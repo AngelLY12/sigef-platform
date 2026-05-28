@@ -1,9 +1,15 @@
+![Laravel](https://img.shields.io/badge/Laravel-11-red)
+![Angular](https://img.shields.io/badge/Angular-19-DD0031)
+![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED)
+![Stripe](https://img.shields.io/badge/Stripe-Payments-635BFF)
+![Redis](https://img.shields.io/badge/Redis-Queues-DC382D)
+
 # SIGEF
-Full-stack school and financial management platform built with Laravel, Angular, Docker, and MySQL.
+Full-stack school and financial management platform built with Laravel, Angular, Docker, Redis, and MySQL.
 
 ## Overview
 
-SIGEF (Sistema de Gestión Escolar y Financiera) is a full-stack web application designed to manage academic and financial processes within educational institutions. The platform centralizes student administration, payment management, reporting, and secure user authentication in a single system.
+SIGEF (Sistema de Gestión Escolar y Financiera) is a full-stack platform focused on academic administration, financial management, and payment processing for educational institutions.
 
 ## Features
 - User authentication and authorization
@@ -22,27 +28,27 @@ SIGEF (Sistema de Gestión Escolar y Financiera) is a full-stack web application
 - Google Cloud Storage integration for receipt management
 - Transactional email notifications with MailerSend
 - Scheduled task automation using Laravel Scheduler
+- Event-driven payment processing using Stripe webhooks and Redis queues
   
 ## Tech Stack
 
 ### Frontend
 - Angular
 - TypeScript
-- HTML
-- CSS
 
 ### Backend
-- PHP
-- Laravel
+- Laravel (PHP)
+- REST API architecture
 
 ### Database
 - MySQL
+- Redis (caching, queues, event-driven processing)
 
-### DevOps & Infrastructure
+### Infrastructure & DevOps
 - Docker
-- Railway
-- Redis
-- Nginx
+- Docker Compose
+- Nginx (reverse proxy)
+- Railway (deployment platform)
 
 ### Third-Party Services
 - Stripe
@@ -94,6 +100,31 @@ src/app
 ├── layouts
 └── shared
 ```
+
+## Architecture
+
+### Backend Overview
+![Architecture](docs/architecture-overview.png)
+
+### Payment System Architecture
+![Payment System](docs/architecture-payment-system.png)
+
+### Database ER Diagram
+![ER Diagram](docs/database-er-diagram.png)
+
+### Stripe Payment Flow
+![Stripe Sequence](docs/stripe-sequence-diagram.png)
+
+### RBAC Authorization Model
+![RBAC](docs/RBAC.png)
+
+## Additional Backend Flows
+
+### Receipt Generation
+![Generate Receipt](docs/generate-receipt.png)
+
+### Receipt Verification
+![Verify Receipt](docs/verify-receipt.png)
 
 ## Running Locally
 
