@@ -1,0 +1,92 @@
+services:
+    nginx:
+        image: nginx:alpine
+        container_name: nginx-laravel
+        restart: unless-stopped
+        env_file:
+            - .env
+        ports:
+            - "80:80"
+        volumes:
+            - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+            - app
+        networks:
+            - laravel
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: laravel-app
+        restart: unless-stopped
+        working_dir: /var/www
+        environment:
+            APP_ROLE: app
+        env_file:
+            -   .env
+        ports:
+            - "9001:9000"
+        depends_on:
+            - db
+            - redis
+        networks:
+            - laravel
+
+    laravel-worker:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: laravel-worker
+        command: php artisan queue:work redis --sleep=3 --tries=3 --timeout=90 --backoff=5 --verbose
+        restart: unless-stopped
+        env_file:
+            - .env
+        environment:
+            APP_ROLE: worker
+        depends_on:
+            - app
+            - redis
+        networks:
+            - laravel
+    db:
+        image: mysql:8
+        container_name: db-laravel
+        restart: unless-stopped
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: cbta71_db
+            MYSQL_USER: laravel_db
+            MYSQL_PASSWORD: 123
+        ports:
+          - "3306:3306"
+        volumes:
+          - db_data:/var/lib/mysql
+        networks:
+            - laravel
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: phpmyadmin-laravel
+        restart: unless-stopped
+        environment:
+            PMA_HOST: db
+            PMA_PORT: 3306
+            MYSQL_ROOT_PASSWORD: root
+        ports:
+          - "8080:80"
+        networks:
+            - laravel
+    redis:
+        image: redis:alpine
+        container_name: redis-laravel
+        restart: unless-stopped
+        ports:
+        - "6379:6379"
+        networks:
+        - laravel
+
+volumes:
+  db_data:
+
+networks:
+  laravel:
+    driver: bridge

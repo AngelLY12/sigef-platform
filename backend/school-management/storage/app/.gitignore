@@ -1,0 +1,6 @@
+*
+!private/
+!public/
+!google/credentials.json
+!google/*.json
+!.gitignore
