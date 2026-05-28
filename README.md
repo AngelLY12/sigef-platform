@@ -218,6 +218,11 @@ ng serve
 Short walkthrough of the authentication flow, dashboard navigation, and financial management modules.
 ![SIGEF Demo](./screenshots/demo.gif)
 
+## Deployment Notes
+
+This project integrates external services such as Stripe, MailerSend, and Google Cloud Storage.  
+For security and infrastructure cost reasons, a public production deployment is not currently available.
+
 ## Author
 
 Developed by Angel López Yáñez.
