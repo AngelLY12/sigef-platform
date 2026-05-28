@@ -103,7 +103,22 @@ src/app
 cd backend/school-management
 
 cp .env.example .env
+```
 
+Configure the initial administrator account in the `.env` file:
+
+```env
+ADMIN_EMAIL=
+ADMIN_PASSWORD=
+ADMIN_FIRST_NAME=
+ADMIN_LAST_NAME=
+ADMIN_PHONE=
+ADMIN_CURP=
+```
+
+Then start the Docker environment:
+
+```bash
 docker compose up --build
 ```
 
