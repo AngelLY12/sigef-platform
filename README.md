@@ -147,71 +147,71 @@ ng serve
 ### Authentication
 
 <p align="center">
-  <img src="./screenshots/auth-login.png" width="420">
-  <img src="./screenshots/auth-register.png" width="420">
+  <img src="./screenshots/auth-login.png" width="500">
+  <img src="./screenshots/auth-register.png" width="500">
 </p>
 
 ### Common
 
 <p align="center">
-  <img src="./screenshots/common-role-selector.png" width="420">
-  <img src="./screenshots/common-404.png" width="420">
+  <img src="./screenshots/common-role-selector.png" width="500">
+  <img src="./screenshots/common-404.png" width="500">
 </p>
 
 <p align="center">
-  <img src="./screenshots/common-403.png" width="420">
-  <img src="./screenshots/common-profile.png" width="420">
+  <img src="./screenshots/common-403.png" width="500">
+  <img src="./screenshots/common-profile.png" width="500">
 </p>
 
 <p align="center">
-  <img src="./screenshots/modal-feedback.png" width="500">
+  <img src="./screenshots/modal-feedback.png" width="650">
 </p>
 
 ### Admin
 
 <p align="center">
-  <img src="./screenshots/admin-dashboard.png" width="700">
+  <img src="./screenshots/admin-dashboard.png" width="900">
 </p>
 
 <p align="center">
-  <img src="./screenshots/admin-users-management.png" width="700">
+  <img src="./screenshots/admin-users-management.png" width="900">
 </p>
 
 <p align="center">
-  <img src="./screenshots/admin-users-permissions-modal.png" width="420">
-  <img src="./screenshots/admin-users-permissions-modal-2.png" width="420">
+  <img src="./screenshots/admin-users-permissions-modal.png" width="500">
+  <img src="./screenshots/admin-users-permissions-modal-2.png" width="500">
 </p>
 
 <p align="center">
-  <img src="./screenshots/admin-user-details.png" width="700">
+  <img src="./screenshots/admin-user-details.png" width="900">
 </p>
 
 <p align="center">
-  <img src="./screenshots/admin-user-permissions-modal.png" width="500">
+  <img src="./screenshots/admin-user-permissions-modal.png" width="650">
 </p>
 
 <p align="center">
-  <img src="./screenshots/admin-import.png" width="700">
+  <img src="./screenshots/admin-import.png" width="900">
 </p>
 
 ### Financial Staff
 
 <p align="center">
-  <img src="./screenshots/financial-dashboard.png" width="700">
+  <img src="./screenshots/financial-dashboard.png" width="900">
 </p>
 
 <p align="center">
-  <img src="./screenshots/financial-concepts.png" width="700">
+  <img src="./screenshots/financial-concepts.png" width="900">
 </p>
 
 <p align="center">
-  <img src="./screenshots/financial-concept-modal.png" width="420">
-  <img src="./screenshots/financial-concept-details.png" width="420">
+  <img src="./screenshots/financial-concept-modal.png" width="500">
+  <img src="./screenshots/financial-concept-details.png" width="500">
 </p>
 
 <p align="center">
-  <img src="./screenshots/financial-concept-modal-2.png" width="420">
-  <img src="./screenshots/financial-debts.png" width="420">
+  <img src="./screenshots/financial-concept-modal-2.png" width="500">
+  <img src="./screenshots/financial-debts.png" width="500">
 </p>
 
 ## Demo
