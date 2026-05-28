@@ -1,0 +1,157 @@
+<app-auth-layout
+  title="SIGEF"
+  subtitle="Regístrate en el sistema"
+  footerMessage="¿Ya tienes cuenta?"
+  [footerLink]="navHelper.login"
+  footerAnchorMessage="Inicia sesión"
+>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <app-stepper
+    [steps]="['Datos personales','Contacto','Dirección','Seguridad']"
+    [currentStep]="currentStep"
+    [canProceed]="isCurrentStepValid()"
+    (nextStep)="currentStep = currentStep + 1"
+    (prevStep)="currentStep = currentStep - 1"
+    (completed)="submit()"
+    [loading]="loading"
+    >
+
+    <div *ngIf="currentStep === 0">
+      <app-input
+        label="Nombre(s)"
+        type="text"
+        placeholder="Pedro Antonio"
+        iconRight="badge"
+        formControlName="name"
+        [customErrors]="{
+          required: 'El nombre es obligatorio',
+          minlength: 'El nombre debe tener al menos 2 caracteres',
+          maxlength: 'El nombre no puede tener más de 50 caracteres',
+          pattern: 'Solo se permiten letras y espacios'
+        }"
+        >
+      </app-input>
+
+      <app-input
+        label="Apellidos"
+        type="text"
+        placeholder="Sánchez Pérez"
+        iconRight="badge"
+        formControlName="last_name"
+        [customErrors]="{
+          required: 'Los apellidos son obligatorios',
+          minlength: 'Los apellidos deben tener al menos 2 caracteres',
+          maxlength: 'Los apellidos no pueden tener más de 50 caracteres',
+          pattern: 'Solo se permiten letras y espacios'
+        }"
+        >
+      </app-input>
+
+      <app-input
+        label="Fecha de nacimiento"
+        dateFormat="yyyy-mm-dd"
+        placeholder="DD/MM/AAAA"
+        type="date"
+        formControlName="birthdate"
+        [customErrors]="{
+          underage: 'Debes ser mayor de 10 años',
+          tooOld: 'La fecha no puede ser hace más de 100 años',
+          invalidDate: 'Ingresa una fecha válida'
+        }"
+        >
+      </app-input>
+
+      <app-select
+        label="Genero"
+        placeholder="Selecciona un genero"
+        iconRight="wc"
+        [options]="genderOptions"
+        formControlName="gender">
+      </app-select>
+
+      <app-input
+        label="CURP"
+        type="text"
+        placeholder="XXXX000000XXXXXX00"
+        iconRight="fingerprint"
+        formControlName="curp"
+        [customErrors]="{
+          required: 'El CURP es obligatorio',
+          minlength: 'El CURP debe tener 18 caracteres',
+          maxlength: 'El CURP debe tener 18 caracteres',
+        }"
+        >
+      </app-input>
+
+      <app-select
+        label="Tipo de sangre"
+        placeholder="Selecciona tu tipo de sangre"
+        iconRight="bloodtype"
+        [options]="bloodTypeOptions"
+        formControlName="blood_type">
+      </app-select>
+    </div>
+
+    <div *ngIf="currentStep === 1">
+      <app-input
+        label="Email"
+        type="email"
+        placeholder="correo@ejemplo.com"
+        iconRight="mail"
+        formControlName="email"
+        [customErrors]="{
+          required: 'El email es obligatorio',
+          email: 'Ingresa un email válido',
+        }"
+        >
+      </app-input>
+
+      <app-input
+        label="Teléfono"
+        type="tel"
+        prefix="+52"
+        placeholder="1234567890"
+        iconRight="phone"
+        formControlName="phone_number"
+        [customErrors]="{
+          required: 'El teléfono es obligatorio',
+          pattern: 'Ingresa 10 dígitos (ej: 5512345678)'
+        }">
+      </app-input>
+    </div>
+
+    <div *ngIf="currentStep === 2">
+
+      <app-address
+      [control]="form.controls.address"
+      [customErrors]="addressCustomErrors"
+      ></app-address>
+
+    </div>
+
+    <div *ngIf="currentStep === 3">
+      <app-password-input
+        label="Password"
+        placeholder="••••••••"
+        [control]="passwordControl">
+      </app-password-input>
+
+      <app-password-input
+        label="Confirmar password"
+        placeholder="••••••••"
+        [showStrength]="false"
+        [control]="confirmPasswordControl"
+        [showHint]="true"
+        [hint]="passwordControl.value !== confirmPasswordControl.value ? 'Las contraseñas no coinciden' : ''"
+        >
+      </app-password-input>
+
+    </div>
+
+    </app-stepper>
+
+  </form>
+
+</app-auth-layout>

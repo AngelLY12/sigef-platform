@@ -1,0 +1,13 @@
+<app-public-layout
+      icon="verified"
+      title="¡Cuenta pendiente de activación!"
+      message="Tu cuenta ha sido creada pero aún no tiene un rol asignado. Un administrador activará tu cuenta próximamente. Mientras tanto, no podrás acceder al sistema."
+      [showErrorCode]="false"
+      [primaryButton]="{
+        text: 'Cerrar sesión',
+        icon: 'logout',
+        variant: 'primary',
+        action: 'logout',
+      }"
+      illustrationType="unverified">
+</app-public-layout>

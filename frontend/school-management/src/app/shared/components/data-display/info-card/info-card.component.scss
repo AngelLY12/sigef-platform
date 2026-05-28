@@ -1,0 +1,144 @@
+.info-card {
+  background: var(--card-bg-primary);
+  border-radius: 1rem;
+  border: 1px solid var(--card-border-default);
+  overflow: visible;
+  height: 100%;
+
+  &.loading {
+    pointer-events: none;
+    opacity: 0.7;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 1.5rem;
+    background: var(--card-header-bg);
+    border-bottom: 1px solid var(--card-border-light);
+    border-radius: 1rem 1rem 0 0;
+    transition:
+      background 0.2s ease,
+      border-radius 0.25s ease;
+
+    &.clickable {
+      cursor: pointer;
+    }
+
+    &.header-only {
+      border-radius: 1rem;
+      border-bottom: none;
+    }
+
+    @media (max-width: 640px) {
+      padding: 0.875rem 1rem;
+    }
+
+    @media (max-width: 480px) {
+      padding: 0.75rem 0.875rem;
+    }
+
+    .spacer {
+      flex: 1;
+    }
+
+    .material-icons {
+      font-size: 1.3rem;
+      color: var(--card-accent-primary);
+
+      @media (max-width: 640px) {
+        font-size: 1.2rem;
+      }
+
+      @media (max-width: 480px) {
+        font-size: 1.1rem;
+      }
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--card-text-primary);
+
+      @media (max-width: 640px) {
+        font-size: 0.95rem;
+      }
+
+      @media (max-width: 480px) {
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  .card-header.clickable:hover {
+    background: var(--card-header-hover-bg);
+  }
+
+  .expand-icon {
+    font-size: 1.25rem;
+    color: var(--card-text-secondary);
+    transition:
+      transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.2s ease;
+  }
+
+  .card-loading-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(2px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 10;
+  }
+
+  .card-content {
+    overflow: hidden;
+    position: relative;
+
+    transition:
+      max-height 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.25s ease,
+      transform 0.35s ease;
+
+    will-change: max-height, opacity, transform;
+
+    opacity: 1;
+    transform: translateY(0);
+
+    .card-content-inner {
+      padding: 1.5rem;
+      position: relative;
+      @media (max-width: 640px) {
+        padding: 1.25rem;
+      }
+
+      @media (max-width: 480px) {
+        padding: 1rem;
+      }
+    }
+    &.collapsed {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+  }
+}
+
+.fade {
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  height: 3rem;
+
+  background: linear-gradient(to bottom, transparent, var(--card-bg-primary));
+
+  pointer-events: none;
+}

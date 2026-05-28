@@ -1,0 +1,100 @@
+<app-page-layout
+  title="Dashboard financiero"
+  welcomeMessage="Resumen general de finanzas"
+  loadingMessage="Cargando datos financieros..."
+  icon="payments"
+  [state]="state"
+>
+  <div class="kpi-grid">
+    <app-kpi-card
+      icon="schedule"
+      iconType="alerts"
+      label="Pendientes"
+      [value]="pendingSummary?.totalAmount | currencyMXN"
+      [subtext]="(pendingSummary?.totalCount || 0) + ' conceptos'"
+    />
+
+    <app-kpi-card
+      icon="groups"
+      iconType="students"
+      label="Estudiantes"
+      [value]="studentsSummary?.totalStudents"
+      [subtext]="(studentsSummary?.totalApplicants || 0) + ' aspirantes'"
+    />
+
+    <app-kpi-card
+      icon="payments"
+      iconType="growth"
+      label="Total de pagos"
+      [value]="this.paymentsSummary?.totalPayments | currencyMXN"
+    />
+
+    <app-expandable-section
+    [maxHeight]="100"
+    >
+      <div class="kpi-grid">
+        <app-kpi-card
+          *ngFor="let item of kpiPayments"
+          [icon]="item.icon"
+          [iconType]="item.iconType"
+          [label]="item.label"
+          [value]="item.value | currencyMXN"
+          [subtext]="item.subtext"
+        />
+      </div>
+    </app-expandable-section>
+  </div>
+
+  <app-section-divider title="Análisis financiero" />
+
+  <div class="charts-grid">
+    <app-chart-card
+      title="Pagos por semestre"
+      type="bar"
+      [data]="paymentsChartData"
+      [options]="barOptions"
+    />
+
+    <app-chart-card
+      title="Comisiones por semestre"
+      type="line"
+      [data]="feesChartData"
+      [options]="lineOptions"
+    />
+    <app-chart-card
+      title="Resumen financiero"
+      type="bar"
+      [data]="financialSummaryChartData"
+      [options]="stackedBarOptions"
+    />
+
+    <app-chart-card
+      title="Balance actual"
+      type="doughnut"
+      [data]="distributionChartData"
+      [options]="doughnutOptions"
+    />
+
+    <app-chart-card
+      title="Disponible por fuente"
+      type="doughnut"
+      [data]="availableBySourceChartData"
+      [options]="horizontalBarOptions"
+    />
+
+    <app-chart-card
+      title="Pendiente por fuente"
+      type="doughnut"
+      [data]="pendingBySourceChartData"
+      [options]="horizontalBarOptions"
+    />
+  </div>
+
+  <app-section-divider title="Historial de conceptos" />
+
+  <app-table
+    [columns]="historyColumns"
+    [data]="conceptsHistory?.data?.items || []"
+    noDataMessage="Sin historial disponible"
+  />
+</app-page-layout>

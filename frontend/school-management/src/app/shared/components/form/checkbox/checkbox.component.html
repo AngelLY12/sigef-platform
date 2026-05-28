@@ -1,0 +1,15 @@
+<div
+  class="checkbox"
+  [class.checked]="value"
+  [class.disabled]="disabled"
+  (click)="toggle($event)"
+>
+  <span class="checkbox-box">
+    <span class="checkbox-icon material-icons">
+      check
+    </span>
+  </span>
+  <span *ngIf="label" class="checkbox-label">
+    {{ label }}
+  </span>
+</div>

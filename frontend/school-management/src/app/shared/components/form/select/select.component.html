@@ -1,0 +1,32 @@
+<app-form-field
+  [label]="label"
+  [error]="error"
+  [disabled]="disabled"
+  [required]="required"
+  [hint]="hint"
+>
+  <app-dropdown #dropdown [disabled]="disabled">
+    <div dropdown-trigger>
+      <button type="button" class="select-trigger" [disabled]="disabled">
+        <span class="trigger-text">
+          {{ selectedLabel }}
+        </span>
+
+        <span class="material-icons icon">
+          {{ iconRight || "expand_more" }}
+        </span>
+      </button>
+    </div>
+
+    <div dropdown-content>
+      <app-menu-item
+        *ngFor="let option of options"
+        [selected]="option.value === value"
+        [allowSelected]="true"
+        (itemClick)="selectOption(option, dropdown)"
+      >
+        {{ option.label }}
+      </app-menu-item>
+    </div>
+  </app-dropdown>
+</app-form-field>

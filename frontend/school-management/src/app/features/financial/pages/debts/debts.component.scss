@@ -1,0 +1,26 @@
+.no-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 240px;
+  color: var(--card-text-secondary);
+  text-align: center;
+  gap: 0.75rem;
+}
+
+.no-data span {
+  font-size: 2rem;
+  opacity: 0.7;
+}
+
+.no-data p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.table-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}

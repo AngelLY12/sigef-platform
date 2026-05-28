@@ -1,0 +1,53 @@
+.filter-bar {
+  border: 1px solid var(--card-border-light);
+  border-radius: 0.75rem;
+  background: var(--card-bg-primary);
+  margin-bottom: 1rem;
+
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.filter-bar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.filter-bar-title {
+  margin: 0;
+  padding-left: 0.5rem;
+  font-weight: 600;
+  color: var(--card-text-primary);
+}
+
+.filter-bar-actions {
+  display: flex;
+  align-items: center;
+}
+
+.filter-bar-actions button {
+  font-size: 0.75rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-primary);
+}
+
+.filter-bar-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  overflow: visible;
+  max-height: 500px;
+  transition: all 0.25s ease;
+}
+
+.filter-bar-content.collapsed {
+  max-height: 0;
+  opacity: 0;
+  padding: 0;
+}

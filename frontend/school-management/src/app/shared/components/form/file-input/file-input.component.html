@@ -1,0 +1,24 @@
+<div
+  class="file-dropzone"
+  (click)="fileInput.click()"
+  (dragover)="onDragOver($event)"
+  (drop)="onDrop($event)"
+>
+  <input
+    #fileInput
+    type="file"
+    [accept]="accept"
+    hidden
+    (change)="onFileSelected($event)"
+  />
+
+  <span class="material-icons">upload_file</span>
+
+  <p *ngIf="!file">
+    {{ label }}
+  </p>
+
+  <p *ngIf="file" class="file-name">
+    {{ file.name }}
+  </p>
+</div>

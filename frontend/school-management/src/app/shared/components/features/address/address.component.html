@@ -1,0 +1,78 @@
+<div class="cp-field">
+  <app-input
+    label="Código Postal"
+    type="text"
+    placeholder="12345"
+    iconRight="markunread_mailbox"
+    [formControl]="cpControl"
+    [customErrors]="getFieldErrors('cp')"
+    >
+  </app-input>
+
+  <div class="spinner" *ngIf="loading">
+    <app-spinner [loading]="true" size="sm"></app-spinner>
+  </div>
+</div>
+
+<app-input
+  label="Estado"
+  type="text"
+  placeholder="Estado"
+  iconRight="location_on"
+  [formControl]="stateControl"
+  [readonly]="true"
+  [customErrors]="getFieldErrors('state')"
+  >
+</app-input>
+
+<app-input
+  label="Municipio"
+  type="text"
+  placeholder="Municipio"
+  iconRight="location_on"
+  [formControl]="cityControl"
+  [readonly]="true"
+  [customErrors]="getFieldErrors('city')"
+  >
+</app-input>
+
+<ng-container *ngIf="neighborhoods.length <= 1">
+  <app-input
+    label="Colonia"
+    type="text"
+    placeholder="Colonia"
+    iconRight="location_city"
+    [formControl]="neighborhoodControl"
+    [readonly]="neighborhoods.length === 1"
+    [customErrors]="getFieldErrors('neighborhood')"
+    >
+  </app-input>
+</ng-container>
+
+<app-select
+  *ngIf="neighborhoods.length > 1"
+  label="Colonia"
+  [options]="neighborhoodOptions"
+  [formControl]="neighborhoodControl"
+  >
+</app-select>
+
+<app-input
+  label="Calle"
+  type="text"
+  placeholder="Av. Siempre Viva"
+  iconRight="home"
+  [formControl]="streetControl"
+  [customErrors]="getFieldErrors('street')"
+  >
+</app-input>
+
+<app-input
+  label="Número"
+  type="text"
+  placeholder="742"
+  iconRight="tag"
+  [formControl]="numberControl"
+  [customErrors]="getFieldErrors('number')"
+  >
+</app-input>

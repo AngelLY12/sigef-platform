@@ -1,0 +1,56 @@
+<div class="stepper">
+  <div class="stepper-header">
+    <div class="steps-indicator">
+      <div
+        *ngFor="let step of steps; let i = index"
+        class="step-item"
+        [class.active]="i === currentStep"
+        [class.completed]="i < currentStep">
+
+        <div class="step-circle" [@stepIndicator]="i === currentStep ? 'active' : 'inactive'">
+          <span *ngIf="i < currentStep" class="check">✓</span>
+          <span *ngIf="i >= currentStep">{{ i + 1 }}</span>
+        </div>
+
+        <div class="step-label">{{ step }}</div>
+
+        <div class="step-line" *ngIf="i < steps.length - 1"></div>
+      </div>
+    </div>
+
+    <div class="step-info">
+      Paso {{ currentStep + 1 }} de {{ steps.length }}
+    </div>
+  </div>
+
+  <div class="stepper-body">
+    @for (step of [currentStep]; track $index) {
+      <div @slideContent>
+        <ng-content></ng-content>
+      </div>
+    }
+  </div>
+
+  <div class="stepper-actions">
+    <app-button
+      *ngIf="currentStep > 0"
+      variant="outline"
+      size="md"
+      type="button"
+      (click)="prev()"
+      [fullWidth]="true">
+      Anterior
+    </app-button>
+
+    <app-button
+      type="button"
+      [variant]="isLastStep ? 'primary' : 'primary'"
+      size="md"
+      (click)="next()"
+      [disabled]="!canProceed || loading"
+      [loading]="loading"
+      [fullWidth]="true">
+      {{ isLastStep ? 'Finalizar' : 'Siguiente' }}
+    </app-button>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+<div class="kpi-card" [class.small]="size === 'small'">
+  <div class="kpi-icon" [class]="iconType">
+    <span class="material-icons">{{ icon }}</span>
+  </div>
+  <div class="kpi-info">
+    <span class="kpi-label">{{ label }}</span>
+    <span class="kpi-value">{{ value }}</span>
+    <div class="kpi-meta">
+      <ng-container *ngIf="trend">
+        <span class="kpi-trend">
+          <span class="material-icons">{{ trend.icon }}</span>
+          {{ trend.text }}
+        </span>
+      </ng-container>
+
+      <ng-container *ngIf="percentage">
+        <span class="kpi-percentage">{{ percentage }}%</span>
+      </ng-container>
+
+      <ng-container *ngIf="subtext">
+        <span class="kpi-sub">{{ subtext }}</span>
+      </ng-container>
+    </div>
+
+    <ng-content select="[extra-content]"></ng-content>
+  </div>
+</div>

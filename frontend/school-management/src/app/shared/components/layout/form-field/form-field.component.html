@@ -1,0 +1,19 @@
+<div class="form-field" [class.error]="!!error" [class.full-width]="fullWidth" [class.disabled]="disabled">
+  <label *ngIf="label" class="field-label">
+    {{ label }}
+    <span *ngIf="required" class="required">*</span>
+  </label>
+
+  <div class="field-content">
+    <ng-content></ng-content>
+  </div>
+  <div class="field-messages" *ngIf="hint || error">
+    <small *ngIf="hint && !error" class="hint">
+      {{ hint }}
+    </small>
+
+    <small *ngIf="error" class="error-message">
+      {{ error }}
+    </small>
+  </div>
+</div>

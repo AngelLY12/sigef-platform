@@ -1,0 +1,15 @@
+<ng-container *ngIf="loading">
+  <span
+    class="spinner"
+    [class]="size + ' ' + color"
+    [class.fullscreen]="fullScreen"
+    *ngIf="!fullScreen">
+  </span>
+
+  <div class="spinner-overlay" *ngIf="fullScreen">
+    <span
+      class="spinner xl"
+      [class]="color">
+    </span>
+  </div>
+</ng-container>

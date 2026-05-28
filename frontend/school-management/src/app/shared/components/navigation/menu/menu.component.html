@@ -1,0 +1,25 @@
+<div class="menu-container" @scaleFade>
+
+  <div #triggerRef (click)="toggle($event)">
+    <ng-content></ng-content>
+  </div>
+
+  <div
+    class="menu-overlay"
+    *ngIf="isOpen"
+    (click)="close()"
+    @fade
+  ></div>
+
+
+  <div
+    class="menu-dropdown"
+    [ngStyle]="menuStyles"
+    *ngIf="isOpen"
+    (click)="$event.stopPropagation()"
+  >
+    <ng-content select="[menu]"></ng-content>
+  </div>
+
+</div>
+

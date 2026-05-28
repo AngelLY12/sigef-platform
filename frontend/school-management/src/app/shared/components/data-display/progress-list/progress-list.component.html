@@ -1,0 +1,12 @@
+ <div class="progress-list">
+      <div class="progress-item" *ngFor="let item of items">
+        <div class="progress-label">
+          <span>{{ item.label }}</span>
+          <span>{{ item.percentage }}%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" [class]="item.type" [style.width.%]="item.percentage"></div>
+        </div>
+        <div class="progress-value">{{ item.value }}</div>
+      </div>
+    </div>

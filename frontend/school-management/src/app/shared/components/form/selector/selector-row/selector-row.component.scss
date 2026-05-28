@@ -1,0 +1,51 @@
+.selector-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 1rem;
+
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: var(--card-hover-bg, rgba(0,0,0,0.03));
+  }
+}
+
+.selector-row .label {
+  font-size: 0.9rem;
+  color: var(--card-text-primary);
+  font-weight: 500;
+}
+
+.selector-row app-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+@media (max-width: 600px) {
+  .selector-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    padding: 0.6rem;
+  }
+
+  .selector-row app-checkbox {
+    justify-content: flex-start;
+  }
+}
+
+.selector-row.add {
+  background: rgba(76, 175, 80, 0.08);
+}
+
+.selector-row.remove {
+  background: rgba(244, 67, 54, 0.08);
+}
+.selector-row.assigned {
+  background: rgba(0, 0, 0, 0.04);
+}

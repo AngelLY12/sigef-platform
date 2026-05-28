@@ -1,0 +1,22 @@
+<div
+  class="selector-row"
+  [class.add]="isAdd()"
+  [class.remove]="isRemove()"
+  [class.assigned]="isAssigned()"
+>
+  <span class="label">{{ label }}</span>
+
+  <app-checkbox
+    label="Agregar"
+    [ngModel]="isAdd() || isAssigned()"
+    [disabled]="isRemove() || (!isBulkOperation && isAssigned())"
+    (ngModelChange)="onAddChange($event)"
+  ></app-checkbox>
+
+  <app-checkbox
+    label="Remover"
+    [ngModel]="isRemove()"
+    [disabled]="isAdd() || (!isBulkOperation && !isAssigned())"
+    (ngModelChange)="onRemoveChange($event)"
+  ></app-checkbox>
+</div>

@@ -1,0 +1,6 @@
+<div class="section-divider">
+  <span class="section-title">
+    <ng-content *ngIf="!title; else text"></ng-content>
+    <ng-template #text>{{ title }}</ng-template>
+  </span>
+</div>

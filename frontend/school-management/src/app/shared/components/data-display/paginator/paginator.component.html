@@ -1,0 +1,70 @@
+<div class="pagination">
+
+  <app-button
+    (click)="goToPage(paginator.previousPageNumber!)"
+    [disabled]="!paginator.hasPrevious"
+    variant="secondary"
+    size="sm"
+    [iconOnly]="true"
+    iconLeft="chevron_left">
+  </app-button>
+
+  <div class="pagination-center">
+
+    <div class="pagination-pages">
+      <ng-container *ngFor="let page of visiblePages">
+
+        <span *ngIf="page === '...'">...</span>
+
+        <app-button
+          *ngIf="page !== '...'"
+          (click)="goToPage(page)"
+          size="sm"
+          [disabled]="page === paginator.currentPage"
+          [variant]="page === paginator.currentPage ? 'primary' : 'secondary'">
+          {{ page }}
+        </app-button>
+
+      </ng-container>
+    </div>
+
+    <div class="pagination-bottom">
+      <span class="pagination-text">
+        <ng-container *ngIf="paginator.totalItems > 0; else noData">
+          {{ paginator.itemsInRange.from }}–{{ paginator.itemsInRange.to }} de {{ paginator.totalItems }}
+        </ng-container>
+
+        <ng-template #noData>
+          0 resultados
+        </ng-template>
+      </span>
+
+      <span class="pagination-divider">|</span>
+
+      <div class="pagination-size">
+        <span>Mostrar:</span>
+
+        <select
+          class="pagination-select"
+          [(ngModel)]="selectedPerPage"
+          (ngModelChange)="onPerPageChange($event)"
+        >
+          <option *ngFor="let size of pageSizes" [value]="size">
+            {{ size }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+  </div>
+
+  <app-button
+    (click)="goToPage(paginator.nextPageNumber!)"
+    [disabled]="!paginator.hasNext"
+    variant="secondary"
+    size="sm"
+    [iconOnly]="true"
+    iconLeft="chevron_right">
+  </app-button>
+
+</div>

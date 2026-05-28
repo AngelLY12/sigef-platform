@@ -1,0 +1,33 @@
+.link {
+  color: var(--color-primary);
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 500;
+  display: inline-block;
+  position: relative;
+  transition: color 0.3s ease;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -0.2rem;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--color-primary-hover);
+    transition: width 0.3s ease;
+  }
+
+  &:hover {
+    color: var(--color-primary-hover);
+
+    &::after {
+      width: 100%;
+    }
+  }
+
+  &:not(:hover)::after {
+    width: 0;
+    transition: width 0.3s ease;
+  }
+}

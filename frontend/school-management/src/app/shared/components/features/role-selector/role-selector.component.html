@@ -1,0 +1,29 @@
+<div class="role-selector-overlay" *ngIf="show" (click)="onClose()">
+  <div class="role-selector-card" (click)="$event.stopPropagation()">
+    <div class="role-selector-header">
+      <app-button class="close-btn"  iconLeft="close" (click)="onClose()" variant="ghost" [iconOnly]="true">
+      </app-button>
+      <span class="material-icons">account_circle</span>
+      <h2>Selecciona tu rol</h2>
+      <p>Hola {{userName}}, tienes múltiples roles. ¿A qué dashboard quieres ingresar?</p>
+    </div>
+
+    <div class="role-list">
+      <button
+        *ngFor="let role of roles"
+        class="role-option"
+        [class.admin]="role === Role.ADMIN"
+        [class.student]="role === Role.STUDENT"
+        [class.parent]="role === Role.PARENT"
+        (click)="onSelectRole(role)">
+
+        <span class="material-icons">{{ getRoleIcon(role) }}</span>
+        <div class="role-info">
+          <span class="role-name">{{ getRoleName(role) }}</span>
+          <span class="role-description">{{ getRoleDescription(role) }}</span>
+        </div>
+        <span class="material-icons arrow">chevron_right</span>
+      </button>
+    </div>
+  </div>
+</div>

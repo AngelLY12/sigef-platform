@@ -1,0 +1,82 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.cp-field {
+  position: relative;
+  margin-bottom: 1rem; /* 16px */
+
+  .spinner {
+    position: absolute;
+    right: 2.5rem; /* 40px */
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+  }
+}
+
+app-input, app-select {
+  display: block;
+  margin-bottom: 1rem; /* 16px */
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .cp-field {
+    margin-bottom: 0.875rem; /* 14px */
+
+    .spinner {
+      right: 2rem; /* 32px */
+    }
+  }
+
+  app-input, app-select {
+    margin-bottom: 0.875rem; /* 14px */
+  }
+}
+
+@media (max-width: 480px) {
+  .cp-field {
+    margin-bottom: 0.75rem; /* 12px */
+
+    .spinner {
+      right: 1.5rem; /* 24px */
+    }
+  }
+
+  app-input, app-select {
+    margin-bottom: 0.75rem; /* 12px */
+  }
+}
+
+@media (max-width: 360px) {
+  .cp-field {
+    margin-bottom: 0.625rem; /* 10px */
+
+    .spinner {
+      right: 1.25rem; /* 20px */
+    }
+  }
+
+  app-input, app-select {
+    margin-bottom: 0.625rem; /* 10px */
+  }
+}
+
+@media (min-width: 1440px) {
+  .cp-field {
+    margin-bottom: 1.25rem;
+
+    .spinner {
+      right: 2.75rem; /* 44px */
+    }
+  }
+
+  app-input, app-select {
+    margin-bottom: 1.25rem; /* 20px */
+  }
+}

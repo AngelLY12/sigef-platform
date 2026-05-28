@@ -1,0 +1,143 @@
+.selector-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  background: var(--card-bg-secondary);
+  border: 1px solid var(--card-border-default);
+  border-radius: 12px;
+
+  padding: 0.75rem;
+  max-height: 300px;
+  overflow-y: auto;
+
+  transition: all 0.2s ease;
+  scroll-behavior: smooth;
+
+  &:hover {
+    border-color: var(--card-hover-border);
+    box-shadow: 0 4px 12px var(--card-hover-shadow);
+  }
+}
+
+.selector-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.selector-list::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+
+@media (max-width: 600px) {
+  .selector-list {
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+.group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 0.5rem;
+}
+
+.group-actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  padding: 0.4rem;
+  border-radius: 10px;
+
+  border: 1px solid transparent;
+  animation: fadeInUp 0.25s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.group:not(:last-child) {
+  margin-bottom: 0.4rem;
+}
+
+
+.group-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  letter-spacing: 0.02em;
+
+  cursor: pointer;
+  user-select: none;
+
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--card-text-secondary);
+
+  padding: 0.35rem 0.4rem;
+  border-radius: 6px;
+
+  transition: background 0.2s ease;
+}
+
+.group-title:hover {
+  background: var(--card-hover-bg, rgba(0,0,0,0.04));
+}
+
+.group-title:active {
+  transform: scale(0.98);
+}
+
+.icon {
+  font-size: 18px;
+  transition: transform 0.25s cubic-bezier(.4,0,.2,1);
+}
+
+.icon.collapsed {
+  transform: rotate(-180deg);
+}
+
+.group-content {
+  padding-left: 0.25rem;
+  border-left: 2px solid var(--table-row-hover);
+  margin-left: 0.25rem;
+
+  overflow: hidden;
+  max-height: 500px;
+  opacity: 1;
+
+  transition:
+    border-color  0.2s ease,
+    max-height 0.25s ease,
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.group-content.collapsed {
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+}
+
+.group:hover .group-content {
+  border-left-color: var(--card-border-default);
+}
+

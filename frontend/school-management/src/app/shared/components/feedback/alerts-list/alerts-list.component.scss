@@ -1,0 +1,143 @@
+.alerts-list {
+
+  .alert-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+
+    background: var(--card-alert-warning-bg);
+    border-radius: 0.5rem;
+    border-left: 3px solid var(--card-accent-warning);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .material-icons {
+      color: var(--card-accent-warning);
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .alert-info {
+      flex: 1;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+
+      .alert-title {
+        font-size: 0.85rem;
+        color: var(--card-accent-warning);
+        word-break: break-word;
+      }
+
+      .alert-count {
+        font-weight: 600;
+        color: var(--card-accent-warning);
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .no-alerts {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    padding: 1.5rem;
+
+    background: var(--card-alert-success-bg);
+    border-radius: 0.5rem;
+
+    color: var(--card-accent-success);
+
+    .material-icons {
+      font-size: 1.5rem;
+      color: var(--card-accent-success);
+      flex-shrink: 0;
+    }
+  }
+}
+
+/* -------- TABLET -------- */
+
+@media (max-width: 768px) {
+
+  .alerts-list {
+
+    .alert-item {
+
+      padding: 0.7rem;
+
+      .material-icons {
+        font-size: 1rem;
+      }
+
+      .alert-info {
+
+        .alert-title {
+          font-size: 0.82rem;
+        }
+
+        .alert-count {
+          font-size: 0.85rem;
+        }
+
+      }
+    }
+
+    .no-alerts {
+
+      padding: 1.25rem;
+
+      .material-icons {
+        font-size: 1.35rem;
+      }
+
+    }
+
+  }
+
+}
+
+/* -------- MOBILE -------- */
+
+@media (max-width: 480px) {
+
+  .alerts-list {
+
+    .alert-item {
+
+      align-items: flex-start;
+
+      .alert-info {
+
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.2rem;
+
+        .alert-count {
+          font-size: 0.8rem;
+        }
+
+      }
+
+    }
+
+    .no-alerts {
+
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: left;
+      gap: 0.5rem;
+
+    }
+
+  }
+
+}

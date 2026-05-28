@@ -1,0 +1,167 @@
+<app-page-layout
+  title="Gestión de Usuarios"
+  welcomeMessage="Administra los usuarios de tu institución"
+  loadingMessage="Cargando usuarios..."
+  icon="people"
+  [state]="usersState"
+  (retry)="loadUsers()"
+>
+  <div *ngIf="usersState === 'success' && paginatedUsers">
+    <app-filter-bar (reset)="onResetFilters()">
+      <app-select
+        label=""
+        [options]="status"
+        placeholder="Selecciona un estatus"
+        iconRight="expand_more"
+        [(ngModel)]="userListParams.status"
+        (ngModelChange)="onStatusFilterChange()"
+      >
+      </app-select>
+      <app-button
+        variant="outline"
+        size="md"
+        iconLeft="refresh"
+        (click)="onRefreshData()"
+      >
+        Refrescar datos
+      </app-button>
+    </app-filter-bar>
+    <app-record-list
+      [items]="paginatedUsers.data.items"
+      [itemTemplate]="userTemplate"
+      [imageTemplate]="avatarTemplate"
+      [selectionTemplate]="selectionTemplate"
+      [selectedItems]="selectedUsers"
+      [listActionsTemplate]="listActionsTemplate"
+      [trackByKey]="'id'"
+      (itemClick)="onClickUser($event)"
+    >
+    </app-record-list>
+    <app-paginator
+      [paginator]="paginatedUsers"
+      (pageChange)="onPageChange($event)"
+      (perPageChange)="onPageSizeChange($event)"
+    ></app-paginator>
+  </div>
+
+  <app-spinner
+    [loading]="changeStatusState === 'loading'"
+    [fullScreen]="true"
+  ></app-spinner>
+</app-page-layout>
+
+<ng-template #userTemplate let-user>
+  <div class="user-record">
+    <div class="user-top">
+      <span class="user-name">{{ user.fullName }}</span>
+      <div class="badge-container">
+        <span class="badge" [ngClass]="getStatusColor(user.status)">
+          {{ user.status.toUpperCase() }}
+        </span>
+      </div>
+    </div>
+
+    <div class="user-bottom">
+      <ng-container *ngIf="user.status === 'eliminado'; else normalInfo">
+        <span class="badge" [ngClass]="getStatusColor(user.status)">
+          Faltan {{ user.deletedAtHuman }} días para su eliminación total
+        </span>
+      </ng-container>
+
+      <ng-template #normalInfo>
+        <span>{{ user.email }}</span>
+        <span class="separator">|</span>
+        <span>{{ user.curp }}</span>
+        <span class="separator">|</span>
+        <span>Creado {{ user.createdAtHuman }}</span>
+        <span class="separator">|</span>
+        <span>{{ user.roles_count }} roles</span>
+      </ng-template>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #avatarTemplate let-user>
+  <div class="avatar">
+    {{ user.fullName.charAt(0) }}
+  </div>
+</ng-template>
+
+<ng-template #selectionTemplate let-user>
+  <app-checkbox
+    [ngModel]="isSelected(user)"
+    (ngModelChange)="toggleUser(user)"
+  ></app-checkbox>
+</ng-template>
+
+<ng-template #listActionsTemplate let-selected>
+  <div class="list-actions-bar">
+    <div class="selected">
+      <app-checkbox
+        [ngModel]="selected.length === paginatedUsers?.currentItemsCount"
+        (ngModelChange)="toggleAll($event)"
+      ></app-checkbox>
+
+      <span class="selected-count"> {{ selected.length }} seleccionados </span>
+    </div>
+    <div class="actions">
+      <app-menu #menu>
+        <app-button
+          trigger
+          variant="ghost"
+          size="sm"
+          [iconOnly]="true"
+          iconLeft="more_vert"
+        ></app-button>
+        <div menu>
+          <app-menu-item
+            icon="delete"
+            (itemClick)="onDeleteSelected(); menu.close()"
+          >
+            Eliminar
+          </app-menu-item>
+          <app-menu-item
+            icon="check_circle"
+            (itemClick)="onActivateSelected(); menu.close()"
+          >
+            Activar
+          </app-menu-item>
+          <app-menu-item
+            icon="block"
+            (itemClick)="onDisableSelected(); menu.close()"
+          >
+            Dar de baja
+          </app-menu-item>
+          <app-menu-item
+            icon="schedule"
+            (itemClick)="onTemporaryDisableSelected(); menu.close()"
+          >
+            Baja temporal
+          </app-menu-item>
+          <app-menu-item
+            icon="admin_panel_settings"
+            (itemClick)="onUpdateRolesSelected(); menu.close()"
+          >
+            Actualizar roles
+          </app-menu-item>
+          <app-menu-item
+            icon="lock"
+            (itemClick)="onUpdatePermissionsSelected(); menu.close()"
+          >
+            Actualizar permisos
+          </app-menu-item>
+          <app-menu-item
+            icon="trending_up"
+            (itemClick)="onPromoteStudents(); menu.close()"
+          >
+            <div>
+              <span>Incrementar semestre</span>
+              <br />
+              <small>Afecta a todos los estudiantes</small>
+            </div>
+          </app-menu-item>
+        </div>
+      </app-menu>
+    </div>
+  </div>
+</ng-template>

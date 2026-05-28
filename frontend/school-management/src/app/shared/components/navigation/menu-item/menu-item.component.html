@@ -1,0 +1,14 @@
+<div class="menu-item"
+  [class.danger]="variant === 'danger'"
+  [class.disabled]="disabled || state === 'loading'"
+  [class.selected]="selected && allowSelected"
+  (click)="!disabled && state !== 'loading' && handleClick($event)">
+
+  <app-spinner *ngIf="state === 'loading'" size="sm"></app-spinner>
+
+  <span class="material-icons" *ngIf="icon && state !== 'loading'">
+    {{ icon }}
+  </span>
+
+  <ng-content></ng-content>
+</div>

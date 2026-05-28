@@ -1,0 +1,20 @@
+<app-button
+    *ngIf="!isInMenu"
+    [variant]="variant"
+    [iconOnly]="iconOnly"
+    [size]="size"
+    [fullWidth]="fullWidth"
+    [iconLeft]="(theme$ | async) === 'light' ? 'dark_mode' : 'light_mode'"
+    type="button"
+    (click)="toggleTheme()"
+    >
+    {{ textButton }}
+</app-button>
+
+<app-menu-item
+*ngIf="isInMenu"
+[icon]="(theme$ | async) === 'light' ? 'dark_mode' : 'light_mode'"
+(itemClick)="toggleTheme()"
+>
+  {{ textButton }}
+</app-menu-item>

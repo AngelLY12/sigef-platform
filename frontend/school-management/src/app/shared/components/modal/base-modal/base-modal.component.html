@@ -1,0 +1,21 @@
+<div class="modal-overlay" @fade (click)="onBackdrop($event)">
+  <div class="modal-container" @scaleFade>
+    <app-loading-overlay
+      [visible]="loading"
+      [message]="loadingMessage"
+    ></app-loading-overlay>
+
+    <div class="modal-header">
+      <ng-content select="[modal-header]"></ng-content>
+    </div>
+
+    <div class="modal-body">
+      <ng-content select="[modal-body]"></ng-content>
+    </div>
+
+    <div class="modal-actions">
+      <ng-content select="[modal-actions]"></ng-content>
+    </div>
+
+  </div>
+</div>

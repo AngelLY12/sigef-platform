@@ -1,0 +1,151 @@
+.chart-card {
+  background: var(--card-bg-primary);
+  border-radius: 1rem;
+  border: 1px solid var(--card-border-default);
+  min-width: 0;
+
+  padding: 1.5rem;
+
+  display: flex;
+  flex-direction: column;
+
+  transition: box-shadow .2s ease, transform .2s ease;
+
+  &:hover {
+    transform: translateY(-0.15rem);
+    box-shadow: 0 0.5rem 1.25rem rgba(0,0,0,.06);
+  }
+
+  &.full-width {
+    grid-column: 1 / -1;
+  }
+
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: .75rem;
+    margin-bottom: 1rem;
+
+    h3 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--card-text-primary);
+    }
+  }
+
+  .chart-container {
+    position: relative;
+
+    width: 100%;
+    height: 12.5rem;
+
+    margin: 1rem auto;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    overflow: hidden;
+
+    canvas {
+      max-width: 100%;
+      max-height: 100%;
+
+      width: 100% !important;
+      height: 100% !important;
+
+      margin: 0 auto;
+
+      filter: drop-shadow(0 0.125rem 0.25rem rgba(0,0,0,.1));
+    }
+
+    &.small {
+      height: 9.5rem;
+    }
+
+    &.line-chart {
+      height: 15.5rem;
+    }
+  }
+}
+
+
+@media (max-width: 48rem) {
+
+  .chart-card {
+
+    padding: 1rem;
+
+    .chart-header h3 {
+      font-size: .9rem;
+    }
+
+    .chart-container {
+
+      height: 10.5rem;
+
+      margin: .75rem auto;
+
+      &.small {
+        height: 8rem;
+      }
+
+      &.line-chart {
+        height: 12.5rem;
+      }
+
+    }
+  }
+
+}
+
+/* ---------------- TABLET ---------------- */
+
+@media (min-width: 48rem) and (max-width: 64rem) {
+
+  .chart-card {
+
+    padding: 1.35rem;
+
+    .chart-container {
+
+      height: 12rem;
+
+      &.line-chart {
+        height: 14rem;
+      }
+
+    }
+
+  }
+
+}
+
+/* ---------------- LARGE DESKTOP ---------------- */
+
+@media (min-width: 90rem) {
+
+  .chart-card {
+
+    padding: 1.75rem;
+
+    .chart-header h3 {
+      font-size: 1.1rem;
+    }
+
+    .chart-container {
+
+      height: 14rem;
+
+      &.line-chart {
+        height: 17rem;
+      }
+
+    }
+
+  }
+
+}
+

@@ -1,0 +1,254 @@
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 100%), 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.secondary-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+
+.chart-footer {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--card-text-secondary);
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+
+      &.active { background: var(--card-accent-success); }
+      &.inactive { background: var(--card-accent-warning); }
+      &.danger { background: var(--card-accent-danger);}
+    }
+  }
+}
+
+.role-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100px, 100%), 1fr));
+  gap: 0.5rem;
+  margin-top: 1rem;
+
+  .role-stat-item {
+    text-align: center;
+    padding: 0.5rem;
+    background: var(--card-stat-bg);
+    border-radius: 0.5rem;
+
+    .role-name {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--card-text-tertiary);
+      margin-bottom: 0.25rem;
+    }
+
+    .role-value {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--card-accent-primary);
+    }
+  }
+}
+
+.chart-period {
+  display: flex;
+  gap: 0.5rem;
+
+  .period {
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    cursor: pointer;
+    color: var(--card-text-tertiary);
+
+    &.active {
+      background: var(--card-accent-primary);
+      color: white;
+    }
+  }
+}
+
+.kpi-breakdown {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  .badge {
+    padding: 0.2rem 0.5rem;
+    border-radius: 1rem;
+    background: var(--card-bg-tertiary);
+
+    &.warning { color: var(--card-accent-warning); }
+  }
+}
+
+.role-mini-stats {
+  margin-top: 0.5rem;
+
+  .role-mini-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+
+    .role-mini-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+
+      &.admin { background: var(--card-accent-primary); }
+      &.student { background: var(--card-accent-success); }
+      &.teacher { background: var(--card-accent-warning); }
+    }
+  }
+}
+
+.academic-mini-stats {
+  margin-top: 0.5rem;
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    .value.warning {
+      color: var(--card-accent-warning);
+      font-weight: 600;
+    }
+  }
+}
+
+.role-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .chart-footer {
+    flex-direction: column;
+    gap: .5rem;
+    align-items: center;
+  }
+  .role-stats {
+    display: flex;
+    overflow-x: auto;
+    gap: 0.5rem;
+  }
+
+  .role-stat-item {
+    min-width: 120px;
+    flex-shrink: 0;
+  }
+
+
+}
+
+.role-summary-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  .role-summary-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    background: var(--card-stat-bg);
+    border-radius: 0.5rem;
+
+    .role-summary-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .role-summary-name {
+      flex: 1;
+      font-size: 0.9rem;
+      color: var(--card-text-secondary);
+    }
+
+    .role-summary-value {
+      font-weight: 600;
+      color: var(--card-accent-primary);
+    }
+  }
+}
+
+.activity-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+
+  .activity-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+.academic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.academic-details {
+  .detail-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--card-border-light);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .detail-label {
+      color: var(--card-text-tertiary);
+    }
+
+    .detail-value {
+      font-weight: 600;
+      &.warning { color: var(--card-accent-warning); }
+    }
+  }
+}
+
+.alerts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.individual-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}

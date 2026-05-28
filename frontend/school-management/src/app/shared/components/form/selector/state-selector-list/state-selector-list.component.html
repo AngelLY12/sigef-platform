@@ -1,0 +1,12 @@
+<div class="selector-list">
+  <app-spinner [loading]="loading === 'loading'" size="lg"></app-spinner>
+  <app-selector-row
+    *ngFor="let l of selectorList"
+    [label]="l.label"
+    [value]="l.value"
+    [state]="state"
+    [assigned]="assigned"
+    [isBulkOperation]="isBulkOperation"
+    (stateChange)="stateChange.emit($event)"
+  ></app-selector-row>
+</div>

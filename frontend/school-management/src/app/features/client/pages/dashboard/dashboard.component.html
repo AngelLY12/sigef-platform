@@ -1,0 +1,78 @@
+<app-page-layout
+  title="Dashboard"
+  welcomeMessage="Bienvenido de nuevo"
+  loadingMessage="Cargando resumen..."
+  icon="dashboard"
+  [state]="state"
+>
+  <div class="kpi-grid">
+    <app-kpi-card
+      icon="pending_actions"
+      iconType="alerts"
+      label="Pendientes"
+      [value]="pendingSummary?.totalAmount | currencyMXN"
+      [subtext]="(pendingSummary?.totalCount ?? '0') + ' pagos'"
+    />
+
+    <app-kpi-card
+      icon="payments"
+      iconType="growth"
+      label="Pagado"
+      [value]="paidSummary?.totalPayments | currencyMXN"
+      subtext="Total acumulado"
+    />
+
+    <app-kpi-card
+      icon="warning"
+      iconType="inactive"
+      label="Vencidos"
+      [value]="overdueSummary?.totalAmount | currencyMXN"
+      [subtext]="overdueSummary?.totalCount + ' pagos'"
+    />
+  </div>
+
+  <app-section-divider title="Resumen financiero" />
+
+  <div class="charts-grid">
+    <app-chart-card
+      title="Pagos por mes"
+      type="bar"
+      [data]="paymentsChartData"
+      [options]="barChartOptions"
+    />
+
+    <app-chart-card
+      title="Distribución de pagos"
+      type="doughnut"
+      [data]="distributionChartData"
+      [options]="pieChartOptions"
+    />
+  </div>
+
+  <app-section-divider title="Historial reciente" />
+
+  <app-table
+    [columns]="historyColumns"
+    [data]="paymentHistory?.data?.items || []"
+    noDataMessage="No hay historial disponible"
+  />
+
+  <app-record-list
+    *ngIf="paymentHistory?.data?.items"
+    [items]="paymentHistory?.data?.items || []"
+    [itemTemplate]="historyItemTemplate"
+    trackByKey="id"
+  />
+
+  <ng-template #historyItemTemplate let-item>
+    <div class="record-item">
+      <div>
+        <strong>{{ item.concept }}</strong>
+        <p>{{ item.date }}</p>
+      </div>
+      <div>
+        <span>{{ item.amount }}</span>
+      </div>
+    </div>
+  </ng-template>
+</app-page-layout>

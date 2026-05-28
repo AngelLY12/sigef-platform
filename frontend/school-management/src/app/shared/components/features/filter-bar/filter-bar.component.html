@@ -1,0 +1,28 @@
+<div class="filter-bar">
+  <div class="filter-bar-header">
+    <h4 class="filter-bar-title">{{ filtersTitle }}</h4>
+
+    <div class="filter-bar-actions">
+      <app-button
+      variant="ghost"
+      size="sm"
+      [iconLeft]=" collapsed ? 'visibility' : 'visibility_off' "
+      [iconOnly]="true"
+      (click)="toggle()">
+      </app-button>
+
+      <app-button
+        variant="ghost"
+        size="sm"
+        iconLeft="refresh"
+        [iconOnly]="true"
+       *ngIf="showActions" (click)="onReset()">
+        Limpiar
+      </app-button>
+    </div>
+  </div>
+
+  <div class="filter-bar-content" [class.collapsed]="collapsed">
+    <ng-content></ng-content>
+  </div>
+</div>

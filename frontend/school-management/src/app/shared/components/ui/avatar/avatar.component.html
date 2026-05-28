@@ -1,0 +1,93 @@
+<app-dropdown
+  #menu
+  position="top"
+>
+  <div dropdown-trigger class="avatar-container">
+
+    <div class="user" *ngIf="!collapsed">
+
+      <div class="avatar">
+        <ng-container *ngIf="userAvatar; else initials">
+          <img [src]="userAvatar" [alt]="userName" />
+        </ng-container>
+
+        <ng-template #initials>
+          {{ userName ? userName.charAt(0) : "?" }}
+        </ng-template>
+      </div>
+
+      <div class="user-info" *ngIf="showUserInfo">
+        <div class="name">
+          {{ userName || "Usuario" }}
+        </div>
+
+        <div class="role">
+          {{ onDisplayRole() }}
+        </div>
+      </div>
+
+      <span class="material-icons arrow">
+        expand_more
+      </span>
+
+    </div>
+
+    <div
+      class="avatar-collapsed"
+      *ngIf="collapsed"
+      [attr.data-tooltip]="userName"
+    >
+      {{ userName ? userName.charAt(0) : "?" }}
+    </div>
+
+  </div>
+
+  <div dropdown-content class="user-menu">
+
+    <app-menu-item
+      icon="person"
+      (itemClick)="onProfileClick(menu)"
+    >
+      Mi perfil
+    </app-menu-item>
+
+    <app-menu-item
+      *ngIf="showRoleSelector"
+      icon="swap_horiz"
+      (itemClick)="onChangeRole(menu)"
+    >
+      Cambiar rol
+    </app-menu-item>
+
+    <div class="menu-item theme-item">
+      <app-theme-button
+        [isInMenu]="true"
+        [iconOnly]="false"
+        textButton="Cambiar tema"
+      >
+        Cambiar tema
+      </app-theme-button>
+    </div>
+
+    <div class="divider"></div>
+
+    <app-menu-item
+      icon="logout"
+      (itemClick)="logout()"
+    >
+      <ng-container *ngIf="!isLoading; else spinnerTemplate">
+        Cerrar sesión
+      </ng-container>
+
+      <ng-template #spinnerTemplate>
+        <app-spinner
+          [loading]="true"
+          size="sm"
+        >
+        </app-spinner>
+      </ng-template>
+
+    </app-menu-item>
+
+  </div>
+</app-dropdown>

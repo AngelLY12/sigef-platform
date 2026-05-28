@@ -1,0 +1,82 @@
+<div class="table-container">
+  <table *ngIf="data.length > 0" class="table">
+    <thead>
+      <tr>
+        <th *ngFor="let col of columns">
+          {{ col.label }}
+        </th>
+        <th *ngIf="actionsTemplate"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let row of data">
+        <td *ngFor="let col of columns" [ngClass]="col.class">
+          <ng-container *ngIf="col.format; else defaultCell">
+            {{ col.format(getValue(row, col.key), row) }}
+          </ng-container>
+
+          <ng-template #defaultCell>
+            <span
+              *ngIf="col.type === 'badge'"
+              class="badge"
+              [ngClass]="resolveBadgeType(col, row)"
+            >
+              {{ getValue(row, col.key) }}
+            </span>
+
+            <span *ngIf="col.type !== 'badge'">
+              {{ getValue(row, col.key) }}
+            </span>
+          </ng-template>
+        </td>
+
+        <td *ngIf="actionsTemplate">
+          <ng-container
+            *ngTemplateOutlet="actionsTemplate; context: { $implicit: row }"
+          >
+          </ng-container>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="data.length === 0">
+    {{ noDataMessage }}
+  </div>
+</div>
+
+<!-- MOBILE -->
+<div class="mobile-list" *ngIf="data.length > 0">
+  <div class="mobile-card" *ngFor="let row of data">
+    <div class="mobile-card-row" *ngFor="let col of columns">
+      <span class="mobile-card-label">{{ col.label }}</span>
+
+      <span class="mobile-card-value">
+        <ng-container *ngIf="col.format; else mobileDefault">
+          {{ col.format(getValue(row, col.key), row) }}
+        </ng-container>
+
+        <ng-template #mobileDefault>
+          <span
+            *ngIf="col.type === 'badge'"
+            class="badge"
+            [ngClass]="resolveBadgeType(col, row)"
+          >
+            {{ getValue(row, col.key) }}
+          </span>
+
+          <span *ngIf="col.type !== 'badge'">
+            {{ getValue(row, col.key) }}
+          </span>
+        </ng-template>
+      </span>
+    </div>
+    <div class="mobile-card-actions" *ngIf="actionsTemplate">
+      <ng-container
+        *ngTemplateOutlet="actionsTemplate; context: { $implicit: row }"
+      >
+      </ng-container>
+    </div>
+  </div>
+</div>

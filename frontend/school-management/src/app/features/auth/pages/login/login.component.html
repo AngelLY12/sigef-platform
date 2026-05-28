@@ -1,0 +1,43 @@
+<app-auth-layout
+  title="SIGEF"
+  subtitle="Ingresa tus credenciales para continuar"
+  footerMessage="¿No estas registrado?"
+  [footerLink]="navHelper.register"
+  footerAnchorMessage="Registrate"
+>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" autocomplete="on"
+  method="post">
+
+    <app-input
+      label="Email"
+      name="email"
+      type="email"
+      placeholder="correo@ejemplo.com"
+      iconRight="mail"
+      formControlName="email"
+      autocomplete="email"
+      >
+    </app-input>
+
+    <app-password-input
+        label="Password"
+        placeholder="••••••••"
+        [showStrength]="false"
+        [control]="passwordControl"
+        autocomplete="current-password"
+        >
+      </app-password-input>
+
+    <app-button
+      iconLeft="login"
+      [fullWidth]="true"
+      type="submit"
+      [loading]="loading"
+      [disabled]="!form.valid || loading">
+      Ingresar
+    </app-button>
+
+  </form>
+
+</app-auth-layout>

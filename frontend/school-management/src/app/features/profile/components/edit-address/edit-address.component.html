@@ -1,0 +1,21 @@
+<app-address [control]="form"></app-address>
+
+<div class="actions">
+  <app-button
+    variant="primary"
+    [fullWidth]="true"
+    (click)="submit()"
+    [loading]="updateState === 'loading'"
+    [disabled]="updateState === 'loading'"
+    >
+    Guardar
+  </app-button>
+  <app-button
+    class="cancel-button"
+    variant="ghost"
+    [fullWidth]="true"
+    [disabled]="updateState === 'loading'"
+    (click)="onCloseModal()">
+    Cancelar
+  </app-button>
+</div>

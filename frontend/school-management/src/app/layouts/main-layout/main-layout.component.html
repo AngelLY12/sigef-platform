@@ -1,0 +1,27 @@
+<div class="main-layout">
+
+  <app-sidebar
+    [menuItems]="menuItems"
+    [role]="userRole"
+    [userName]="userName"
+    [userAvatar]="userAvatar"
+    [collapsed]="collapsed"
+    (collapsedChange)="onCollapsedChange($event)"
+    [showRoleSelector]="shouldShowRoleSelector()"
+    (changeRole)="openRoleSelector()"
+
+  ></app-sidebar>
+
+  <main class="main-content" [class.sidebar-collapsed] ="collapsed">
+    <router-outlet></router-outlet>
+  </main>
+
+</div>
+
+<app-role-selector
+  [show]="showRoleSelector"
+  [roles]="userRoles"
+  [userName]="userName"
+  (roleSelected)="onRoleSelected($event)"
+  (close)="onSelectorClose()">
+</app-role-selector>

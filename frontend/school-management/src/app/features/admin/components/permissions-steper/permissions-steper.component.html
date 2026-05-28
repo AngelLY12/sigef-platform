@@ -1,0 +1,45 @@
+<app-stepper
+  [steps]="stepsByMode"
+  [currentStep]="currentStep"
+  [canProceed]="canProceed()"
+  [loading]="loading === 'loading'"
+  (nextStep)="nextStep()"
+  (prevStep)="prevStep()"
+  (completed)="complete()"
+>
+
+  <div *ngIf="currentStep === 0" class="step-section">
+    <app-radio-group
+      label="¿Cómo quieres obtener los permisos?"
+      [(ngModel)]="mode"
+      [options]="radioOptions"
+    ></app-radio-group>
+  </div>
+
+  <div *ngIf="currentStep === 1 && mode === 'role'" class="step-section">
+    <h3 class="step-title">Configuración</h3>
+
+    <app-select
+      label="Selecciona un role"
+      placeholder="Elige un role"
+      iconRight="expand_more"
+      [options]="rolesOptions"
+      [(ngModel)]="selectedRole"
+    ></app-select>
+  </div>
+
+  <div
+    *ngIf="currentStep === 2 || (mode === 'curps' && currentStep === 1)"
+    class="step-section"
+  >
+    <h3 class="step-title">Permisos</h3>
+    <app-group-state-selector-list
+      [loading]="loading"
+      [selectorList]="permissionsGroups"
+      [state]="permissionsState"
+      (stateChange)="onStateChange($event)"
+    ></app-group-state-selector-list>
+
+  </div>
+
+</app-stepper>

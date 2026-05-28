@@ -1,0 +1,15 @@
+<app-public-layout
+      title="Acceso denegado"
+      message="No tienes permisos suficientes para acceder a esta sección. Si crees que esto es un error, contacta al administrador del sistema."
+      [showErrorCode]="true"
+      errorCodeLeft="4"
+      errorCodeRight="3"
+      [primaryButton]="{
+        text: 'Cerrar sesión',
+        icon: 'logout',
+        variant: 'primary',
+        action: 'logout',
+      }"
+      illustrationType="unauthorized"
+      errorCode="403">
+</app-public-layout>

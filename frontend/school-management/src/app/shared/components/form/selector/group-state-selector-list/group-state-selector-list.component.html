@@ -1,0 +1,53 @@
+<div class="selector-list">
+  <app-spinner [loading]="loading === 'loading'" size="lg"></app-spinner>
+  <div *ngFor="let group of selectorList" class="group">
+    <div class="group-header">
+      <div class="group-title" (click)="toggleGroup(group.group)">
+        <span
+          class="material-icons icon"
+          [class.collapsed]="isCollapsed(group.group)"
+        >
+          expand_more
+        </span>
+        {{ group.group }} ({{ getActiveCount(group) }}/{{ group.items.length }})
+      </div>
+
+      <div class="group-actions" (click)="$event.stopPropagation()">
+        <app-button
+          variant="ghost"
+          size="sm"
+          (click)="toggleGroupAction(group, 'add')"
+        >
+          {{
+            getGroupStateCount(group, "add") === group.items.length
+              ? "Quitar selección"
+              : "Agregar todo"
+          }}
+        </app-button>
+        <app-button
+          variant="ghost"
+          size="sm"
+          (click)="toggleGroupAction(group, 'remove')"
+        >
+          {{
+            getGroupStateCount(group, "remove") === group.items.length
+              ? "Quitar selección"
+              : "Remover todo"
+          }}
+        </app-button>
+      </div>
+    </div>
+
+    <div class="group-content" [class.collapsed]="isCollapsed(group.group)">
+      <app-selector-row
+        *ngFor="let l of group.items"
+        [label]="l.label"
+        [value]="l.value"
+        [state]="state"
+        [assigned]="assigned"
+        [isBulkOperation]="isBulkOperation"
+        (stateChange)="stateChange.emit($event)"
+      ></app-selector-row>
+    </div>
+  </div>
+</div>

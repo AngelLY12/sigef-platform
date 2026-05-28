@@ -1,0 +1,186 @@
+.concepts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+
+.concept-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.concept-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.concept-amount {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--card-text-primary);
+  letter-spacing: -0.02em;
+}
+
+.status-badge {
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-badge.activo {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+
+.status-badge.desactivado {
+  background: var(--color-info-bg);
+  color: var(--color-info);
+}
+
+.status-badge.finalizado {
+  background: var(--color-warning-bg);
+  color: var(--color-warning);
+}
+
+.status-badge.eliminado {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
+.concept-description {
+  font-size: 0.9rem;
+  color: var(--card-text-secondary);
+  line-height: 1.4;
+}
+
+.concept-details {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+
+  gap: 0.75rem;
+
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-top: 1px solid var(--color-border);
+
+  width: 100%;
+  min-width: 0;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.detail-item .label {
+  font-size: 0.7rem;
+  color: var(--card-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.detail-item .value {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--card-text-primary);
+}
+
+.floating-button {
+  position: fixed;
+  right: 2.5rem;
+  bottom: 2.5rem;
+  z-index: 1000;
+}
+
+.no-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 240px;
+  color: var(--card-text-secondary);
+  text-align: center;
+  gap: 0.75rem;
+}
+
+.no-data span {
+  font-size: 2rem;
+  opacity: 0.7;
+}
+
+.no-data p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 1024px) {
+  .concepts-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  .concept-amount {
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .concepts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .concept-header {
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .concept-amount {
+    font-size: 1.3rem;
+  }
+
+  .status-badge {
+    font-size: .62rem;
+  }
+
+  .concept-details {
+    grid-template-columns: 1fr;
+  }
+
+  .concepts-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 480px) {
+  .concept-amount {
+    font-size: 1.2rem;
+  }
+
+  .concept-description {
+    font-size: 0.85rem;
+  }
+
+  .detail-item .value {
+    font-size: 0.8rem;
+  }
+}
+
+@media (min-width: 1440px) {
+  .concepts-grid {
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .concept-amount {
+    font-size: 1.8rem;
+  }
+}

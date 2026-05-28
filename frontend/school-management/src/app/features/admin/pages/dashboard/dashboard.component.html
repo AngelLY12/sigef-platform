@@ -1,0 +1,305 @@
+<app-page-layout
+title="Panel de administración"
+welcomeMessage="Bienvenido de nuevo"
+loadingMessage="Cargando resumen..."
+icon="dashboard"
+[showAlertBadge]="hasAlerts"
+[state]="state"
+(retry)="loadSummary()"
+[alertCount]="getTotalAlerts()"
+
+>
+
+<div *ngIf="summary && state !='loading'" class="dashboard-content">
+
+    <app-section-divider>Visión General</app-section-divider>
+
+    <div class="kpi-grid">
+      <app-kpi-card
+        icon="people"
+        iconType="total"
+        label="Total Usuarios"
+        [value]="summary.populationSummary.total_users"
+        [trend]="{ icon: 'arrow_upward', text: '+' + summary.recentActivity.new_users_today + ' hoy' }">
+      </app-kpi-card>
+
+      <app-kpi-card
+        icon="check_circle"
+        iconType="active"
+        label="Usuarios Activos"
+        [value]="summary.populationSummary.active_users"
+        [percentage]="getPercentage(summary.populationSummary.active_users, summary.populationSummary.total_users)">
+      </app-kpi-card>
+
+      <app-kpi-card
+        icon="school"
+        iconType="students"
+        label="Estudiantes"
+        [value]="summary.academicSummary.students_total"
+        [subtext]="summary.academicSummary.students_with_career + ' con carrera'">
+      </app-kpi-card>
+
+      <app-kpi-card
+        icon="warning"
+        iconType="alerts"
+        label="Alertas"
+        [value]="getTotalAlerts()"
+        subtext="Requieren atención"
+        [class.has-alerts]="hasAlerts">
+      </app-kpi-card>
+    </div>
+
+    <app-section-divider>Distribución de Usuarios</app-section-divider>
+
+    <div class="charts-grid">
+      <app-chart-card
+        title="Distribución de Usuarios"
+        [data]="userDistributionChartData"
+        [options]="userDistributionChartOptions"
+        type="doughnut">
+
+        <div footer class="chart-footer">
+          <div class="legend-item">
+            <span class="dot active"></span>
+            <span>Activos ({{ summary.populationSummary.active_users }})</span>
+          </div>
+          <div class="legend-item">
+            <span class="dot inactive"></span>
+            <span>Inactivos ({{ totalInactiveUsers }})</span>
+          </div>
+          <div class="legend-item">
+            <span class="dot danger"></span>
+            <span>Eliminados ({{ totalDeleteUsers }})</span>
+          </div>
+        </div>
+      </app-chart-card>
+
+      <app-chart-card
+        title="Crecimiento de Usuarios"
+        [data]="activityChartData"
+        [options]="activityChartOptions"
+        type="line"
+        size="line-chart"
+        [fullWidth]="true">
+      </app-chart-card>
+
+      <app-chart-card
+        title="Usuarios por Rol"
+        [data]="roleChartData"
+        [options]="userDistributionChartOptions"
+        type="doughnut"
+        size="small">
+
+        <div footer class="role-stats">
+          <div class="role-stat-item">
+            <span class="role-name">Admin</span>
+            <span class="role-value">{{ summary.usersByRoleSummary.admin }}</span>
+          </div>
+          <div class="role-stat-item">
+            <span class="role-name">Aspirante</span>
+            <span class="role-value">{{ summary.usersByRoleSummary.applicant }}</span>
+          </div>
+          <div class="role-stat-item">
+            <span class="role-name">Personal financiero</span>
+            <span class="role-value">{{ summary.usersByRoleSummary['financial-staff'] }}</span>
+          </div>
+          <div class="role-stat-item">
+            <span class="role-name">Padres</span>
+            <span class="role-value">{{ summary.usersByRoleSummary.parent }}</span>
+          </div>
+          <div class="role-stat-item">
+            <span class="role-name">Estudiantes</span>
+            <span class="role-value">{{ summary.usersByRoleSummary.student }}</span>
+          </div>
+          <div class="role-stat-item">
+            <span class="role-name">Supervisor</span>
+            <span class="role-value">{{ summary.usersByRoleSummary.supervisor }}</span>
+          </div>
+          <div class="role-stat-item">
+            <span class="role-name">Sin verificar</span>
+            <span class="role-value">{{ summary.usersByRoleSummary.unverified }}</span>
+          </div>
+        </div>
+      </app-chart-card>
+      <app-chart-card
+        title="Información Académica"
+        [data]="academicChartData"
+        [options]="userDistributionChartOptions"
+        type="doughnut"
+      >
+      </app-chart-card>
+    </div>
+    <app-section-divider>Información Detallada</app-section-divider>
+
+    <div class="info-grid">
+      <app-info-card
+        icon="menu_book"
+        title="Situación Académica"
+        type="academic">
+
+        <app-progress-list [items]="academicProgressItems"></app-progress-list>
+      </app-info-card>
+
+      <app-info-card
+        icon="warning"
+        title="Alertas del Sistema"
+        type="alerts">
+
+        <app-alerts-list [alerts]="alertItems"></app-alerts-list>
+      </app-info-card>
+
+      <app-info-card
+        icon="pie_chart"
+        title="Estado de Cuentas"
+        type="demographics">
+
+        <app-demographics-grid [items]="demographicItems"></app-demographics-grid>
+      </app-info-card>
+    </div>
+
+    <app-section-divider>Detalles por Categoría</app-section-divider>
+
+    <div class="individual-cards-grid">
+      <app-kpi-card
+        *ngIf="summary.usersByRoleSummary.admin > 0"
+        icon="admin_panel_settings"
+        iconType="roles"
+        label="Administradores"
+        [value]="summary.usersByRoleSummary.admin"
+        size="small">
+      </app-kpi-card>
+
+      <app-kpi-card
+        *ngIf="summary.usersByRoleSummary.student > 0"
+        icon="school"
+        iconType="roles"
+        label="Estudiantes"
+        [value]="summary.usersByRoleSummary.student"
+        size="small">
+      </app-kpi-card>
+
+      <app-kpi-card
+        *ngIf="summary.usersByRoleSummary.applicant > 0"
+        icon="assignment"
+        iconType="roles"
+        label="Aspirantes"
+        [value]="summary.usersByRoleSummary.applicant"
+        size="small">
+      </app-kpi-card>
+
+      <app-kpi-card
+        *ngIf="summary.usersByRoleSummary['financial-staff'] > 0"
+        icon="account_balance"
+        iconType="roles"
+        label="Personal Financiero"
+        [value]="summary.usersByRoleSummary['financial-staff']"
+        size="small">
+      </app-kpi-card>
+
+      <app-kpi-card
+        *ngIf="summary.usersByRoleSummary.parent > 0"
+        icon="family_history"
+        iconType="roles"
+        label="Padres"
+        [value]="summary.usersByRoleSummary.parent"
+        size="small">
+      </app-kpi-card>
+
+      <app-kpi-card
+        *ngIf="summary.usersByRoleSummary.supervisor > 0"
+        icon="supervisor_account"
+        iconType="roles"
+        label="Supervisores"
+        [value]="summary.usersByRoleSummary.supervisor"
+        size="small">
+      </app-kpi-card>
+
+      <app-kpi-card
+        *ngIf="summary.usersByRoleSummary.unverified > 0"
+        icon="verified"
+        iconType="roles"
+        label="Sin Verificar"
+        [value]="summary.usersByRoleSummary.unverified"
+        size="small">
+      </app-kpi-card>
+    </div>
+
+    <div class="individual-cards-grid" *ngIf="summary.academicSummary.students_total > 0">
+      <app-kpi-card
+        *ngIf="summary.academicSummary.students_without_career > 0"
+        icon="warning"
+        iconType="alerts"
+        label="Sin carrera"
+        [value]="summary.academicSummary.students_without_career"
+        size="small"
+        subtext="estudiantes">
+      </app-kpi-card>
+
+      <app-kpi-card
+        *ngIf="summary.academicSummary.students_without_semester > 0"
+        icon="error"
+        iconType="alerts"
+        label="Sin semestre"
+        [value]="summary.academicSummary.students_without_semester"
+        size="small"
+        subtext="estudiantes">
+      </app-kpi-card>
+
+      <app-kpi-card
+        *ngIf="summary.academicSummary.students_without_group > 0"
+        icon="group_off"
+        iconType="alerts"
+        label="Sin grupo"
+        [value]="summary.academicSummary.students_without_group"
+        size="small"
+        subtext="estudiantes">
+      </app-kpi-card>
+    </div>
+
+    <div class="secondary-kpi-grid">
+      <app-kpi-card
+        icon="pause_circle"
+        iconType="inactive"
+        label="Usuarios Inactivos"
+        [value]="summary.populationSummary.inactive_users"
+        size="small">
+
+        <div extra-content class="kpi-breakdown">
+          <span class="badge warning">Temp: {{ summary.populationSummary.temporal_inactive_users }}</span>
+        </div>
+      </app-kpi-card>
+
+      <app-kpi-card
+        icon="trending_up"
+        iconType="growth"
+        label="Nuevos Usuarios"
+        [value]="summary.recentActivity.new_users_today"
+        size="small">
+       <div extra-content class="kpi-breakdown">
+          <span class="badge warning">Mes: {{ summary.recentActivity.new_users_this_month }}</span>
+       </div>
+      </app-kpi-card>
+
+      <app-kpi-card
+        icon="assignment"
+        iconType="academic"
+        label="Situación Académica"
+        value=""
+        size="small">
+
+        <div extra-content class="academic-mini-stats">
+          <div class="stat-row">
+            <span>Sin grupo:</span>
+            <span class="value warning">{{ summary.academicSummary.students_without_group }}</span>
+          </div>
+          <div class="stat-row">
+            <span>Sin semestre:</span>
+            <span class="value warning">{{ summary.academicSummary.students_without_semester }}</span>
+          </div>
+        </div>
+      </app-kpi-card>
+    </div>
+  </div>
+
+</app-page-layout>
+

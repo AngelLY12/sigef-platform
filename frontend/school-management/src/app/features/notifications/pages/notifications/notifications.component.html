@@ -1,0 +1,66 @@
+<app-page-layout
+  title="Notificaciones"
+  welcomeMessage="Aquí verás todas las actualizaciones del sistema"
+  loadingMessage="Cargando notificaciones..."
+  [state]="notificationsState"
+  icon="notifications"
+  (retry)="loadAllNotifications()"
+>
+
+  <div *ngIf="notificationsState === 'success' && paginatedNotifications">
+
+    <app-record-list
+      [items]="paginatedNotifications.data.items"
+      [itemTemplate]="notificationTemplate"
+      [imageTemplate]="iconTemplate"
+      [trackByKey]="'id'"
+    >
+    </app-record-list>
+
+    <app-paginator
+      *ngIf="paginatedNotifications.data.total > 0"
+      [paginator]="paginatedNotifications"
+      (pageChange)="onPageChange($event)"
+      (perPageChange)="onPageSizeChange($event)"
+    ></app-paginator>
+
+  </div>
+
+</app-page-layout>
+
+<ng-template #notificationTemplate let-notification>
+  <div class="notification-item">
+
+    <div class="notification-top">
+      <span class="notification-title">
+        {{ notification.data?.title }}
+      </span>
+
+      <span
+        class="badge"
+        [ngClass]="notification.data?.type || 'default'"
+      >
+        {{ notification.data?.type }}
+      </span>
+    </div>
+
+    <div class="notification-message">
+      {{ notification.data?.message }}
+    </div>
+
+    <div class="notification-meta">
+      <span>{{ notification.created_at | date:'short' }}</span>
+
+      <span *ngIf="!notification.read_at" class="unread-dot"></span>
+    </div>
+
+  </div>
+</ng-template>
+
+<ng-template #iconTemplate let-notification>
+  <div class="notification-icon">
+    <span class="material-icons">
+      {{ getNotificationIcon(notification.data?.type) }}
+    </span>
+  </div>
+</ng-template>

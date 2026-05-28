@@ -1,0 +1,147 @@
+<app-page-layout
+  [title]="userName || 'Detalles del Usuario'"
+  welcomeMessage="Administra los detalles del usuario"
+  loadingMessage="Cargando usuario..."
+  icon="chevron_left"
+  (iconAction)="onUsersNavigation()"
+  [iconClickeable]="true"
+  [state]="state"
+  (retry)="loadUserDetails(userId!)"
+>
+  <div
+    class="user-container"
+    [class.edit-mode]="updateMode"
+    *ngIf="state === 'success' && userDetails"
+  >
+    <div class="bar">
+      <app-button
+        [iconLeft]="updateMode ? 'close' : 'edit'"
+        variant="ghost"
+        (click)="onUpdateState()"
+      >
+        {{ updateMode ? "Cancelar" : "Editar" }}
+      </app-button>
+    </div>
+
+    <div class="user-details">
+      <app-info-card
+        *ngIf="!updateMode"
+        icon="account_circle"
+        title="Información del Usuario"
+      >
+        <app-info-card-item
+          *ngFor="let item of basicInfoItems"
+          [icon]="item.icon"
+          [label]="item.label"
+          [value]="item.value"
+        >
+        </app-info-card-item>
+      </app-info-card>
+
+      <app-info-card
+        *ngIf="!updateMode"
+        icon="home"
+        title="Dirección del Usuario"
+      >
+        <app-expandable-section [maxHeight]="200">
+          <app-info-card-item
+            *ngFor="let item of addressInfoItems"
+            [icon]="item.icon"
+            [label]="item.label"
+            [value]="item.value"
+          >
+          </app-info-card-item>
+        </app-expandable-section>
+      </app-info-card>
+
+      <app-info-card
+        class="editable-card"
+        icon="badge"
+        title="Roles del Usuario"
+        [actionConfig]="
+          updateMode
+            ? {
+                singleButton: {
+                  label: 'Editar',
+                  icon: 'edit',
+                },
+              }
+            : undefined
+        "
+        (action)="onUpdateRoles()"
+      >
+        <app-info-card-item
+          *ngFor="let item of rolesItems"
+          [icon]="item.icon"
+          [label]="item.label"
+          [value]="item.value"
+        >
+        </app-info-card-item>
+      </app-info-card>
+
+      <app-info-card
+        class="editable-card"
+        icon="security"
+        title="Permisos del usuario"
+        [actionConfig]="
+          updateMode
+            ? {
+                singleButton: {
+                  label: 'Editar',
+                  icon: 'edit',
+                  loading: permissionsState === 'loading',
+                  disabled: permissionsState === 'loading',
+                },
+              }
+            : undefined
+        "
+        (action)="onUpdatePermissions()"
+      >
+        <app-expandable-section [maxHeight]="200">
+          <app-info-card-item
+            *ngFor="let item of permissionsItems"
+            [icon]="item.icon"
+            [label]="item.label"
+            [value]="item.value"
+          >
+          </app-info-card-item>
+
+          <span class="no-info" *ngIf="permissionsItems!.length === 0">
+            No hay permisos asignados
+          </span>
+        </app-expandable-section>
+      </app-info-card>
+
+      <app-info-card
+        class="editable-card"
+        icon="history"
+        title="Información académica"
+        [actionConfig]="
+          updateMode
+            ? {
+                singleButton: {
+                  label: 'Editar',
+                  icon: 'edit',
+                  loading: studentDetailsState === 'loading',
+                  disabled: studentDetailsState === 'loading',
+                },
+              }
+            : undefined
+        "
+        (action)="onManageStudentDetails()"
+      >
+        <app-info-card-item
+          *ngFor="let item of studentDetailItems"
+          [icon]="item.icon"
+          [label]="item.label"
+          [value]="item.value"
+        >
+        </app-info-card-item>
+
+        <span class="no-info" *ngIf="studentDetailItems!.length === 0">
+          No hay información académica disponible
+        </span>
+      </app-info-card>
+    </div>
+  </div>
+</app-page-layout>

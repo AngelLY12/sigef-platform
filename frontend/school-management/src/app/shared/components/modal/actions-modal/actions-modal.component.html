@@ -1,0 +1,123 @@
+<app-base-modal
+  *ngIf="isVisible"
+  (backdrop)="actionState !== 'loading' && close()"
+  [loading]="actionState === 'loading'"
+  loadingMessage="Guardando cambios..."
+>
+  <div modal-header>
+    <div class="title-container">
+      <h2>{{ config.title }}</h2>
+      <app-button
+        *ngIf="isMobile"
+        [iconOnly]="true"
+        iconLeft="close"
+        [disabled]="actionState === 'loading'"
+        variant="ghost"
+        (click)="close()"
+      ></app-button>
+    </div>
+
+    <p *ngIf="config.description">
+      {{ config.description }}
+    </p>
+
+    <p *ngIf="config.entityName">
+      Se aplicará a {{ models.length }} {{ config.entityName }}
+    </p>
+  </div>
+
+  <div modal-body class="modal-body-grid">
+    <div
+      *ngFor="let field of config.fields"
+      [class.full-width]="field.fullWidth"
+    >
+      <ng-container *ngIf="field.type === 'input'">
+        <app-input
+          [label]="field.label"
+          [type]="field.inputType!"
+          [autocomplete]="field.inputType"
+          [disabled]="field.inputDisabled ?? false"
+          [placeholder]="field.placeHolder!"
+          [(ngModel)]="formData[field.name]"
+        ></app-input>
+      </ng-container>
+
+      <ng-container *ngIf="field.type === 'select'">
+        <app-select
+          [label]="field.label"
+          [disabled]="field.inputDisabled ?? false"
+          [options]="field.options || []"
+          [(ngModel)]="formData[field.name]"
+        ></app-select>
+      </ng-container>
+
+      <ng-container *ngIf="field.type === 'checkbox'">
+        <app-checkbox
+          [(ngModel)]="formData[field.name]"
+          [label]="field.label"
+          [disabled]="field.inputDisabled ?? false"
+        ></app-checkbox>
+      </ng-container>
+
+      <ng-container *ngIf="field.type === 'multiselect'">
+        <label class="field-label">{{ field.label }}</label>
+
+        <div class="checkbox-group">
+          <app-checkbox
+            *ngFor="let opt of field.options"
+            [label]="opt.label"
+            [disabled]="field.inputDisabled ?? false"
+            [ngModel]="isChecked(field.name, opt.value)"
+            (ngModelChange)="onCheckboxChange(field.name, opt.value, $event)"
+          ></app-checkbox>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="field.type === 'state-selector'">
+        <label class="field-label">{{ field.label }}</label>
+
+        <app-state-selector-list
+          [selectorList]="field.options || []"
+          [loading]="actionState"
+          [state]="formData[field.name]"
+          [assigned]="toSet(field.assigned)"
+          [isBulkOperation]="field.isBulkOperation ?? false"
+          (stateChange)="onStateSelectorChange(field.name, $event)"
+        ></app-state-selector-list>
+      </ng-container>
+      <ng-container *ngIf="field.type === 'group-state-selector'">
+        <label class="field-label">{{ field.label }}</label>
+
+        <app-group-state-selector-list
+          [selectorList]="field.groupOptions || []"
+          [state]="formData[field.name]"
+          [loading]="actionState"
+          [assigned]="toSet(field.assigned)"
+          [isBulkOperation]="field.isBulkOperation ?? false"
+          (stateChange)="onStateSelectorChange(field.name, $event)"
+        ></app-group-state-selector-list>
+      </ng-container>
+    </div>
+  </div>
+
+  <div modal-actions class="actions">
+    <app-button
+      *ngIf="!isMobile"
+      [disabled]="actionState === 'loading'"
+      variant="outline"
+      [fullWidth]="true"
+      (click)="close()"
+    >
+      Cancelar
+    </app-button>
+
+    <app-button
+      [disabled]="actionState === 'loading'"
+      [loading]="actionState === 'loading'"
+      (click)="submit()"
+      [fullWidth]="true"
+    >
+      {{ config.submitLabel || "Guardar" }}
+    </app-button>
+  </div>
+</app-base-modal>

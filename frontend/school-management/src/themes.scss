@@ -1,0 +1,143 @@
+$light-theme: (
+  color-error: #b00020,
+  color-error-bg: #ffe5e5,
+  color-error-border: #ffb3b3,
+
+  color-success: #1b5e20,
+  color-success-bg: #e5ffe5,
+  color-success-border: #b2dfdb,
+
+  color-info: #1976d2,
+  color-info-bg: #e3f2fd,
+  color-info-border: #bbdefb,
+  color-info-hover: #1565c0,
+
+  color-background: #EAF9E7,
+  color-surface: #FFFFFF,
+  color-primary: #3F9663,
+  color-primary-hover: #357F55,
+  color-secondary: #C0E6BA,
+
+  color-text: #013237,
+  color-text-light: #2E4F4F,
+  color-border: #D6EFD2,
+  color-border-focus: #3f51b5,
+
+  color-danger: #c62828,
+  color-danger-hover: rgba(198, 40, 40, 0.9),
+  color-outline-bg-hover: rgba(63, 150, 99, 0.1),
+  color-white: #FFFFFF,
+
+  color-warning-bg: #fde3b5,
+  color-warning: #c58b28,
+  color-warning-hover: #FFB300,
+  color-outline-warning-hover: rgba(255, 160, 0, 0.1),
+
+  card-bg-primary: #FFFFFF,
+  card-bg-secondary: #F8FAF9,
+  card-bg-tertiary: #F0F5F2,
+
+  card-header-bg: #FFFFFF,
+  card-header-border: #E2F0E8,
+  card-header-icon-bg: #E8F3EE,
+  card-header-icon-color: #3F9663,
+
+  card-stat-bg: #F3F9F6,
+  card-stat-value: #2C4A3E,
+  card-stat-label: #5F7D70,
+
+  card-accent-primary: #3F9663,
+  card-accent-success: #1B5E20,
+  card-accent-warning: #C58B28,
+  card-accent-danger: #C62828,
+
+  card-hover-shadow: rgba(63, 150, 99, 0.15),
+  card-hover-border: #3F9663,
+
+  card-border-light: #E8F0EC,
+  card-border-default: #D6EFD2,
+
+  card-text-primary: #013237,
+  card-text-secondary: #2E4F4F,
+  card-text-tertiary: #5F7D70,
+
+  card-alert-warning-bg: #FFF4E5,
+  card-alert-success-bg: #E8F5E9,
+  card-alert-error-bg: #FFEBEE,
+
+  table-row-hover: #F0F5F2,
+
+
+
+);
+
+$dark-theme: (
+  color-error: #ff6b6b,
+  color-error-bg: #3b0000,
+  color-error-border: #ff4c4c,
+
+  color-success: #76ff03,
+  color-success-bg: #1b3a1b,
+  color-success-border: #4caf50,
+
+  color-info: #64b5f6,
+  color-info-bg: #1e3a5f,
+  color-info-border: #2c4b7a,
+  color-info-hover: #42a5f5,
+
+  color-background: #121212,
+  color-surface: #1E1E1E,
+  color-primary: #4caf50,
+  color-primary-hover: #357F55,
+  color-secondary: #2e7d32,
+
+  color-text: #E0E0E0,
+  color-text-light: #B0B0B0,
+  color-border: #333,
+  color-border-focus: #8997f4,
+
+
+  color-danger: #ff5252,
+  color-danger-hover: rgba(255, 82, 82, 0.9),
+  color-outline-bg-hover: rgba(76, 175, 80, 0.1),
+  color-white: #FFFFFF,
+
+  color-warning-bg: #614901,
+  color-warning: #ffbf00,
+  color-warning-hover: #FFD54F,
+  color-outline-warning-hover: rgba(255, 193, 7, 0.2),
+
+  card-bg-primary: #1E1E1E,
+  card-bg-secondary: #2A2A2A,
+  card-bg-tertiary: #333333,
+
+  card-header-bg: #252525,
+  card-header-border: #3A4A40,
+  card-header-icon-bg: #2A4035,
+  card-header-icon-color: #81C784,
+
+  card-stat-bg: #2C2C2C,
+  card-stat-value: #E0E0E0,
+  card-stat-label: #9E9E9E,
+
+  card-accent-primary: #81C784,
+  card-accent-success: #A5D6A7,
+  card-accent-warning: #FFB74D,
+  card-accent-danger: #EF9A9A,
+
+  card-hover-shadow: rgba(129, 199, 132, 0.2),
+  card-hover-border: #81C784,
+
+  card-border-light: #3A4A40,
+  card-border-default: #3A4A40,
+
+  card-text-primary: #E0E0E0,
+  card-text-secondary: #B0B0B0,
+  card-text-tertiary: #9E9E9E,
+
+  card-alert-warning-bg: #4A3A2A,
+  card-alert-success-bg: #1E3A2A,
+  card-alert-error-bg: #3A2A2A,
+
+  table-row-hover: #2A2A2A,
+);

@@ -1,0 +1,16 @@
+<app-public-layout
+      icon="error_outline"
+      title="¡Ups! Página no encontrada"
+      [message]="randomMessage"
+      [showErrorCode]="true"
+      errorCodeLeft="4"
+      errorCodeRight="4"
+      [primaryButton]="{
+        text: 'Volver atrás',
+        icon: 'arrow_back',
+        variant: 'primary',
+        action: 'function',
+        handler: goBackOrHome.bind(this)
+      }"
+      illustration="default">
+</app-public-layout>

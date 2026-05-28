@@ -1,0 +1,23 @@
+<app-base-modal
+  *ngIf="isVisible"
+  (backdrop)="close()"
+>
+
+  <div modal-header>
+    <div class="title-container">
+      <h2>{{ title }}</h2>
+      <app-button
+        *ngIf="isMobile"
+        [iconOnly]="true"
+        iconLeft="close"
+        variant="ghost"
+        (click)="close()"
+      ></app-button>
+    </div>
+  </div>
+
+  <div modal-body>
+    <ng-container #container></ng-container>
+  </div>
+
+</app-base-modal>

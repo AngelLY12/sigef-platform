@@ -1,0 +1,23 @@
+<div class="radio-group">
+  <label class="group-label" *ngIf="label">{{ label }}</label>
+
+  <div class="options">
+    <div
+      class="option"
+      *ngFor="let opt of options"
+      [class.selected]="value === opt.value"
+      (click)="select(opt.value)"
+    >
+      <div class="radio-indicator">
+        <div class="dot" *ngIf="value === opt.value"></div>
+      </div>
+
+      <div class="content">
+        <span class="title">{{ opt.label }}</span>
+        <span class="desc" *ngIf="opt.description">
+          {{ opt.description }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

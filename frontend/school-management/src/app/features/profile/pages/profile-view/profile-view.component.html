@@ -1,0 +1,113 @@
+<ng-template #headerActions>
+  <app-button
+    variant="ghost"
+    size="sm"
+    iconLeft="lock"
+    [iconOnly]="true"
+    (click)="changePassword()"
+    matTooltip="Cambiar contraseña"
+  ></app-button>
+</ng-template>
+
+<ng-template #headerBottom>
+  <div class="profile-badges">
+    <span class="badge" *ngIf="profile?.emailVerifiedAt">
+      Email verificado
+    </span>
+
+    <app-button
+      *ngIf="!profile?.emailVerifiedAt"
+      variant="outline"
+      [iconLeft]="emailState === 'success' ? 'verified' : 'warning'"
+      size="md"
+      [loading]="emailState === 'loading'"
+      [disabled]="emailState === 'loading'"
+      (click)="verifyEmail()"
+    >
+      {{ emailState === "success" ? "Correo enviado" : "Verifica tu correo" }}
+    </app-button>
+  </div>
+</ng-template>
+
+<app-page-layout
+  title="Mi perfil"
+  [welcomeMessage]="currentName || 'Usuario'"
+  loadingMessage="Cargando perfil..."
+  icon="account_circle"
+  [showAlertBadge]="false"
+  iconSize="lg"
+  [state]="state"
+  (retry)="loadProfile()"
+  [headerActions]="headerActions"
+  [headerBottom]="headerBottom"
+>
+  <div class="profile">
+    <div *ngIf="profile && state === 'success'" class="profile-content">
+      <div class="profile-grid">
+        <app-alerts-list [alerts]="accountAlerts"></app-alerts-list>
+        <app-info-card
+          icon="contact_mail"
+          title="Contacto"
+          [actionConfig]="{
+            singleButton: {
+              label: 'Editar',
+              icon: 'edit',
+            },
+          }"
+          (action)="editContact()"
+        >
+          <app-info-card-item
+            *ngFor="let item of contactItems"
+            [icon]="item.icon"
+            [label]="item.label"
+            [value]="item.value"
+          ></app-info-card-item>
+        </app-info-card>
+        <app-info-card
+          icon="badge"
+          title="Información personal"
+          [actionConfig]="{
+            singleButton: {
+              label: 'Editar',
+              icon: 'edit',
+            },
+          }"
+          (action)="editPersonal()"
+        >
+          <app-info-card-item
+            *ngFor="let item of personalItems"
+            [icon]="item.icon"
+            [label]="item.label"
+            [value]="item.value"
+          ></app-info-card-item>
+        </app-info-card>
+        <app-info-card
+          icon="location_on"
+          title="Dirección"
+          [actionConfig]="{
+            singleButton: {
+              label: 'Editar',
+              icon: 'edit',
+            },
+          }"
+          (action)="editAddress()"
+        >
+          <app-info-card-item
+            *ngFor="let item of addressItems"
+            [icon]="item.icon"
+            [label]="item.label"
+            [value]="item.value"
+          ></app-info-card-item>
+        </app-info-card>
+        <app-info-card icon="info" title="Cuenta">
+          <app-info-card-item
+            *ngFor="let item of accountItems"
+            [icon]="item.icon"
+            [label]="item.label"
+            [value]="item.value"
+          ></app-info-card-item>
+        </app-info-card>
+      </div>
+    </div>
+  </div>
+</app-page-layout>

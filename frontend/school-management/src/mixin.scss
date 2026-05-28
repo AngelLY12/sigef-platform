@@ -1,0 +1,74 @@
+@use 'sass:map';
+
+@mixin apply-theme($theme-map) {
+  --color-error: #{map.get($theme-map, color-error)};
+  --color-error-bg: #{map.get($theme-map, color-error-bg)};
+  --color-error-border: #{map.get($theme-map, color-error-border)};
+
+  --color-success: #{map.get($theme-map, color-success)};
+  --color-success-bg: #{map.get($theme-map, color-success-bg)};
+  --color-success-border: #{map.get($theme-map, color-success-border)};
+
+  --color-info: #{map.get($theme-map, color-info)};
+  --color-info-bg: #{map.get($theme-map, color-info-bg)};
+  --color-info-border: #{map.get($theme-map, color-info-border)};
+  --color-info-hover: #{map.get($theme-map, color-info-hover)};
+
+  --color-background: #{map.get($theme-map, color-background)};
+  --color-surface: #{map.get($theme-map, color-surface)};
+  --color-primary: #{map.get($theme-map, color-primary)};
+  --color-primary-hover: #{map.get($theme-map, color-primary-hover)};
+  --color-secondary: #{map.get($theme-map, color-secondary)};
+
+  --color-text: #{map.get($theme-map, color-text)};
+  --color-text-light: #{map.get($theme-map, color-text-light)};
+  --color-border: #{map.get($theme-map, color-border)};
+  --color-border-focus: #{map.get($theme-map, color-border-focus)};
+
+  --color-danger: #{map.get($theme-map, color-danger)};
+  --color-danger-hover: #{map.get($theme-map, color-danger-hover)};
+  --color-outline-bg-hover: #{map.get($theme-map, color-outline-bg-hover)};
+  --color-white: #{map.get($theme-map, color-white)};
+
+  --color-warning-bg: #{map.get($theme-map, color-warning-bg)};
+  --color-warning: #{map.get($theme-map, color-warning)};
+  --color-warning-hover: #{map.get($theme-map, color-warning-hover)};
+  --color-outline-warning-hover: #{map.get($theme-map, color-outline-warning-hover)};
+
+  --card-bg-primary: #{map.get($theme-map, card-bg-primary)};
+  --card-bg-secondary: #{map.get($theme-map, card-bg-secondary)};
+  --card-bg-tertiary: #{map.get($theme-map, card-bg-tertiary)};
+
+  --card-header-bg: #{map.get($theme-map, card-header-bg)};
+  --card-header-border: #{map.get($theme-map, card-header-border)};
+  --card-header-icon-bg: #{map.get($theme-map, card-header-icon-bg)};
+  --card-header-icon-color: #{map.get($theme-map, card-header-icon-color)};
+
+  --card-stat-bg: #{map.get($theme-map, card-stat-bg)};
+  --card-stat-value: #{map.get($theme-map, card-stat-value)};
+  --card-stat-label: #{map.get($theme-map, card-stat-label)};
+
+  --card-accent-primary: #{map.get($theme-map, card-accent-primary)};
+  --card-accent-success: #{map.get($theme-map, card-accent-success)};
+  --card-accent-warning: #{map.get($theme-map, card-accent-warning)};
+  --card-accent-danger: #{map.get($theme-map, card-accent-danger)};
+
+  --card-hover-shadow: #{map.get($theme-map, card-hover-shadow)};
+  --card-hover-border: #{map.get($theme-map, card-hover-border)};
+
+  --card-border-light: #{map.get($theme-map, card-border-light)};
+  --card-border-default: #{map.get($theme-map, card-border-default)};
+
+  --card-text-primary: #{map.get($theme-map, card-text-primary)};
+  --card-text-secondary: #{map.get($theme-map, card-text-secondary)};
+  --card-text-tertiary: #{map.get($theme-map, card-text-tertiary)};
+
+  --card-alert-warning-bg: #{map.get($theme-map, card-alert-warning-bg)};
+  --card-alert-success-bg: #{map.get($theme-map, card-alert-success-bg)};
+  --card-alert-error-bg: #{map.get($theme-map, card-alert-error-bg)};
+
+  --table-row-hover: #{map.get($theme-map, table-row-hover)};
+
+
+
+}

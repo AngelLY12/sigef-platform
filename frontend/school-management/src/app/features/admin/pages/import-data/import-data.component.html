@@ -1,0 +1,79 @@
+<app-page-layout
+  title="Importar"
+  welcomeMessage="En este apartado puedes importar archivos Excel"
+  icon="upload_file"
+>
+  <div class="import-controls">
+    <app-button
+      variant="outline"
+      iconLeft="swap_horiz"
+      (click)="onChangeImportMode()"
+    >
+      Cambiar a {{ importMode === "users" ? "estudiantes" : "usuarios" }}
+    </app-button>
+
+    <app-button
+      variant="ghost"
+      iconLeft="download"
+      (click)="downloadTemplate()"
+    >
+      Descargar plantilla
+    </app-button>
+  </div>
+
+  <div class="import-grid">
+    <app-info-card
+      icon="group"
+      title="Importar usuarios"
+      *ngIf="importMode === 'users'"
+    >
+      <p class="description">
+        Sube un Excel con usuarios. Usa la plantilla para evitar errores.
+      </p>
+
+      <app-file-input
+        [file]="usersFile"
+        label="Arrastra un Excel de usuarios o haz clic"
+        (fileChange)="usersFile = $event"
+      ></app-file-input>
+
+      <div class="actions">
+        <app-button
+          variant="primary"
+          [loading]="usersState === 'loading'"
+          [disabled]="!usersFile"
+          (click)="onImportUsers()"
+        >
+          Importar usuarios
+        </app-button>
+      </div>
+    </app-info-card>
+
+    <app-info-card
+      icon="school"
+      title="Importar estudiantes"
+      *ngIf="importMode === 'students'"
+    >
+      <p class="description">
+        Suba un Excel con información académica por CURP.
+      </p>
+
+      <app-file-input
+        [file]="studentsFile"
+        label="Arrastra un Excel de estudiantes o haz clic"
+        (fileChange)="studentsFile = $event"
+      ></app-file-input>
+
+      <div class="actions">
+        <app-button
+          variant="primary"
+          [loading]="studentsState === 'loading'"
+          [disabled]="!studentsFile"
+          (click)="onImportStudents()"
+        >
+          Importar estudiantes
+        </app-button>
+      </div>
+    </app-info-card>
+  </div>
+</app-page-layout>

@@ -1,0 +1,40 @@
+<div class="info-card" [class]="type" [class.loading]="loading">
+  <div class="card-loading-overlay" *ngIf="loading">
+    <app-spinner [loading]="loading" size="lg"></app-spinner>
+  </div>
+  <div
+    class="card-header clickable"
+    [class.header-only]="!expanded"
+    (click)="toggleExpand()"
+  >
+    <span class="material-icons">{{ icon }}</span>
+    <h3>{{ title }}</h3>
+    <span class="spacer"></span>
+
+    <span class="material-icons expand-icon" [style.transform]="expanded ? 'rotate(0deg)' : 'rotate(-180deg)'">
+      expand_more
+    </span>
+
+    <ng-container *ngIf="actionConfig?.singleButton as btn">
+      <app-button
+        size="sm"
+        variant="ghost"
+        [iconOnly]="isMobile"
+        [iconLeft]="btn.icon"
+        [loading]="btn.loading ?? false"
+        [disabled]="btn.disabled ?? false"
+        (click)="$event.stopPropagation(); btn.onClick?.() ?? action.emit()"
+      >
+        {{ btn.label }}
+      </app-button>
+    </ng-container>
+    <ng-container *ngIf="actionConfig?.listActionsTemplate as tla">
+      <ng-container *ngTemplateOutlet="tla"></ng-container>
+    </ng-container>
+  </div>
+  <div #contentRef class="card-content" [class.collapsed]="!expanded" [style.maxHeight]="contentHeight !== null ? contentHeight + 'px' : null">
+    <div class="card-content-inner">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

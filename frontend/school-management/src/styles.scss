@@ -1,0 +1,32 @@
+/* You can add global styles to this file, and also import other style files */
+@use 'themes' as *;
+@use 'mixin' as *;
+@use 'sass:map';
+
+:root {
+  @include apply-theme($light-theme);
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+body[data-theme="dark"] {
+  @include apply-theme($dark-theme);
+}
+
+::ng-deep {
+  .chart-card {
+    .chartjs-render-monitor {
+      color: var(--card-text-primary);
+    }
+
+    .chart-legend {
+      color: var(--card-text-secondary);
+      font-size: 0.8rem;
+    }
+  }
+}

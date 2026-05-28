@@ -1,0 +1,28 @@
+<div class="auth-wrapper">
+  <div class="auth-card" @fadeSlide>
+
+    <div class="auth-header">
+      <h1><strong>{{ title }}</strong></h1>
+      <p>{{ subtitle }}</p>
+    </div>
+
+    <ng-content></ng-content>
+
+    <div class="auth-footer">
+      <p>
+        {{ footerMessage }}
+        <app-anchor [link]="footerLink" [anchorMessage]="footerAnchorMessage">
+        </app-anchor>
+      </p>
+      <p *ngIf="!hideForgotPassword">¿Olvidaste tu contraseña?
+          <app-anchor [link]="navHelper.forgotPassword" anchorMessage="Recuperar contraseña"></app-anchor>
+      </p>
+      <span class="legal">© 2026 SIGE CBTa No.71</span>
+    </div>
+
+  </div>
+</div>
+<div class="theme-toggle">
+  <app-theme-button></app-theme-button>
+</div>
+

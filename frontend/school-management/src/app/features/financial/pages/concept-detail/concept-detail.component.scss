@@ -1,0 +1,83 @@
+.concept-detail {
+  margin-top: 1rem;
+}
+
+.concept-sections {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+app-button {
+  border-radius: 12px;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+app-button:hover {
+  background-color: var(--color-primary-hover);
+  transform: translateY(-1px);
+}
+
+app-button.active {
+  background: var(--color-primary);
+}
+
+.floating-button {
+  position: fixed;
+  right: 2.5rem;
+  bottom: 2.5rem;
+  z-index: 1000;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.detail-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+
+@media (max-width: 1024px) {
+  .detail-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 0.875rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .concept-sections {
+    display: none;
+  }
+
+  .concept-detail {
+    margin-top: 0.75rem;
+  }
+
+  .detail-list {
+    gap: 0.65rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .concept-detail {
+    margin-top: 0.5rem;
+  }
+
+  .detail-list {
+    gap: 0.5rem;
+  }
+}
+
+@media (min-width: 1440px) {
+  .detail-grid {
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 1.25rem;
+  }
+}

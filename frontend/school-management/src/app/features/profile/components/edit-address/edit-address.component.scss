@@ -1,0 +1,13 @@
+.actions {
+  display: flex;
+  flex-direction: column-reverse;
+  flex: 1;
+}
+
+
+@media (max-width: 600px) {
+
+  .cancel-button{
+    display: none;
+  }
+}

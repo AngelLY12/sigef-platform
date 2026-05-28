@@ -1,0 +1,153 @@
+<app-stepper
+  [steps]="stepLabels"
+  [currentStep]="currentStep"
+  [canProceed]="canProceed()"
+  [loading]="loading === 'loading'"
+  (nextStep)="nextStep()"
+  (prevStep)="prevStep()"
+  (completed)="complete()"
+>
+  <form [formGroup]="form" (ngSubmit)="complete()">
+    <div *ngIf="currentStep === 0">
+      <app-input
+        label="Nombre del concepto"
+        type="text"
+        formControlName="concept_name"
+        placeholder="Colegiatura mensual"
+        iconRight="receipt_long"
+        [required]="true"
+        [customErrors]="{
+          required: 'El nombre es obligatorio',
+          minlength: 'El nombre debe tener al menos 2 caracteres',
+          maxlength: 'El nombre no puede tener más de 50 caracteres',
+          pattern: 'Solo se permiten letras y espacios',
+        }"
+      ></app-input>
+      <app-input
+        label="Descripción"
+        type="text"
+        formControlName="description"
+        placeholder="Pago correspondiente a la colegiatura del mes de septiembre."
+        iconRight="description"
+        [customErrors]="{
+          maxlength: 'La descripción no puede tener más de 200 caracteres',
+        }"
+      ></app-input>
+      <app-input
+        label="Monto"
+        type="number"
+        formControlName="amount"
+        placeholder="1500.00"
+        iconRight="attach_money"
+        [required]="true"
+        [customErrors]="{
+          required: 'El monto es obligatorio',
+          min: 'El monto debe ser al menos 10.00',
+          max: 'El monto no puede exceder 25000.00',
+        }"
+      ></app-input>
+      <app-select
+        label="Estatus del concepto"
+        placeholder="Selecciona una opción"
+        [required]="true"
+        iconRight="expand_more"
+        [options]="statusOptions"
+        formControlName="status"
+      ></app-select>
+    </div>
+
+    <div *ngIf="currentStep === 1">
+      <app-input
+        label="Fecha de inicio"
+        type="date"
+        formControlName="start_date"
+        [required]="true"
+      ></app-input>
+      <app-input
+        label="Fecha de finalización"
+        type="date"
+        formControlName="end_date"
+      ></app-input>
+    </div>
+    <div *ngIf="currentStep === 2">
+      <app-select
+        label="¿A quién aplica?"
+        placeholder="Selecciona una opción"
+        iconRight="expand_more"
+        [required]="true"
+        [options]="appliesToOptions"
+        formControlName="applies_to"
+      ></app-select>
+      <ng-container *ngIf="appliesToSelection as config">
+        <app-multi-select
+          *ngIf="config.type === 'multiselect'"
+          [label]="config.label"
+          [required]="true"
+          placeholder="Selecciona opciones"
+          iconRight="expand_more"
+          [options]="config.options"
+          [formControlName]="config.controlName"
+        ></app-multi-select>
+
+        <div *ngIf="config.type === 'search'">
+          <app-input
+            label="Buscar estudiante"
+            [required]="true"
+            placeholder="Número de control"
+            iconRight="search"
+            (valueChange)="searchStudents($event)"
+          ></app-input>
+
+          <app-multi-select
+            [label]="config.label"
+            [required]="true"
+            placeholder="Selecciona estudiantes"
+            iconRight="expand_more"
+            [options]="config.options"
+            [formControlName]="config.controlName"
+          ></app-multi-select>
+        </div>
+
+        <div *ngIf="config.type === 'career-semester'">
+          <app-multi-select
+            label="Carreras"
+            [required]="true"
+            placeholder="Selecciona carreras"
+            iconRight="expand_more"
+            [options]="careers"
+            formControlName="careers_ids"
+          ></app-multi-select>
+
+          <app-multi-select
+            label="Semestres"
+            [required]="true"
+            placeholder="Selecciona semestres"
+            iconRight="expand_more"
+            [options]="semesters"
+            formControlName="semesters"
+          ></app-multi-select>
+        </div>
+        <app-input
+          *ngIf="config.allowExceptions"
+          label="¿Quieres excluir a algún estudiante?"
+          placeholder="Número de control"
+          iconRight="search"
+          (valueChange)="searchStudents($event)"
+          hint="Puedes excluir estudiantes específicos aunque el criterio los incluya"
+        ></app-input>
+
+        <app-multi-select
+          *ngIf="config.allowExceptions"
+          label="Estudiantes excluidos"
+          placeholder="Selecciona estudiantes"
+          iconRight="expand_more"
+          [options]="studentOptions"
+          formControlName="exceptionStudents"
+        ></app-multi-select>
+        <div class="info-message" *ngIf="config.type === 'info'">
+          {{ config.message }}
+        </div>
+      </ng-container>
+    </div>
+  </form>
+</app-stepper>

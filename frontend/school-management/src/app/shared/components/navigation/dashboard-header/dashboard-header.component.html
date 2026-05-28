@@ -1,0 +1,43 @@
+<div class="dashboard-header">
+  <div class="header-top">
+    <div class="top-left">
+      <div
+        class="icon"
+        *ngIf="icon"
+        [class]="'icon-' + iconSize"
+        [class.clickable]="iconClickable"
+        (click)="iconClickable && onClickAction()"
+      >
+        <span class="material-icons">{{ icon }}</span>
+      </div>
+      <div class="title-section">
+        <h1>{{ title }}</h1>
+        <p class="welcome-message" *ngIf="welcomeMessage">
+          {{ welcomeMessage }}
+        </p>
+      </div>
+    </div>
+
+    <div class="top-right">
+      <div class="badges">
+        <div class="date-badge">
+          <span class="material-icons">calendar_today</span>
+          {{ date | date: "fullDate" }}
+        </div>
+
+        <div class="alert-badge" *ngIf="showAlertBadge && alertCount > 0">
+          <span class="material-icons">notifications_active</span>
+          <span class="badge">{{ alertCount }}</span>
+        </div>
+      </div>
+
+      <div class="actions">
+        <ng-content select="[actions]"></ng-content>
+      </div>
+    </div>
+  </div>
+
+  <div class="header-bottom" *ngIf="hasHeaderBottomContent">
+    <ng-content></ng-content>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+<div class="alerts-list">
+  <div class="alert-item" *ngFor="let alert of alerts">
+    <span class="material-icons">{{ alert.icon }}</span>
+    <div class="alert-info">
+      <span class="alert-title">{{ alert.title }}</span>
+      <span class="alert-count">{{ alert.count }}</span>
+    </div>
+  </div>
+
+  <div class="no-alerts" *ngIf="alerts.length === 0">
+    <span class="material-icons">check_circle</span>
+    <span>No hay alertas activas</span>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+.notification-item {
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+}
+
+.notification-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notification-title {
+  font-weight: 600;
+  font-size: .9rem;
+}
+
+.notification-message {
+  font-size: .8rem;
+  opacity: .8;
+}
+
+.notification-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: .7rem;
+  opacity: .6;
+}
+
+.unread-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-primary);
+}

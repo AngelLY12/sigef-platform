@@ -1,0 +1,38 @@
+
+.selector-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  background: var(--card-bg-secondary);
+  border: 1px solid var(--card-border-default);
+  border-radius: 12px;
+
+  padding: 0.75rem;
+  max-height: 300px;
+  overflow-y: auto;
+
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--card-hover-border);
+    box-shadow: 0 4px 12px var(--card-hover-shadow);
+  }
+}
+
+.selector-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.selector-list::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+@media (max-width: 600px) {
+
+  .selector-list {
+    max-height: none;
+    overflow: visible;
+  }
+}

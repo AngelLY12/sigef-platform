@@ -1,0 +1,147 @@
+<div class="edit-form">
+  <div class="actions">
+    @for (section of formsSection; track section.key) {
+      <app-button
+        variant="ghost"
+        [iconLeft]="section.icon"
+        [class.active]="activeSection === section.key"
+        (click)="activeSection = section.key"
+      >
+        {{ section.title }}
+      </app-button>
+    }
+  </div>
+
+  <form [formGroup]="form" class="form-content" (ngSubmit)="submit()">
+    @for (section of formsSection; track section.key) {
+      @if (activeSection === section.key) {
+        <div class="section-content">
+          <div class="fields-grid">
+            @for (item of section.items; track $index) {
+              @if (item.type === "input") {
+                <app-input
+                  [label]="item.label"
+                  [iconLeft]="item.icon"
+                  [type]="item.inputType"
+                  [formControlName]="item.controlName"
+                />
+              }
+
+              @if (item.type === "select") {
+                <app-select
+                  [label]="item.label"
+                  [iconRight]="item.icon"
+                  [options]="item.options"
+                  [formControlName]="item.controlName"
+                />
+              }
+
+              @if (
+                item.type === "multiselect" &&
+                item.controlName !== "students" &&
+                (!item.showWhen || item.showWhen.includes(appliesToValue!))
+              ) {
+                <app-multi-select
+                  [label]="item.label"
+                  [iconRight]="item.icon"
+                  [options]="item.options"
+                  [formControlName]="item.controlName"
+                />
+              }
+              @if (
+                item.type === "multiselect" &&
+                item.controlName === "students" &&
+                (!item.showWhen || item.showWhen.includes(appliesToValue!))
+              ) {
+                <app-input
+                  label="Buscar estudiante"
+                  placeholder="Número de control"
+                  iconRight="search"
+                  (valueChange)="searchStudents($event)"
+                />
+
+                @if (students.length > 0) {
+                  <div class="students-preview">
+                    @for (student of students; track student.n_control) {
+                      <span class="student-chip">
+                        {{ student.text }}
+                      </span>
+                    }
+                  </div>
+                }
+
+                <app-multi-select
+                  [label]="item.label"
+                  [iconRight]="item.icon"
+                  [options]="studentOptions"
+                  [formControlName]="item.controlName"
+                />
+              }
+            }
+          </div>
+          @if (
+            activeSection === "relations" &&
+            appliesToValue !== null &&
+            appliesToValue !== ConceptAppliesTo.ESTUDIANTES
+          ) {
+            <app-input
+              label="¿Quieres excluir a algún estudiante?"
+              placeholder="Número de control"
+              iconRight="search"
+              (valueChange)="searchStudents($event)"
+              hint="Puedes excluir estudiantes específicos aunque el criterio los incluya"
+            ></app-input>
+
+            @if (students.length > 0) {
+              <div class="students-preview">
+                @for (student of students; track student.n_control) {
+                  <span class="student-chip">
+                    {{ student.text }}
+                  </span>
+                }
+              </div>
+            }
+
+            <app-multi-select
+              label="Estudiantes excluidos"
+              placeholder="Selecciona estudiantes"
+              iconRight="expand_more"
+              [options]="studentOptions"
+              formControlName="exceptionStudents"
+            ></app-multi-select>
+          }
+          @if (activeSection === "relations") {
+            <div class="relations-options">
+              <app-checkbox
+                label="Reemplazar relaciones existentes"
+                formControlName="replaceRelations"
+              />
+
+              <app-checkbox
+                *ngIf="appliesToValue != ConceptAppliesTo.ESTUDIANTES"
+                label="Reemplazar excepciones"
+                formControlName="replaceExceptions"
+              />
+
+              <app-checkbox
+                *ngIf="appliesToValue != ConceptAppliesTo.ESTUDIANTES"
+                label="Eliminar todas las excepciones"
+                formControlName="removeAllExceptions"
+              />
+            </div>
+          }
+        </div>
+      }
+    }
+    <app-button
+      variant="primary"
+      iconLeft="update"
+      [fullWidth]="true"
+      [loading]="loading === 'loading'"
+      [disabled]="!canSend"
+      type="submit"
+    >
+      Actualizar
+    </app-button>
+  </form>
+</div>

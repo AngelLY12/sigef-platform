@@ -1,0 +1,43 @@
+<div *ngIf="message || (errors && errors.length)" class="modal-overlay" (click)="closeOnBackdrop($event)">
+  <div class="modal-container" [class.closing]="isClosing" @fadeSlide>
+
+    <div class="icon-wrapper" [ngClass]="type">
+      <div class="icon-circle">
+        <span class="material-icons">
+          {{ getIcon() }}
+        </span>
+      </div>
+    </div>
+
+    <h2 class="modal-title" [ngClass]="type">
+      {{ getTitle() }}
+    </h2>
+
+    <p *ngIf="message" class="modal-message">{{ message }}</p>
+
+    <div *ngIf="errors?.length" class="details-container" [ngClass]="type">
+      <div class="details-header">
+        <span class="material-icons">info</span>
+        <span>Detalles:</span>
+      </div>
+      <ul class="details-list">
+        <li *ngFor="let err of errors">
+          <span class="material-icons">circle</span>
+          {{ err }}
+        </li>
+      </ul>
+    </div>
+
+    <button
+      class="modal-button"
+      [ngClass]="type"
+      (click)="close()">
+      <span class="material-icons">
+        {{ type === 'error' ? 'close' : 'done' }}
+      </span>
+      <span>Aceptar</span>
+    </button>
+
+    <div class="modal-decoration"></div>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+<app-public-layout
+  icon="person"
+  title="Puedes elegir cómo acceder al sistema"
+  message="Selecciona un rol para continuar"
+  [showErrorCode]="false"
+  [primaryButton]="{
+    text: 'Abrir selector',
+    icon: 'arrow_forward',
+    variant: 'primary',
+    action: 'function',
+    handler: openSelector.bind(this)
+  }",
+  [secondaryButton]="{
+    text: 'Cerrar sesión',
+    icon: 'logout',
+    variant: 'outline',
+    action: 'function',
+    handler: logout.bind(this)
+  }"
+>
+</app-public-layout>
+
+<app-role-selector
+  [show]="showRoleSelector"
+  [roles]="userRoles"
+  [userName]="userName"
+  (roleSelected)="onRoleSelected($event)"
+  (close)="onSelectorClose()"
+>
+</app-role-selector>

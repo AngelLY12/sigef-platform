@@ -1,0 +1,76 @@
+.demographics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+
+  .demographic-item {
+    text-align: center;
+    padding: 0.75rem;
+    background: var(--card-stat-bg);
+    border-radius: 0.5rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .label {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--card-text-tertiary);
+      margin-bottom: 0.25rem;
+      line-height: 1.2;
+    }
+
+    .value {
+      font-size: 1.1rem;
+      font-weight: 600;
+
+      &.success { color: var(--card-accent-success); }
+      &.warning { color: var(--card-accent-warning); }
+      &.danger { color: var(--card-accent-danger); }
+      &.primary { color: var(--card-accent-primary); }
+    }
+  }
+}
+
+/* -------- TABLET -------- */
+
+@media (max-width: 1024px) {
+
+  .demographics-grid {
+    grid-template-columns: repeat(2, 1fr);
+
+    .demographic-item {
+      padding: 0.7rem;
+
+      .value {
+        font-size: 1rem;
+      }
+    }
+  }
+
+}
+
+/* -------- MOBILE -------- */
+
+@media (max-width: 480px) {
+
+  .demographics-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+
+    .demographic-item {
+      padding: 0.65rem;
+
+      .label {
+        font-size: 0.68rem;
+      }
+
+      .value {
+        font-size: 0.95rem;
+      }
+    }
+  }
+
+}

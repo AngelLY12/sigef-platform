@@ -1,0 +1,165 @@
+.public-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-background);
+  padding: 20px;
+}
+
+.public-content {
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.error-code {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  font-weight: 700;
+
+  .digit {
+    font-size: 120px;
+    line-height: 1;
+    color: var(--color-primary);
+    text-shadow: 4px 4px 0 rgba(63, 150, 99, 0.2);
+
+    @media (max-width: 768px) {
+      font-size: 80px;
+    }
+  }
+
+  .zero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 120px;
+    background-color: var(--color-surface);
+    border-radius: 50%;
+    border: 8px solid var(--color-primary);
+    box-shadow: 0 0 0 8px rgba(63, 150, 99, 0.1);
+
+    .icon {
+      font-size: 64px;
+      color: var(--color-primary);
+    }
+
+    @media (max-width: 768px) {
+      width: 80px;
+      height: 80px;
+
+      .icon {
+        font-size: 40px;
+      }
+    }
+  }
+
+  &.single-icon .zero {
+    margin: 0 auto;
+  }
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 16px;
+
+  @media (max-width: 768px) {
+    font-size: 24px;
+  }
+}
+
+.message {
+  font-size: 18px;
+  color: var(--color-text-light);
+  margin-bottom: 40px;
+  line-height: 1.6;
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 48px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 0 20px;
+  }
+
+  app-button {
+    min-width: 200px;
+
+    @media (max-width: 768px) {
+      min-width: 100%;
+    }
+  }
+}
+
+.illustration {
+  opacity: 0.5;
+  animation: float 3s ease-in-out infinite;
+
+  svg {
+    width: 120px;
+    height: 120px;
+
+    @media (max-width: 768px) {
+      width: 80px;
+      height: 80px;
+    }
+  }
+
+  &.unverified svg path {
+    fill: var(--color-warning);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.theme-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 999;
+
+  @media (max-width: 768px) {
+    top: 0.875rem;
+  }
+
+  @media (max-width: 480px) {
+    top: 0.75rem;
+  }
+
+  @media (min-width: 1440px) {
+    top: 1.25rem;
+  }
+}

@@ -1,0 +1,16 @@
+<div class="chart-card" [class.full-width]="fullWidth">
+  <div class="chart-header">
+    <h3>{{ title }}</h3>
+    <ng-content select="[header-right]"></ng-content>
+  </div>
+
+  <div class="chart-container" [class]="size">
+    <canvas baseChart
+      [data]="data"
+      [options]="options"
+      [type]="type">
+    </canvas>
+  </div>
+
+  <ng-content select="[footer]"></ng-content>
+</div>

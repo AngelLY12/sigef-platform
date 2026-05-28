@@ -1,0 +1,115 @@
+.progress-list {
+
+  .progress-item {
+    margin-bottom: 1rem;
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+
+      margin-bottom: 0.25rem;
+
+      font-size: 0.8rem;
+      color: var(--card-text-secondary);
+
+      flex-wrap: wrap;
+
+      span {
+        min-width: 0;
+        word-break: break-word;
+      }
+    }
+
+    .progress-bar {
+      height: 6px;
+
+      background: var(--card-bg-tertiary);
+      border-radius: 3px;
+
+      overflow: hidden;
+
+      margin-bottom: 0.25rem;
+
+      .progress-fill {
+        height: 100%;
+        border-radius: 3px;
+
+        transition: width 0.5s ease;
+
+        &.success { background: var(--card-accent-success); }
+        &.warning { background: var(--card-accent-warning); }
+        &.danger { background: var(--card-accent-danger); }
+      }
+    }
+
+    .progress-value {
+      font-size: 0.75rem;
+      color: var(--card-text-tertiary);
+      text-align: right;
+    }
+  }
+
+}
+
+/* -------- TABLET -------- */
+
+@media (max-width: 768px) {
+
+  .progress-list {
+
+    .progress-item {
+
+      .progress-label {
+        font-size: 0.75rem;
+      }
+
+      .progress-bar {
+        height: 5px;
+      }
+
+      .progress-value {
+        font-size: 0.72rem;
+      }
+
+    }
+
+  }
+
+}
+
+/* -------- MOBILE -------- */
+
+@media (max-width: 480px) {
+
+  .progress-list {
+
+    .progress-item {
+
+      margin-bottom: 0.85rem;
+
+      .progress-label {
+
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.15rem;
+
+        font-size: 0.72rem;
+
+      }
+
+      .progress-bar {
+        height: 5px;
+      }
+
+      .progress-value {
+        font-size: 0.7rem;
+        text-align: left;
+      }
+
+    }
+
+  }
+
+}

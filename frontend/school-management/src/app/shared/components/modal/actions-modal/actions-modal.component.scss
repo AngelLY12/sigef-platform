@@ -1,0 +1,82 @@
+h2 {
+  margin: 0 0 8px 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--card-text-primary);
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+p {
+  margin: 0 0 12px 0;
+  color: var(--card-text-secondary);
+  font-size: 0.95rem;
+}
+
+.modal-body-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.modal-body-grid > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-body-grid > div.full-width {
+  grid-column: span 2;
+}
+
+.field-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: var(--card-text-tertiary);
+}
+
+.checkbox-group {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.actions {
+  display: flex;
+  width: 100%;
+  flex-direction: column-reverse;
+  gap: 0.5rem;
+}
+
+@media (max-width: 600px) {
+  .modal-body-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .modal-body-grid > div:has(.checkbox-group) {
+    grid-column: span 1;
+  }
+
+  .checkbox-group {
+    grid-template-columns: 1fr;
+  }
+  .title-container h2 {
+    font-size: 1.25rem;
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  p {
+    font-size: 0.9rem;
+  }
+}

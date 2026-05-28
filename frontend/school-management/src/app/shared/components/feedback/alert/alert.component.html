@@ -1,0 +1,25 @@
+<div class="alert-overlay" *ngIf="message">
+  <div
+    class="alert"
+    [class.visible]="visible"
+    [class.error]="type === 'error'"
+    [class.warn]="type === 'warn'"
+    [class.info]="type === 'info'"
+    [class.success]="type === 'success'"
+    [class.closing]="isClosing"
+  >
+
+    <div class="icon-wrapper" [ngClass]="type">
+      <span class="material-icons icon">
+        {{ getIcon() }}
+      </span>
+    </div>
+
+    <span class="message">{{ message }}</span>
+
+    <button class="close-btn" (click)="close()">
+      <span class="material-icons">close</span>
+    </button>
+
+  </div>
+</div>

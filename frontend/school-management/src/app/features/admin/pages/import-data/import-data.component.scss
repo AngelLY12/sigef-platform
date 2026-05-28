@@ -1,0 +1,60 @@
+.import-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.description {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.success {
+  color: #22c55e;
+  display: block;
+  margin-top: 0.5rem;
+}
+
+.error {
+  color: #ef4444;
+  display: block;
+  margin-top: 0.5rem;
+}
+
+.import-controls {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .import-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .actions {
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+
+  .import-controls {
+    flex-direction: column;
+    margin-top: 1rem;
+    align-items: center;
+    align-items: center;
+  }
+}

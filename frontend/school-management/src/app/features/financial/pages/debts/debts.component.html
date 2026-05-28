@@ -1,0 +1,67 @@
+<app-page-layout
+  title="Adeudos"
+  welcomeMessage="Aquí puedes gestionar los adeudos de la escuela."
+  loadingMessage="Cargando adeudos..."
+  icon="request_quote "
+  [state]="debtsState"
+  (retry)="loadDebts()"
+>
+  <app-filter-bar (reset)="onResetFilters()">
+    <app-input
+      placeholder="Buscar por CURP, email o número de control del estudiante"
+      iconRight="search"
+      [formControl]="searchControl"
+      (iconRightClick)="onSearchData()"
+      (keyup.enter)="onSearchData()"
+    />
+
+    <app-button
+      variant="outline"
+      size="md"
+      iconLeft="refresh"
+      (click)="onRefreshData()"
+    >
+      Refrescar datos
+    </app-button>
+  </app-filter-bar>
+
+  <div
+    *ngIf="
+      debtsState === 'success' &&
+        paginatedDebts &&
+        paginatedDebts.data.items.length > 0;
+      else noDataTemplate
+    "
+  >
+    <app-table
+      [columns]="debtsColumns"
+      [data]="paginatedDebts.data.items"
+      [actionsTemplate]="actionsTemplate"
+      noDataMessage="Sin historial disponible"
+    ></app-table>
+    <app-paginator
+      [paginator]="paginatedDebts"
+      (pageChange)="onPageChange($event)"
+      (perPageChange)="onPageSizeChange($event)"
+    >
+    </app-paginator>
+  </div>
+  <ng-template #noDataTemplate>
+    <div class="no-data">
+      <span class="material-icons">receipt_long</span>
+      <p>No se encontraron adeudos.</p>
+    </div>
+  </ng-template>
+  <ng-template #actionsTemplate let-item>
+    <div class="table-actions">
+      <app-button
+        variant="ghost"
+        size="sm"
+        iconLeft="payments"
+        (click)="openStripeModal(item)"
+      >
+        Stripe
+      </app-button>
+    </div>
+  </ng-template>
+</app-page-layout>

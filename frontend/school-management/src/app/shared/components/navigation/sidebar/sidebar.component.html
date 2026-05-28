@@ -1,0 +1,85 @@
+<app-button
+  class="mobile-menu-toggle"
+  variant="primary"
+  size="md"
+  [iconOnly]="true"
+  iconLeft="menu"
+  *ngIf="!mobileOpen"
+  (click)="toggleSidebar()">
+</app-button>
+
+<aside
+  class="sidebar"
+  [class.collapsed]="collapsed && !mobileOpen"
+  [class.mobile-open]="mobileOpen">
+
+  <div class="sidebar-header">
+    <div class="logo" routerLink="/">
+      <span class="material-icons">{{ logoIcon }}</span>
+
+      <span class="logo-text" *ngIf="!collapsed">
+        {{ logoText }}
+      </span>
+    </div>
+
+    <app-button
+      variant="ghost"
+      size="sm"
+      [iconOnly]="true"
+      [iconLeft]="collapsed ? 'chevron_right' : 'chevron_left'"
+      (click)="toggleSidebar()">
+    </app-button>
+  </div>
+
+  <nav class="menu">
+    <a
+      *ngFor="let item of menuItems"
+      class="menu-item"
+      [routerLink]="item.route"
+      routerLinkActive="active"
+      (click)="closeMobileSidebar()"
+    >
+      <span class="material-icons icon">
+        {{ item.icon }}
+      </span>
+
+      <span *ngIf="!collapsed" class="label">
+        {{ item.label }}
+      </span>
+
+      <span
+        *ngIf="item.badge"
+        class="badge"
+        [class.dot]="collapsed"
+        [ngClass]="item.badgeColor || 'primary'"
+      >
+        <ng-container *ngIf="!collapsed">
+          {{ item.badge === true ? '' : item.badge }}
+        </ng-container>
+      </span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <app-avatar
+      [collapsed]="collapsed"
+      [showUserInfo]="showUserInfo"
+      [role]="role"
+      [userAvatar]="userAvatar"
+      [userName]="userName"
+      (profileClick)="onProfileClick()"
+      [showRoleSelector]="showRoleSelector"
+      (changeRole)="onChangeRole()"
+
+      >
+    </app-avatar>
+  </div>
+
+</aside>
+
+<div
+  class="sidebar-overlay"
+  *ngIf="mobileOpen"
+  (click)="mobileOpen = false">
+</div>
+

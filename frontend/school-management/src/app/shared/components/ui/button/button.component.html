@@ -1,0 +1,48 @@
+<ng-container *ngIf="routerLink; else normalButton">
+
+  <a
+    [routerLink]="routerLink"
+    class="btn"
+    [ngClass]="[variant, size, fullWidth ? 'full' : '', isDisabled ? 'disabled' : '']">
+
+    <ng-container *ngTemplateOutlet="buttonContent"></ng-container>
+
+  </a>
+
+</ng-container>
+
+<ng-template #normalButton>
+
+  <button
+    [attr.type]="type"
+    class="btn"
+    [disabled]="isDisabled"
+    [ngClass]="[variant, size, fullWidth ? 'full' : '', iconOnly ? 'icon-only': '' ,isDisabled ? 'disabled' : '']">
+
+    <ng-container *ngTemplateOutlet="buttonContent"></ng-container>
+
+  </button>
+
+</ng-template>
+
+<ng-template #buttonContent>
+
+  <app-spinner *ngIf="loading" [loading]="loading"></app-spinner>
+
+  <ng-container *ngIf="!loading">
+
+    <i *ngIf="iconLeft" class="material-icons icon left">
+      {{ iconLeft }}
+    </i>
+
+    <span class="label" *ngIf="!iconOnly">
+      <ng-content></ng-content>
+    </span>
+
+    <i *ngIf="iconRight" class="material-icons icon right">
+      {{ iconRight }}
+    </i>
+
+  </ng-container>
+
+</ng-template>

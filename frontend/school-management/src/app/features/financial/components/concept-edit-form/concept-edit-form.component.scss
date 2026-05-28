@@ -1,0 +1,90 @@
+.edit-form {
+  padding: 1rem;
+}
+.actions {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.form-content {
+  margin-top: 1.5rem;
+}
+
+app-button {
+  border-radius: 12px;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+app-button:hover {
+  transform: translateY(-1px);
+}
+
+app-button.active {
+  background: var(--color-primary);
+}
+
+.relations-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  margin: 1rem;
+
+  border-radius: 12px;
+  background: var(--color-surface-secondary);
+}
+
+.students-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.75rem 0;
+}
+
+.student-chip {
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  background: var(--color-info-bg);
+  border: 1px solid var(--color-border);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 768px) {
+  .actions {
+    justify-content: center;
+  }
+
+  .edit-form {
+    padding: 0.75rem;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .edit-form {
+    padding: 0.5rem;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .relations-options {
+    padding: 0.75rem;
+  }
+}
+
+
+@media (min-width: 1440px) {
+  .edit-form {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}

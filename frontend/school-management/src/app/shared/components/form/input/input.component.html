@@ -1,0 +1,77 @@
+<app-form-field
+  [label]="label"
+  [error]="hasError ? getErrorMessage() : undefined"
+  [disabled]="disabled"
+  [required]="required"
+  [hint]="hint"
+  [fullWidth]="fullWidth"
+>
+  <div
+    class="input-container"
+    [class.error]="hasError"
+    [class.focused]="focused"
+    [class.sm]="size === 'sm'"
+    [class.md]="size === 'md'"
+    [class.lg]="size === 'lg'"
+    [class.disabled]="disabled"
+    [class.has-left-icon]="iconLeft"
+    [class.has-right-icon]="iconRight || clearable"
+    [class.has-prefix]="prefix"
+    [class.has-suffix]="suffix"
+  >
+    <i
+      *ngIf="iconLeft"
+      class="material-icons icon left"
+      [class.clickable]="iconLeftClick.observers.length > 0"
+      (click)="iconLeftClick.emit()"
+    >
+      {{ iconLeft }}
+    </i>
+
+    <span *ngIf="prefix" class="prefix">
+      {{ prefix }}
+    </span>
+
+    <input
+      [id]="id || name"
+      [type]="type"
+      [placeholder]="placeholder"
+      [value]="value"
+      [disabled]="disabled"
+      [readonly]="readonly"
+      [required]="isRequired"
+      [attr.autocomplete]="autocomplete"
+      [attr.maxlength]="maxLength"
+      [attr.minlength]="minLength"
+      [attr.min]="min"
+      [attr.max]="max"
+      [attr.step]="step"
+      [attr.pattern]="pattern"
+      (input)="handleInput($event)"
+      (blur)="onBlur()"
+      (focus)="onFocus()"
+      (keydown)="onKeyDown($event)"
+    />
+
+    <span *ngIf="suffix" class="suffix">
+      {{ suffix }}
+    </span>
+
+    <button
+      *ngIf="clearable && value && !disabled && !iconRight"
+      class="clear-button"
+      (click)="clearValue()"
+      type="button"
+    >
+      <i class="material-icons">close</i>
+    </button>
+
+    <i
+      *ngIf="iconRight"
+      class="material-icons icon right clickable"
+      (click)="iconRightClick.emit()"
+    >
+      {{ iconRight }}
+    </i>
+  </div>
+</app-form-field>

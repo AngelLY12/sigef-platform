@@ -1,0 +1,8 @@
+ <div class="demographics-grid">
+      <div class="demographic-item" *ngFor="let item of items">
+        <span class="label">{{ item.label }}</span>
+        <span class="value" [class]="item.type">
+          {{ item.value }}{{ item.suffix }}
+        </span>
+      </div>
+    </div>

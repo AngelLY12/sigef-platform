@@ -1,0 +1,43 @@
+<div class="record-list">
+
+  <div class="record-list-actions" *ngIf="listActionsTemplate && selectedItems?.length">
+    <ng-container
+      *ngTemplateOutlet="listActionsTemplate; context: { $implicit: selectedItems }">
+    </ng-container>
+  </div>
+
+  <ng-container *ngIf="items.length > 0; else emptyState">
+    <div class="record" *ngFor="let item of items" [class.selected]="isSelected(item)">
+
+      <div class="record-select" *ngIf="selectionTemplate" (click)="$event.stopPropagation()">
+        <ng-container
+          *ngTemplateOutlet="selectionTemplate; context: { $implicit: item }">
+        </ng-container>
+      </div>
+
+      <div class="record-body" (click)="onItemClicked(item)">
+
+        <div class="record-image" *ngIf="imageTemplate">
+          <ng-container
+            *ngTemplateOutlet="imageTemplate; context: { $implicit: item }">
+          </ng-container>
+        </div>
+
+        <div class="record-content">
+          <ng-container
+            *ngTemplateOutlet="itemTemplate; context: { $implicit: item }">
+          </ng-container>
+        </div>
+
+      </div>
+
+    </div>
+  </ng-container>
+
+  <ng-template #emptyState>
+    <div class="empty-state">
+      No hay datos disponibles
+    </div>
+  </ng-template>
+
+</div>

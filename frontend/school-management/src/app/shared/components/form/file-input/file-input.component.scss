@@ -1,0 +1,55 @@
+
+.file-dropzone {
+  border: 2px dashed var(--card-border-default);
+  border-radius: 1rem;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--card-bg-secondary);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+
+  .material-icons {
+    font-size: 2rem;
+    color: var(--card-accent-primary);
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--card-text-secondary);
+  }
+
+  .file-name {
+    font-weight: 600;
+    color: var(--card-text-primary);
+  }
+
+  &:hover {
+    border-color: var(--card-accent-primary);
+    background: var(--card-hover-bg);
+  }
+
+  &:active {
+    transform: scale(0.99);
+  }
+}
+
+@media (max-width: 600px) {
+  .file-dropzone {
+    padding: 1.25rem;
+    border-radius: 0.75rem;
+
+    .material-icons {
+      font-size: 1.75rem;
+    }
+
+    p {
+      font-size: 0.85rem;
+    }
+  }
+}

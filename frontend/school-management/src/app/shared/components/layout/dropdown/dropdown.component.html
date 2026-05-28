@@ -1,0 +1,11 @@
+<div class="dropdown-container" @scaleFade>
+  <div class="dropdown-trigger" (click)="toggleDropdown(); $event.stopPropagation()">
+    <ng-content select="[dropdown-trigger]"></ng-content>
+  </div>
+
+  <div class="dropdown-overlay" *ngIf="isOpen" (click)="closeDropdown()" @fade></div>
+
+  <div class="dropdown-panel" [ngClass]="'position-' + position" *ngIf="isOpen">
+    <ng-content select="[dropdown-content]"></ng-content>
+  </div>
+</div>

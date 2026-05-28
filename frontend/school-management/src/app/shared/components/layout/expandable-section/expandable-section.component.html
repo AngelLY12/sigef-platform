@@ -1,0 +1,21 @@
+<div class="expandable">
+  <div
+    #contentRef
+    class="content"
+    [class.expanded]="expanded"
+    [style.maxHeight.px]="contentHeight"
+  >
+    <ng-content></ng-content>
+    <div class="fade" *ngIf="!expanded && shouldShowToggle && showFade"></div>
+  </div>
+
+  <app-button
+    *ngIf="showToggle && shouldShowToggle"
+    variant="ghost"
+    size="sm"
+    [iconRight]="expanded ? 'expand_less' : 'expand_more'"
+    (click)="toggle()"
+  >
+    {{ expanded ? collapseText : expandText }}
+  </app-button>
+</div>

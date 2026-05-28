@@ -1,0 +1,52 @@
+<app-page-layout
+  [title]="concept?.concept_name!"
+  [welcomeMessage]="concept?.description || 'Sin descripción '"
+  loadingMessage="Cargando concepto..."
+  icon="receipt"
+  [state]="state"
+  (retry)="loadConceptData(conceptId!)"
+>
+  <div *ngIf="concept && state === 'success'" class="concept-detail">
+    <div class="floating-button">
+      <app-button
+        variant="primary"
+        iconLeft="edit"
+        size="lg"
+        [iconOnly]="true"
+        (click)="openEdit()"
+      >
+      </app-button>
+    </div>
+
+    <div class="concept-sections">
+      <app-button
+        *ngFor="let section of detailSections"
+        variant="ghost"
+        [iconLeft]="section.icon"
+        [class.active]="activeSection === section.key"
+        (click)="activeSection = section.key"
+      >
+        {{ section.title }}
+      </app-button>
+    </div>
+    <div class="detail-grid">
+      <app-info-card
+        *ngFor="let section of detailSections"
+        [title]="section.title"
+        [icon]="section.icon"
+        [hidden]="!isMobile && activeSection !== section.key"
+        [defaultExpanded]="!isMobile"
+      >
+        <div class="detail-list">
+          <app-info-card-item
+            *ngFor="let item of section.items"
+            [icon]="item.icon"
+            [label]="item.label"
+            [value]="item.value"
+          >
+          </app-info-card-item>
+        </div>
+      </app-info-card>
+    </div>
+  </div>
+</app-page-layout>
