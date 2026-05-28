@@ -75,5 +75,3 @@ find_number_format_usage.php
 migrate-exceptions.php
 SearchJobs.php
 temp.json
-
-Dockerfile.dev

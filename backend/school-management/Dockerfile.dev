@@ -38,7 +38,6 @@ COPY bootstrap ./bootstrap
 COPY config ./config
 
 RUN composer install \
-    --no-dev \
     --optimize-autoloader \
     --no-interaction \
     --no-progress \
@@ -46,6 +45,8 @@ RUN composer install \
     --no-scripts
 
 COPY . .
+
+RUN rm -rf bootstrap/cache/*.php
 
 # =========================
 # STAGE 2 — RUNTIME
@@ -81,15 +82,22 @@ WORKDIR /var/www
 
 COPY --from=builder /var/www /var/www
 
-# storage-init como tu Debian
-COPY ./storage /var/www/storage-init
-
 # entrypoints
-COPY docker/php-fpm/entrypoint.sh /usr/local/bin/entrypoint.sh
-COPY docker/php-fpm/entrypoint.worker.sh /usr/local/bin/entrypoint.worker.sh
+COPY docker/php-fpm/dev/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY docker/php-fpm/dev/entrypoint.worker.sh /usr/local/bin/entrypoint.worker.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/entrypoint.worker.sh
 
-RUN chown -R www-data:www-data /var/www
+RUN rm -f /var/www/storage/logs/laravel.log
+
+RUN mkdir -p \
+    /var/www/storage/framework/cache \
+    /var/www/storage/framework/sessions \
+    /var/www/storage/framework/views \
+    /var/www/storage/logs \
+    /var/www/bootstrap/cache \
+    && chown -R www-data:www-data /var/www \
+    && chmod -R 775 /var/www/storage \
+    && chmod -R 775 /var/www/bootstrap/cache
 
 USER www-data
 
