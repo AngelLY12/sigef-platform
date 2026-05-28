@@ -1,4 +1,4 @@
-![Laravel](https://img.shields.io/badge/Laravel-11-red)
+![Laravel](https://img.shields.io/badge/Laravel-12-red)
 ![Angular](https://img.shields.io/badge/Angular-19-DD0031)
 ![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED)
 ![Stripe](https://img.shields.io/badge/Stripe-Payments-635BFF)
