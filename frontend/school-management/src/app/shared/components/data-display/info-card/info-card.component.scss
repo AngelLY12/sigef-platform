@@ -3,7 +3,7 @@
   border-radius: 1rem;
   border: 1px solid var(--card-border-default);
   overflow: visible;
-  height: 100%;
+  height: auto;
 
   &.loading {
     pointer-events: none;
