@@ -4,6 +4,7 @@ import {
   Component,
   ElementRef,
   Input,
+  OnDestroy,
   ViewChild,
 } from '@angular/core';
 import { ButtonComponent } from '../../ui/button/button.component';
@@ -15,7 +16,7 @@ import { ButtonComponent } from '../../ui/button/button.component';
   templateUrl: './expandable-section.component.html',
   styleUrl: './expandable-section.component.scss',
 })
-export class ExpandableSectionComponent implements AfterViewInit {
+export class ExpandableSectionComponent implements AfterViewInit, OnDestroy {
   @Input() expanded = false;
   @Input() showToggle = true;
   @Input() showFade = true;
@@ -24,14 +25,25 @@ export class ExpandableSectionComponent implements AfterViewInit {
   @Input() collapseText = 'Ver menos';
 
   @ViewChild('contentRef') contentRef!: ElementRef<HTMLDivElement>;
+  private resizeObserver?: ResizeObserver;
 
   contentHeight = 0;
   shouldShowToggle = false;
 
-  ngAfterViewInit(): void {
-    requestAnimationFrame(() => {
-      this.updateHeight();
+  ngAfterViewInit() {
+    this.resizeObserver = new ResizeObserver(() => {
+      requestAnimationFrame(() => {
+        this.updateHeight();
+      });
     });
+
+    this.resizeObserver.observe(this.contentRef.nativeElement);
+
+    this.updateHeight();
+  }
+
+  ngOnDestroy() {
+    this.resizeObserver?.disconnect();
   }
 
   toggle() {
@@ -45,7 +57,13 @@ export class ExpandableSectionComponent implements AfterViewInit {
     if (!this.contentRef) return;
 
     const el = this.contentRef.nativeElement;
+
     this.shouldShowToggle = el.scrollHeight > this.maxHeight;
+
+    if (!this.shouldShowToggle) {
+      this.contentHeight = el.scrollHeight;
+      return;
+    }
 
     this.contentHeight = this.expanded ? el.scrollHeight : this.maxHeight;
   }
