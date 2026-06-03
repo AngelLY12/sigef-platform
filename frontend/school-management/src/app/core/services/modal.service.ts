@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { DisplayType } from '../models/types/display-type.type';
 import { ModalType } from '../models/types/modal-error.type';
 import { ActionModalConfig } from '../models/domain/action-modal-config.model';
+import { ConfirmModalConfig } from '../models/domain/confirm-moda-config.model';
 
 @Injectable({ providedIn: 'root' })
 export class ModalService {
@@ -23,6 +24,8 @@ export class ModalService {
     component: any;
     data?: any;
   } | null>(null);
+
+  public confirmModalData = new BehaviorSubject< ConfirmModalConfig  | null>(null);
 
   show(data: {
     message?: string;
@@ -62,5 +65,13 @@ export class ModalService {
     this.closeCallback = undefined;
 
     this.customModalData.next(null);
+  }
+
+  openConfirm(config: ConfirmModalConfig) {
+    this.confirmModalData.next(config );
+  }
+
+  closeConfirm() {
+    this.confirmModalData.next(null);
   }
 }

@@ -1,0 +1,49 @@
+<app-base-modal
+  *ngIf="isVisible"
+  (backdrop)="actionState !== 'loading' && close()"
+  [loading]="actionState === 'loading'"
+  loadingMessage="Procesando..."
+>
+  <div modal-header>
+    <div class="title-container">
+      <h2>{{ config.title }}</h2>
+
+      <app-button
+        *ngIf="isMobile"
+        [iconOnly]="true"
+        iconLeft="close"
+        variant="ghost"
+        [disabled]="actionState === 'loading'"
+        (click)="close()"
+      />
+    </div>
+  </div>
+
+  <div modal-body>
+    <p class="confirm-message">
+      {{ config.message }}
+    </p>
+  </div>
+
+  <div modal-actions class="actions">
+    <app-button
+      *ngIf="!isMobile"
+      variant="ghost"
+      [fullWidth]="true"
+      [disabled]="actionState === 'loading'"
+      (click)="close()"
+    >
+      {{ config.cancelLabel || 'Cancelar' }}
+    </app-button>
+
+    <app-button
+      [variant]="config.confirmVariant || 'primary'"
+      [fullWidth]="true"
+      [loading]="actionState === 'loading'"
+      [disabled]="actionState === 'loading'"
+      (click)="confirm()"
+    >
+      {{ config.confirmLabel || 'Confirmar' }}
+    </app-button>
+  </div>
+</app-base-modal>

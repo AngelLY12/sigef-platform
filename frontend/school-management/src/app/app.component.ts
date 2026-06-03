@@ -7,10 +7,11 @@ import { ActionsModalComponent } from './shared/components/modal/actions-modal/a
 import { CustomModalComponent } from './shared/components/modal/custom-modal/custom-modal.component';
 import { Title } from '@angular/platform-browser';
 import { filter } from 'rxjs';
+import { ConfirmModalComponent } from './shared/components/modal/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule ,NotificationModalComponent, AlertComponent, ActionsModalComponent, CustomModalComponent],
+  imports: [RouterOutlet, CommonModule ,NotificationModalComponent, AlertComponent, ActionsModalComponent, CustomModalComponent, ConfirmModalComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
