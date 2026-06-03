@@ -18,8 +18,14 @@ export class PaginatorComponent implements OnChanges {
   @Output() pageChange = new EventEmitter<number>();
   @Output() perPageChange = new EventEmitter<number>();
 
-  goToPage(page: number | '...') {
-    if (page === '...' ||  page === this.paginator.currentPage) return;
+  goToPage(page: number | '...' | null | undefined) {
+  if (
+    page == null ||
+    page === '...' ||
+    page === this.paginator.currentPage ||
+    page < 1 ||
+    page > this.paginator.totalPages
+  ) return;
     this.pageChange.emit(page);
   }
 
