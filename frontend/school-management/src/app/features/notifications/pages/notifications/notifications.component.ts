@@ -12,9 +12,10 @@ import {
 import { Notification } from '../../../../core/models/domain/notification.model';
 import { ListController } from '../../../../core/utils/list-controller.utils';
 import { PaginatorComponent } from '../../../../shared/components/data-display/paginator/paginator.component';
-import { FilterBarComponent } from '../../../../shared/components/features/filter-bar/filter-bar.component';
 import { Paginated } from '../../../../core/utils/paginated-helper.utils';
 import { QueryParamsHelper } from '../../../../core/utils/query-params-helper.utils';
+import { forkJoin } from 'rxjs';
+import { ModalService } from '../../../../core/services/modal.service';
 
 @Component({
   selector: 'app-notifications',
@@ -24,15 +25,18 @@ import { QueryParamsHelper } from '../../../../core/utils/query-params-helper.ut
     RecordListComponent,
     PageLayoutComponent,
     PaginatorComponent,
+    ButtonComponent,
   ],
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.scss',
 })
 export class NotificationsComponent implements OnInit {
   private notificationsService = inject(NotificationService);
+  private modalService = inject(ModalService);
   private listController!: ListController<NotificationParams>;
 
   paginatedNotifications: Paginated<Notification> | null = null;
+  unreadNotifications: Notification[] = [];
   unreadCount = 0;
   readCount = 0;
 
@@ -52,20 +56,63 @@ export class NotificationsComponent implements OnInit {
 
   loadAllNotifications() {
     this.notificationsState = 'loading';
-    this.notificationsService
-      .getAllNotifications(this.notificationsParams)
-      .subscribe({
-        next: (res) => {
-          this.notificationsState ='success';
-          this.paginatedNotifications = res.notifications;
-          this.unreadCount = res.unreadCount;
-          this.readCount = res.readCount;
-          console.log(res);
-        },
-        error: () => {
-          this.notificationsState = 'error';
-        },
+    forkJoin({
+      all: this.notificationsService.getAllNotifications(
+        this.notificationsParams,
+      ),
+      unread: this.notificationsService.getUnreadNotifications(),
+    }).subscribe({
+      next: ({ all, unread }) => {
+        this.notificationsState = 'success';
+        this.paginatedNotifications = all.notifications;
+        this.unreadCount = all.unreadCount;
+        this.readCount = all.readCount;
+        this.unreadNotifications = unread.notifications;
+      },
+      error: () => {
+        this.notificationsState = 'error';
+      },
+    });
+  }
+
+  markAsRead(notification: Notification) {
+    if (notification.read_at) {
+      this.modalService.show({
+        message: 'Esta notificación ya ha sido marcada como leída.',
+        type: 'info',
+        display: 'alert',
       });
+      return;
+    }
+    this.notificationsService.markAsRead(notification.id).subscribe({
+      next: () => {
+        this.loadAllNotifications();
+      },
+    });
+  }
+
+  markAllAsRead() {
+    this.notificationsService.markAllAsRead().subscribe({
+      next: () => {
+        this.loadAllNotifications();
+      },
+    });
+  }
+
+  deleteNotification(notification: Notification) {
+    this.modalService.openConfirm({
+      title: 'Eliminar notificación',
+      message: `¿Deseas eliminar esta notificación? Esta acción no puede deshacerse.`,
+
+      confirmLabel: 'Eliminar',
+      confirmVariant: 'danger',
+
+      onConfirm: () => this.notificationsService.deleteNotification(notification.id),
+
+      onSuccess: () => {
+        this.loadAllNotifications();
+      },
+    });
   }
 
   onRefresh() {

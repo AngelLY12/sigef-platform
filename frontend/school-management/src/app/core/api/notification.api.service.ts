@@ -45,4 +45,18 @@ export class NotificationService {
       .pipe(map((res) => res.data));
   }
 
+  markAsRead(notificationId: string): Observable<void> {
+    return this.http
+      .post(`${NOTIFICATIONS_URL}/mark-as-read/${notificationId}`, {})
+      .pipe(map(() => {}));
+  }
+
+  markAllAsRead(): Observable<void> {
+    return this.http.post(`${NOTIFICATIONS_URL}/mark-as-read`, {}).pipe(map(() => {}));
+  }
+
+  deleteNotification(notificationId: string): Observable<void> {
+    return this.http.delete(`${NOTIFICATIONS_URL}/${notificationId}`).pipe(map(() => {}));
+  }
+
 }
