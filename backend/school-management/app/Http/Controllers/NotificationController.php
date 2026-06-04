@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Core\Application\Services\Misc\NotificationsServiceFacades;
+use App\Http\Requests\General\PaginationRequest;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 
@@ -14,43 +17,51 @@ use Illuminate\Support\Facades\Response;
 class NotificationController extends Controller
 {
 
-    public function index()
-    {
-        $user = Auth::user();
+    protected NotificationsServiceFacades $service;
 
+    public function __construct(NotificationsServiceFacades $service)
+    {
+        $this->service=$service;
+    }
+
+    public function index(PaginationRequest $request)
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        $forceRefresh = $request->validated()['forceRefresh'] ?? false;
+        $perPage = $request->integer('perPage', 15);
+        $page = $request->integer('page', 1);
+        $notifications = $this->service->findReadNotifications($user, $page, $perPage, $forceRefresh);
+        $count = $this->service->countNotifications($user, $forceRefresh);
         return Response::success([
-            'notifications' => $user->notifications()
-                ->whereNotNull('read_at')
-                ->orderBy('created_at', 'desc')
-                ->paginate(20),
-            'unread_count' => $user->unreadNotifications()->count(),
-            'read_count' => $user->notifications()->whereNotNull('read_at')->count()
+            'notifications' => $notifications,
+            'unread_count' => $count->unread_count,
+            'read_count' => $count->read_count
         ]);
     }
 
-    public function unread()
+    public function unread(PaginationRequest $request)
     {
+        /** @var User $user */
         $user = Auth::user();
+        $forceRefresh = $request->validated()['forceRefresh'] ?? false;
+        $perPage = $request->integer('perPage', 15);
+        $page = $request->integer('page', 1);
+        $notifications = $this->service->findUnreadNotifications($user, $page, $perPage, $forceRefresh);
         return Response::success([
-            'notifications' => $user->unreadNotifications()
-                ->orderBy('created_at', 'desc')
-                ->get(),
-            'count' => $user->unreadNotifications()->count(),
+            'notifications' => $notifications
         ]);
     }
 
     public function markAsRead($id = null)
     {
+        /** @var User $user */
         $user = Auth::user();
 
         if ($id) {
-            $notification = $user->notifications()->where('id', $id)->first();
-
-            if ($notification) {
-                $notification->markAsRead();
-            }
+            $this->service->markAsReadNotification($user, $id);
         } else {
-            $user->unreadNotifications()->update(['read_at' => now()]);
+            $this->service->markAsReadAllNotifications($user);
         }
 
         return Response::success([
@@ -60,8 +71,9 @@ class NotificationController extends Controller
 
     public function destroy($id)
     {
+        /** @var User $user */
         $user = Auth::user();
-        $user->notifications()->where('id', $id)->delete();
+        $this->service->deleteNotification($user, $id);
         return  Response::success(null, null, 200);
     }
 }

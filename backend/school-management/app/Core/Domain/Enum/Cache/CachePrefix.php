@@ -10,4 +10,5 @@ enum CachePrefix : string
     case USER = 'user';
     case CAREERS = 'careers';
     case PARENT = 'parent';
+    case NOTIFICATIONS = 'notifications';
 }

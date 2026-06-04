@@ -7,6 +7,7 @@ use App\Core\Domain\Repositories\Command\Auth\RefreshTokenRepInterface;
 use App\Core\Domain\Repositories\Command\Auth\RolesAndPermissionsRepInterface;
 use App\Core\Domain\Repositories\Command\Misc\CareerRepInterface;
 use App\Core\Domain\Repositories\Command\Misc\DBRepInterface;
+use App\Core\Domain\Repositories\Command\Misc\NotificationRepInterface;
 use App\Core\Domain\Repositories\Command\Misc\ParentInviteRepInterface;
 use App\Core\Domain\Repositories\Command\Misc\SemesterPromotionsRepInterface;
 use App\Core\Domain\Repositories\Command\Payments\PaymentConceptRepInterface;
@@ -19,6 +20,7 @@ use App\Core\Domain\Repositories\Command\User\StudentDetailReInterface;
 use App\Core\Domain\Repositories\Command\User\UserRepInterface;
 use App\Core\Domain\Repositories\Query\Auth\RolesAndPermissosQueryRepInterface;
 use App\Core\Domain\Repositories\Query\Misc\CareerQueryRepInterface;
+use App\Core\Domain\Repositories\Query\Misc\NotificationQueryRepInterface;
 use App\Core\Domain\Repositories\Query\Misc\ParentInviteQueryRepInterface;
 use App\Core\Domain\Repositories\Query\Payments\PaymentConceptQueryRepInterface;
 use App\Core\Domain\Repositories\Query\Payments\PaymentEventQueryRepInterface;
@@ -34,6 +36,7 @@ use App\Core\Infraestructure\Repositories\Command\Auth\EloquentRefreshTokenRepos
 use App\Core\Infraestructure\Repositories\Command\Auth\EloquentRolesAndPermissionsRepository;
 use App\Core\Infraestructure\Repositories\Command\Misc\EloquentCareerRepository;
 use App\Core\Infraestructure\Repositories\Command\Misc\EloquentDBRepository;
+use App\Core\Infraestructure\Repositories\Command\Misc\EloquentNotificationRepository;
 use App\Core\Infraestructure\Repositories\Command\Misc\EloquentParentInviteRepository;
 use App\Core\Infraestructure\Repositories\Command\Misc\EloquentSemesterPromotionsRepository;
 use App\Core\Infraestructure\Repositories\Command\Payments\EloquentPaymentConceptRepository;
@@ -46,6 +49,7 @@ use App\Core\Infraestructure\Repositories\Command\User\EloquentStudentDetailRepo
 use App\Core\Infraestructure\Repositories\Command\User\EloquentUserRepository;
 use App\Core\Infraestructure\Repositories\Query\Auth\EloquentRolesAndPermissionQueryRepository;
 use App\Core\Infraestructure\Repositories\Query\Misc\EloquentCareerQueryRepository;
+use App\Core\Infraestructure\Repositories\Query\Misc\EloquentNotificationQueryRepository;
 use App\Core\Infraestructure\Repositories\Query\Misc\EloquentParentInviteQueryRepository;
 use App\Core\Infraestructure\Repositories\Query\Payments\EloquentPaymentConceptQueryRepository;
 use App\Core\Infraestructure\Repositories\Query\Payments\EloquentPaymentEventQueryRepository;
@@ -136,6 +140,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(PaymentEventRepInterface::class, EloquentPaymentEventRepository::class);
         $this->app->bind(PaymentEventQueryRepInterface::class, EloquentPaymentEventQueryRepository::class);
         $this->app->bind(ReceiptRepInterface::class, EloquentReceiptRepository::class);
+        $this->app->bind(NotificationRepInterface::class, EloquentNotificationRepository::class);
+        $this->app->bind(NotificationQueryRepInterface::class, EloquentNotificationQueryRepository::class);
 
     }
 
