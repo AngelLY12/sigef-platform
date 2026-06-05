@@ -4,11 +4,10 @@ namespace App\Swagger;
 /**
  * @OA\Info(
  *     version="1.0.0",
- *     title="School Management API",
- *     description="Documentación de la API para el sistema de gestión escolar",
+ *     title="SIGEF API",
+ *     description="School and Financial Management System API",
  *     @OA\Contact(
- *         email="soporte@cbta71.edu.mx",
- *         name="Equipo de desarrollo CBTa71"
+ *         name="Angel López Yáñez"
  *     ),
  *     @OA\License(
  *         name="MIT",
@@ -18,12 +17,12 @@ namespace App\Swagger;
  *
  * @OA\Server(
  *     url="http://localhost:80",
- *     description="Servidor local"
+ *     description="Local development server"
  * )
  *
  * @OA\Server(
- *     url="https://nginx-production-728f.up.railway.app",
- *     description="Servidor de producción"
+ *     url="https://api.example.com",
+ *     description="Production server"
  * )
  *
  * @OA\PathItem(
