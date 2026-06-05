@@ -5,155 +5,177 @@ namespace App\Swagger\controllers\Misc;
 class Notifications
 {
 
-/**
- * @OA\Get(
- *     path="/api/v1/notifications",
- *     operationId="getUserNotifications",
- *     tags={"Notifications"},
- *     summary="Obtener notificaciones leídas paginadas del usuario autenticado",
- *     description="Retorna una lista paginada de las notificaciones LEÍDAS del usuario. Las notificaciones no leídas se obtienen en el endpoint /unread.",
- *     security={{"sanctum": {}}},
- *     @OA\Parameter(
- *         name="page",
- *         in="query",
- *         description="Número de página",
- *         required=false,
- *         @OA\Schema(type="integer", default=1)
- *     ),
- *     @OA\Parameter(
- *         name="perPage",
- *         in="query",
- *         description="Notificaciones por página",
- *         required=false,
- *         @OA\Schema(type="integer", default=20, maximum=100)
- *     ),
- *     @OA\Parameter(
- *          name="forceRefresh",
- *          in="query",
- *          description="Forzar actualización del caché (true o false).",
- *          required=false,
- *          @OA\Schema(type="boolean", example=false)
- *      ),
- *     @OA\Response(
- *         response=200,
- *         description="Notificaciones leídas obtenidas exitosamente",
- *         @OA\JsonContent(
- *             allOf={
- *                 @OA\Schema(ref="#/components/schemas/SuccessResponse"),
- *                 @OA\Schema(
- *                     type="object",
- *                     @OA\Property(
- *                         property="data",
- *                         type="object",
- *                         @OA\Property(
- *                             property="notifications",
- *                             allof={
- *                                 @OA\Schema(ref="#/components/schemas/PaginatedResponse"),
- *                                 @OA\Schema(
- *                                     @OA\Property(
- *                                         property="items",
- *                                         type="array",
- *                                         @OA\Items(
- *                                             ref="#/components/schemas/DatabaseNotification"
- *                                         )
- *                                     )
- *                                 )
- *                             }
- *                         ),
- *                         @OA\Schema (ref="#/components/schemas/NotificationsCountResponse")
- *                     )
- *                 )
- *             }
- *         )
- *     ),
- *     @OA\Response(
- *         response=401,
- *         description="No autenticado",
- *         @OA\JsonContent(ref="#/components/schemas/ErrorResponse")
- *     ),
- *     @OA\Response(
- *         response=429,
- *         description="Demasiadas solicitudes",
- *         @OA\JsonContent(ref="#/components/schemas/ErrorResponse")
- *     )
- * )
- */
-public function index(){}
+    /**
+     * @OA\Get(
+     *     path="/api/v1/notifications",
+     *     operationId="getUserNotifications",
+     *     tags={"Notifications"},
+     *     summary="Obtener notificaciones leídas paginadas del usuario autenticado",
+     *     description="Retorna una lista paginada de las notificaciones leídas del usuario.",
+     *     security={{"sanctum": {}}},
+     *
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Número de página",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=1)
+     *     ),
+     *
+     *     @OA\Parameter(
+     *         name="perPage",
+     *         in="query",
+     *         description="Notificaciones por página",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=15)
+     *     ),
+     *
+     *     @OA\Parameter(
+     *         name="forceRefresh",
+     *         in="query",
+     *         description="Forzar actualización del caché",
+     *         required=false,
+     *         @OA\Schema(type="boolean", example=false)
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Notificaciones obtenidas correctamente",
+     *         @OA\JsonContent(
+     *             allOf={
+     *                 @OA\Schema(ref="#/components/schemas/SuccessResponse"),
+     *                 @OA\Schema(
+     *                     @OA\Property(
+     *                         property="data",
+     *                         type="object",
+     *
+     *                         @OA\Property(
+     *                             property="notifications",
+     *                             allOf={
+     *                                 @OA\Schema(ref="#/components/schemas/PaginatedResponse"),
+     *                                 @OA\Schema(
+     *                                     @OA\Property(
+     *                                         property="items",
+     *                                         type="array",
+     *                                         @OA\Items(
+     *                                             ref="#/components/schemas/DatabaseNotification"
+     *                                         )
+     *                                     )
+     *                                 )
+     *                             }
+     *                         ),
+     *
+     *                         @OA\Property(
+     *                             property="unread_count",
+     *                             type="integer",
+     *                             example=3
+     *                         ),
+     *
+     *                         @OA\Property(
+     *                             property="read_count",
+     *                             type="integer",
+     *                             example=12
+     *                         )
+     *                     )
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=401,
+     *         description="No autenticado",
+     *         @OA\JsonContent(ref="#/components/schemas/ErrorResponse")
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=429,
+     *         description="Demasiadas solicitudes",
+     *         @OA\JsonContent(ref="#/components/schemas/ErrorResponse")
+     *     )
+     * )
+     */
+    public function index(){}
 
-/**
- * @OA\Get(
- *     path="/api/v1/notifications/unread",
- *     operationId="getUnreadNotifications",
- *     tags={"Notifications"},
- *     summary="Obtener notificaciones no leídas",
- *     description="Retorna todas las notificaciones no leídas del usuario",
- *     security={{"sanctum": {}}},
- *     @OA\Parameter(
- *          name="page",
- *          in="query",
- *          description="Número de página",
- *          required=false,
- *          @OA\Schema(type="integer", default=1)
- *      ),
- *      @OA\Parameter(
- *          name="perPage",
- *          in="query",
- *          description="Notificaciones por página",
- *          required=false,
- *          @OA\Schema(type="integer", default=20, maximum=100)
- *      ),
- *      @OA\Parameter(
- *           name="forceRefresh",
- *           in="query",
- *           description="Forzar actualización del caché (true o false).",
- *           required=false,
- *           @OA\Schema(type="boolean", example=false)
- *      ),
- *     @OA\Response(
- *         response=200,
- *         description="Notificaciones no leídas obtenidas",
- *         @OA\JsonContent(
- *             allOf={
- *                 @OA\Schema(ref="#/components/schemas/SuccessResponse"),
- *                 @OA\Schema(
- *                     type="object",
- *                     @OA\Property(
- *                         property="data",
- *                         type="object",
- *                         @OA\Property(
- *                             property="notifications",
- *                             allof={
- *                                 @OA\Schema(ref="#/components/schemas/PaginatedResponse"),
- *                                 @OA\Schema(
- *                                     @OA\Property(
- *                                         property="items",
- *                                         type="array",
- *                                         @OA\Items(
- *                                             ref="#/components/schemas/DatabaseNotification"
- *                                         )
- *                                     )
- *                                 )
- *                             }
- *
- *                         )
- *                     )
- *                 )
- *             }
- *         )
- *     ),
- *     @OA\Response(
- *         response=401,
- *         description="No autenticado",
- *         @OA\JsonContent(ref="#/components/schemas/ErrorResponse")
- *     ),
- *     @OA\Response(
- *         response=429,
- *         description="Demasiadas solicitudes",
- *         @OA\JsonContent(ref="#/components/schemas/ErrorResponse")
- *     )
- * )
- */
-public function unread(){}
+    /**
+     * @OA\Get(
+     *     path="/api/v1/notifications/unread",
+     *     operationId="getUnreadNotifications",
+     *     tags={"Notifications"},
+     *     summary="Obtener notificaciones no leídas",
+     *     description="Retorna una lista paginada de las notificaciones no leídas del usuario.",
+     *     security={{"sanctum": {}}},
+     *
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Número de página",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=1)
+     *     ),
+     *
+     *     @OA\Parameter(
+     *         name="perPage",
+     *         in="query",
+     *         description="Notificaciones por página",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=15)
+     *     ),
+     *
+     *     @OA\Parameter(
+     *         name="forceRefresh",
+     *         in="query",
+     *         description="Forzar actualización del caché",
+     *         required=false,
+     *         @OA\Schema(type="boolean", example=false)
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Notificaciones no leídas obtenidas correctamente",
+     *         @OA\JsonContent(
+     *             allOf={
+     *                 @OA\Schema(ref="#/components/schemas/SuccessResponse"),
+     *                 @OA\Schema(
+     *                     @OA\Property(
+     *                         property="data",
+     *                         type="object",
+     *
+     *                         @OA\Property(
+     *                             property="notifications",
+     *                             allOf={
+     *                                 @OA\Schema(ref="#/components/schemas/PaginatedResponse"),
+     *                                 @OA\Schema(
+     *                                     @OA\Property(
+     *                                         property="items",
+     *                                         type="array",
+     *                                         @OA\Items(
+     *                                             ref="#/components/schemas/DatabaseNotification"
+     *                                         )
+     *                                     )
+     *                                 )
+     *                             }
+     *                         )
+     *                     )
+     *                 )
+     *             }
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=401,
+     *         description="No autenticado",
+     *         @OA\JsonContent(ref="#/components/schemas/ErrorResponse")
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=429,
+     *         description="Demasiadas solicitudes",
+     *         @OA\JsonContent(ref="#/components/schemas/ErrorResponse")
+     *     )
+     * )
+     */
+    public function unread(){}
 
 /**
  * @OA\Post(
