@@ -2,6 +2,8 @@
 
 namespace App\Notifications;
 
+use App\Core\Application\DTO\Response\Notifications\RelationNotificationDataDTO;
+use App\Core\Application\Factories\Notifications\RelationNotificationFactory;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
@@ -17,6 +19,7 @@ class ParentStudentDeleteNotification extends Notification
      */
     public function __construct(
         public string $studentFullName,
+        public string $parentFullName,
     )
     {
         //
@@ -34,11 +37,12 @@ class ParentStudentDeleteNotification extends Notification
 
     public function toDatabase(object $notifiable): array
     {
-        return [
-            'title' => 'Relación eliminada',
-            'message' => "Hola {$notifiable->name}, se elimino la relación con tu familiar {$this->studentFullName}.",
-            'type' => 'relation_deleted'
-        ];
+        return RelationNotificationFactory::deleted(
+            new RelationNotificationDataDTO(
+                student_name: $this->studentFullName,
+                parent_name: $this->parentFullName,
+            )
+        )->toArray();
     }
 
     public function toBroadcast($notifiable): BroadcastMessage

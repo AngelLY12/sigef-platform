@@ -2,6 +2,8 @@
 
 namespace App\Notifications;
 
+use App\Core\Application\DTO\Response\Notifications\PromotionNotificationDataDTO;
+use App\Core\Application\Factories\Notifications\PromotionNotificationFactory;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
@@ -35,11 +37,11 @@ class PromotionCompletedNotification extends Notification
 
     public function toDatabase($notifiable): array
     {
-        return [
-            'title' => 'Promoción de estudiantes completada',
-            'message' => "Se promovieron {$this->promotedCount} estudiantes y se dieron de baja {$this->desactivatedCount}",
-            'type' => 'promotion_completed'
-        ];
+        $data = new PromotionNotificationDataDTO(
+            promoted_count: $this->promotedCount,
+            deactivated_count: $this->desactivatedCount,
+        );
+        return PromotionNotificationFactory::completed($data)->toArray();
     }
 
     public function toBroadcast($notifiable): BroadcastMessage

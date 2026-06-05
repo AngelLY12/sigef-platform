@@ -2,6 +2,8 @@
 
 namespace App\Notifications;
 
+use App\Core\Application\DTO\Response\Notifications\ImportNotificationDataDTO;
+use App\Core\Application\Factories\Notifications\ImportNotificationFactory;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
@@ -34,12 +36,11 @@ class ImportFailedNotification extends Notification
 
     public function toDatabase($notifiable): array
     {
-        return [
-            'title' => 'Import error',
-            'message' => "Error al terminar la importación de datos",
-            'error' => $this->errorMessage,
-            'type' => 'import_error'
-        ];
+        return ImportNotificationFactory::error(
+            new ImportNotificationDataDTO(
+                error: $this->errorMessage
+            )
+        )->toArray();
     }
 
     public function toBroadcast($notifiable): BroadcastMessage

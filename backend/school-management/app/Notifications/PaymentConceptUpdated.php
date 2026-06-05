@@ -2,6 +2,8 @@
 
 namespace App\Notifications;
 
+use App\Core\Application\DTO\Response\Notifications\PaymentConceptChangedDataDTO;
+use App\Core\Application\Factories\Notifications\PaymentConceptNotificationFactory;
 use App\Core\Domain\Utils\Helpers\Money;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\BroadcastMessage;
@@ -32,20 +34,22 @@ class PaymentConceptUpdated extends Notification
 
     public function toDatabase(object $notifiable): array
     {
-        return [
-            'title' => $this->getTitle(),
-            'message' => $this->getMessage($notifiable),
-            'concept_id' => $this->paymentConcept['id'],
-            'concept_name' => $this->paymentConcept['concept_name'],
-            'amount' => $this->paymentConcept['amount'],
-            'start_date' => $this->paymentConcept['start_date']?->toISOString(),
-            'end_date' => $this->paymentConcept['end_date']?->toISOString(),
-            'changes' => $this->getFilteredChanges(),
-            'action' => $this->determineMainChangeType(),
-            'type' => 'payment_concept_changed',
-            'priority' => 'high',
-            'created_at' => now()->toISOString(),
-        ];
+        $data = new PaymentConceptChangedDataDTO(
+            concept_id: $this->paymentConcept['id'],
+            concept_name: $this->paymentConcept['concept_name'],
+            amount: $this->paymentConcept['amount'],
+            changes: $this->getFilteredChanges(),
+            action: $this->determineMainChangeType(),
+            timestamp: now()->toImmutable(),
+            start_date: $this->paymentConcept['start_date']?->toImmutable(),
+            end_date: $this->paymentConcept['end_date']?->toImmutable(),
+            priority: 'high',
+        );
+        return PaymentConceptNotificationFactory::changed(
+            data: $data,
+            title: $this->getTitle(),
+            message: $this->getMessage($notifiable)
+        )->toArray();
     }
     public function toBroadcast($notifiable): BroadcastMessage
     {

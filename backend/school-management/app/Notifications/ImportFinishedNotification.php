@@ -2,6 +2,8 @@
 
 namespace App\Notifications;
 
+use App\Core\Application\DTO\Response\Notifications\ImportNotificationDataDTO;
+use App\Core\Application\Factories\Notifications\ImportNotificationFactory;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
@@ -34,12 +36,11 @@ class ImportFinishedNotification extends Notification
 
     public function toDatabase($notifiable): array
     {
-        return [
-            'title' => 'Import finalizado',
-            'message' => "Import de datos finalizado, a continuación veras un resúmen.",
-            'details' => $this->buildImportMessage(),
-            'type' => 'import_finished'
-        ];
+        return ImportNotificationFactory::finished(
+            new ImportNotificationDataDTO(
+                details: $this->buildImportMessage()
+            )
+        )->toArray();
     }
 
     public function toBroadcast($notifiable): BroadcastMessage

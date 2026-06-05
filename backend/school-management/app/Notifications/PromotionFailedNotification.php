@@ -2,6 +2,8 @@
 
 namespace App\Notifications;
 
+use App\Core\Application\DTO\Response\Notifications\PromotionNotificationDataDTO;
+use App\Core\Application\Factories\Notifications\PromotionNotificationFactory;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
@@ -34,11 +36,10 @@ class PromotionFailedNotification extends Notification
 
     public function toDatabase($notifiable): array
     {
-        return [
-            'title' => 'Promoción de estudiantes no completada',
-            'message' => "Hubo un fallo en la promoción de los estudiantes: {$this->error}",
-            'type' => 'promotion_failed'
-        ];
+        $data = new PromotionNotificationDataDTO(
+            error: $this->error,
+        );
+        return PromotionNotificationFactory::failed($data)->toArray();
     }
 
     public function toBroadcast($notifiable): BroadcastMessage

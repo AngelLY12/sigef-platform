@@ -2,6 +2,8 @@
 
 namespace App\Notifications;
 
+use App\Core\Application\DTO\Response\Notifications\InvitationNotificationDataDTO;
+use App\Core\Application\Factories\Notifications\InvitationNotificationFactory;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
@@ -35,11 +37,12 @@ class ParentInvitationFailedNotification extends Notification
 
     public function toDatabase($notifiable): array
     {
-        return [
-            'title' => 'Fallo al aceptar invitación',
-            'message' => "Hola {$this->studentFullName}, hubo un fallo inesperado en la invitación enviada a tu familiar {$this->parentFullName}. Puedes iniciar el proceso de nuevo enviando una nueva invitación.",
-            'type' => 'invitation_failed',
-        ];
+        return InvitationNotificationFactory::failed(
+            new InvitationNotificationDataDTO(
+                student_name: $this->studentFullName,
+                parent_name: $this->parentFullName
+            )
+        )->toArray();
     }
 
     public function toBroadcast($notifiable): BroadcastMessage

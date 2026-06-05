@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Core\Domain\Repositories\Query\User\UserQueryRepInterface;
 use App\Events\ParentStudentRelationDelete;
+use App\Models\User;
 use App\Notifications\ParentStudentDeleteNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
@@ -30,7 +31,8 @@ class SendParentStudentDeleteNotification implements ShouldQueue
         $parent= $this->userQueryRep->findModelEntity($event->parentId);
         $student= $this->userQueryRep->findModelEntity($event->studentId);
         $parent->notify(new ParentStudentDeleteNotification(
-            $student->name . ' ' . $student->last_name
+            $student->name . ' ' . $student->last_name,
+            $parent->name . ' ' . $parent->last_name
         ));
     }
 

@@ -2,6 +2,8 @@
 
 namespace App\Notifications;
 
+use App\Core\Application\DTO\Response\Notifications\PaymentConceptStatusChangedDataDTO;
+use App\Core\Application\Factories\Notifications\PaymentConceptNotificationFactory;
 use App\Core\Domain\Entities\PaymentConcept;
 use App\Core\Domain\Enum\PaymentConcept\PaymentConceptStatus;
 use Illuminate\Bus\Queueable;
@@ -37,19 +39,22 @@ class PaymentConceptStatusUpdated extends Notification
      */
     public function toDatabase($notifiable): array
     {
-        return [
-            'type' => 'payment_concept_status_changed',
-            'concept_id' => $this->concept['id'],
-            'concept_name' => $this->concept['concept_name'],
-            'old_status' => $this->oldStatus,
-            'new_status' => $this->newStatus,
-            'amount' => $this->concept['amount'],
-            'applies_to' => $this->concept['applies_to']->value,
-            'title' => $this->getTitle(),
-            'message' => $this->getMessage(),
-            'status_transition' => "{$this->oldStatus}_to_{$this->newStatus}",
-            'timestamp' => now()->toISOString(),
-        ];
+        $data = new PaymentConceptStatusChangedDataDTO(
+            concept_id: $this->concept['id'],
+            concept_name: $this->concept['concept_name'],
+            old_status: $this->oldStatus,
+            new_status: $this->newStatus,
+            amount: $this->concept['amount'],
+            applies_to: $this->concept['applies_to']->value,
+            status_transition: "{$this->oldStatus}_to_{$this->newStatus}",
+            timestamp: now()->toImmutable(),
+        );
+
+        return PaymentConceptNotificationFactory::statusChanged(
+            $data,
+            $this->getTitle(),
+            $this->getMessage()
+        )->toArray();
     }
 
     public function toBroadcast($notifiable): BroadcastMessage

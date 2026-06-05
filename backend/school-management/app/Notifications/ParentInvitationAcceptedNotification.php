@@ -2,6 +2,8 @@
 
 namespace App\Notifications;
 
+use App\Core\Application\DTO\Response\Notifications\InvitationNotificationDataDTO;
+use App\Core\Application\Factories\Notifications\InvitationNotificationFactory;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
@@ -35,11 +37,12 @@ class ParentInvitationAcceptedNotification extends Notification
 
     public function toDatabase($notifiable): array
     {
-        return [
-            'title' => 'Nuevo familiar agregado',
-            'message' => "Hola {$this->studentFullName}, tu familiar {$this->parentFullName} aceptó tu invitación",
-            'type' => 'invitation_accepted',
-        ];
+        return InvitationNotificationFactory::accepted(
+            new InvitationNotificationDataDTO(
+                student_name: $this->studentFullName,
+                parent_name: $this->parentFullName
+            )
+        )->toArray();
     }
 
     public function toBroadcast($notifiable): BroadcastMessage
