@@ -8,126 +8,37 @@
 >
   <div
     *ngIf="
-      (notificationsState === 'success' && paginatedNotifications) ||
-      unreadNotifications.length > 0
+      (notificationsState === 'success' && readPaginatedNotifications) ||
+      unreadPaginatedNotifications
     "
   >
-    <div class="notifications-header">
-      <div class="notification-filters">
-        <app-button
-          [variant]="!onlyUnread ? 'primary' : 'ghost'"
-          iconLeft="done_all"
-          (click)="onlyUnread = false"
-        >
-          Leídas
-        </app-button>
 
-        <app-button
-          [variant]="onlyUnread ? 'primary' : 'ghost'"
-          iconLeft="mark_email_unread"
-          (click)="onlyUnread = true"
-        >
-          No leídas
-        </app-button>
-      </div>
-
-      <div class="notifications-right">
-        <app-button
-          *ngIf="unreadCount > 0"
-          size="sm"
-          variant="outline"
-          iconLeft="mark_email_read"
-          (click)="markAllAsRead()"
-        >
-          Marcar todas como leídas
-        </app-button>
-
-        <div class="notification-count">
-          <span>{{ unreadCount }}</span>
-          <span>sin leer</span>
-          <span>•</span>
-          <span>{{ readCount }}</span>
-          <span>leídas</span>
-        </div>
-      </div>
-    </div>
-    <app-record-list
-      *ngIf="!onlyUnread && paginatedNotifications"
-      [items]="paginatedNotifications.data.items"
-      [itemTemplate]="notificationTemplate"
-      [imageTemplate]="iconTemplate"
-      [trackByKey]="'id'"
+    <app-notifications-header
+      [onlyUnread]="onlyUnread"
+      [unreadCount]="unreadCount"
+      [readCount]="readCount"
+      (refresh)="onRefresh()"
+      (viewChange)="onlyUnread = $event"
+      (markAllAsRead)="markAllAsRead()"
+    ></app-notifications-header>
+    <app-notifications-list
+      *ngIf="!onlyUnread && readPaginatedNotifications"
+      [paginatedNotifications]="readPaginatedNotifications"
+      (markAsRead)="markAsRead($event)"
+      (deleteNotification)="deleteNotification($event)"
+      (pageChange)="onReadPageChange($event)"
+      (pageSizeChange)="onReadPageSizeChange($event)"
     >
-    </app-record-list>
+    </app-notifications-list>
 
-    <app-record-list
-      *ngIf="onlyUnread"
-      [items]="unreadNotifications"
-      [itemTemplate]="notificationTemplate"
-      [imageTemplate]="iconTemplate"
-      [trackByKey]="'id'"
+    <app-notifications-list
+      *ngIf="onlyUnread && unreadPaginatedNotifications"
+      [paginatedNotifications]="unreadPaginatedNotifications"
+      (markAsRead)="markAsRead($event)"
+      (deleteNotification)="deleteNotification($event)"
+      (pageChange)="onUnreadPageChange($event)"
+      (pageSizeChange)="onUnreadPageSizeChange($event)"
     >
-    </app-record-list>
-
-    <app-paginator
-      *ngIf="
-        !onlyUnread &&
-        paginatedNotifications &&
-        paginatedNotifications.data.total > 0
-      "
-      [paginator]="paginatedNotifications"
-      (pageChange)="onPageChange($event)"
-      (perPageChange)="onPageSizeChange($event)"
-    ></app-paginator>
+    </app-notifications-list>
   </div>
 </app-page-layout>
-
-<ng-template #notificationTemplate let-notification>
-  <div class="notification-item">
-    <div class="notification-top">
-      <span class="notification-title">
-        {{ notification.data?.title }}
-      </span>
-      <div class="notification-actions">
-        <app-button
-          *ngIf="!notification.read_at"
-          size="sm"
-          variant="ghost"
-          iconLeft="done"
-          [iconOnly]="true"
-          (click)="markAsRead(notification)"
-        >
-          Marcar leída
-        </app-button>
-
-        <app-button
-          size="sm"
-          variant="ghost"
-          iconLeft="delete"
-          [iconOnly]="true"
-          (click)="deleteNotification(notification)"
-        >
-          Eliminar
-        </app-button>
-      </div>
-    </div>
-
-    <div class="notification-message">
-      {{ notification.data?.message }}
-    </div>
-
-    <div class="notification-meta">
-      <span>{{ notification.created_at | date: "short" }}</span>
-
-      <span *ngIf="!notification.read_at" class="unread-dot"></span>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #iconTemplate let-notification>
-  <div class="notification-icon">
-    <span class="material-icons">
-      {{ getNotificationIcon(notification.data?.type) }}
-    </span>
-  </div>
-</ng-template>

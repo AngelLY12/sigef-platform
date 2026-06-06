@@ -1,0 +1,13 @@
+<app-metadata-card title="Cambio de estado del concepto">
+  <div metadata-header>
+    <app-metadata-badge [type]="getPriorityType(metadata.priority)" [text]="getPriorityLabel(metadata.priority) || 'Sin prioridad'"></app-metadata-badge>
+  </div>
+  <div metadata-body>
+    <app-metadata-row label="Concepto" [value]="metadata.concept_name"></app-metadata-row>
+    <app-metadata-row label="Estado anterior" [value]="getStatusLabel(metadata.old_status)"></app-metadata-row>
+    <app-metadata-row label="Estado nuevo" [value]="getStatusLabel(metadata.new_status)"></app-metadata-row>
+    <app-metadata-row label="Monto" [value]="metadata.amount | currencyMXN"></app-metadata-row>
+    <app-metadata-row label="Transición" [value]="getStatusTransitionLabel(metadata.status_transition)"></app-metadata-row>
+    <app-metadata-row label="Fecha" [value]="metadata.timestamp | date: 'short'"></app-metadata-row>
+  </div>
+</app-metadata-card>

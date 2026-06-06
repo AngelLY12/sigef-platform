@@ -1,0 +1,7 @@
+<app-metadata-card title="Promoción">
+  <div metadata-body>
+    <app-metadata-row *ngIf="!metadata.error" label="Promovidos" [value]="metadata.promoted_count"></app-metadata-row>
+    <app-metadata-row *ngIf="!metadata.error" label="Desactivados" [value]="metadata.deactivated"></app-metadata-row>
+    <app-metadata-badge *ngIf="metadata.error" [text]="metadata.error" [type]="'error'"></app-metadata-badge>
+  </div>
+</app-metadata-card>

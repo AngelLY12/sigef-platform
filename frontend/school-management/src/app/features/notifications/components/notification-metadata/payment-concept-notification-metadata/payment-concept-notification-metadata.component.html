@@ -1,0 +1,11 @@
+<app-metadata-card title="Concepto actualizado">
+  <div metadata-header>
+    <app-metadata-badge [type]="getPriorityType(metadata.priority)" [text]="getPriorityLabel(metadata.priority) || 'Sin prioridad'"></app-metadata-badge>
+  </div>
+  <div metadata-body>
+    <app-metadata-row label="Nombre" [value]="metadata.concept_name"></app-metadata-row>
+    <app-metadata-row label="Acción" [value]="getActionLabel(metadata.action)"></app-metadata-row>
+    <app-metadata-row label="Fecha" [value]="metadata.timestamp | date: 'short'"></app-metadata-row>
+    <app-metadata-list [title]="'Cambios'" [changes]="metadata.changes"></app-metadata-list>
+  </div>
+</app-metadata-card>

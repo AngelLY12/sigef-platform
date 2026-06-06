@@ -1,0 +1,9 @@
+<ng-container *ngIf="component">
+  <ng-container
+    *ngComponentOutlet="
+      component;
+      inputs: { metadata: notification.data.metadata }
+    "
+  >
+  </ng-container>
+</ng-container>

@@ -1,0 +1,44 @@
+<div class="notifications-header">
+  <div class="notification-filters">
+    <app-button
+      [variant]="!onlyUnread ? 'primary' : 'ghost'"
+      iconLeft="done_all"
+      (click)="showRead()"
+    >
+      Leídas
+    </app-button>
+
+    <app-button
+      [variant]="onlyUnread ? 'primary' : 'ghost'"
+      iconLeft="mark_email_unread"
+      (click)="showUnread()"
+    >
+      No leídas
+    </app-button>
+  </div>
+  <div class="notifications-right">
+    <app-button
+      variant="ghost"
+      iconLeft="refresh"
+      [iconOnly]="true"
+      (click)="onRefresh()"
+    ></app-button>
+    <app-button
+      *ngIf="unreadCount > 0"
+      size="sm"
+      variant="outline"
+      iconLeft="mark_email_read"
+      (click)="onMarkAllAsRead()"
+    >
+      Marcar todas como leídas
+    </app-button>
+
+    <div class="notification-count">
+      <span>{{ unreadCount }}</span>
+      <span>sin leer</span>
+      <span>•</span>
+      <span>{{ readCount }}</span>
+      <span>leídas</span>
+    </div>
+  </div>
+</div>

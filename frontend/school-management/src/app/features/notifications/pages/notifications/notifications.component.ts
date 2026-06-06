@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { RecordListComponent } from '../../../../shared/components/data-display/record-list/record-list.component';
 import { PageLayoutComponent } from '../../../../shared/components/navigation/page-layout/page-layout.component';
-import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
 import { LoadingState } from '../../../../core/models/types/loading-state.type';
 import { NotificationService } from '../../../../core/api/notification.api.service';
 import {
@@ -11,21 +9,21 @@ import {
 } from '../../../../core/models/domain/notification-params.model';
 import { Notification } from '../../../../core/models/domain/notification.model';
 import { ListController } from '../../../../core/utils/list-controller.utils';
-import { PaginatorComponent } from '../../../../shared/components/data-display/paginator/paginator.component';
 import { Paginated } from '../../../../core/utils/paginated-helper.utils';
 import { QueryParamsHelper } from '../../../../core/utils/query-params-helper.utils';
 import { forkJoin } from 'rxjs';
 import { ModalService } from '../../../../core/services/modal.service';
+import { NotificationsHeaderComponent } from '../../components/notifications-header/notifications-header.component';
+import { NotificationsListComponent } from '../../components/notifications-list/notifications-list.component';
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
   imports: [
-    CommonModule,
-    RecordListComponent,
     PageLayoutComponent,
-    PaginatorComponent,
-    ButtonComponent,
+    CommonModule,
+    NotificationsListComponent,
+    NotificationsHeaderComponent,
   ],
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.scss',
@@ -33,22 +31,29 @@ import { ModalService } from '../../../../core/services/modal.service';
 export class NotificationsComponent implements OnInit {
   private notificationsService = inject(NotificationService);
   private modalService = inject(ModalService);
-  private listController!: ListController<NotificationParams>;
+  private readListController!: ListController<NotificationParams>;
+  private unreadListController!: ListController<NotificationParams>;
 
-  paginatedNotifications: Paginated<Notification> | null = null;
-  unreadNotifications: Notification[] = [];
+  readPaginatedNotifications: Paginated<Notification> | null = null;
+  unreadPaginatedNotifications: Paginated<Notification> | null = null;
   unreadCount = 0;
   readCount = 0;
 
-  notificationsParams: NotificationParams = createNotificationsParams();
+  readNotificationsParams: NotificationParams = createNotificationsParams();
+  unreadNotificationsParams: NotificationParams = createNotificationsParams();
   notificationsState: LoadingState = 'idle';
 
   onlyUnread = false;
 
   ngOnInit(): void {
-    this.listController = new ListController<NotificationParams>(
-      () => this.notificationsParams,
-      (params) => (this.notificationsParams = params),
+    this.readListController = new ListController<NotificationParams>(
+      () => this.readNotificationsParams,
+      (params) => (this.readNotificationsParams = params),
+      () => this.loadAllNotifications(),
+    );
+    this.unreadListController = new ListController<NotificationParams>(
+      () => this.unreadNotificationsParams,
+      (params) => (this.unreadNotificationsParams = params),
       () => this.loadAllNotifications(),
     );
     this.loadAllNotifications();
@@ -58,16 +63,20 @@ export class NotificationsComponent implements OnInit {
     this.notificationsState = 'loading';
     forkJoin({
       all: this.notificationsService.getAllNotifications(
-        this.notificationsParams,
+        this.readNotificationsParams,
       ),
-      unread: this.notificationsService.getUnreadNotifications(),
+      unread: this.notificationsService.getUnreadNotifications(
+        this.unreadNotificationsParams,
+      ),
     }).subscribe({
       next: ({ all, unread }) => {
         this.notificationsState = 'success';
-        this.paginatedNotifications = all.notifications;
-        this.unreadCount = all.unreadCount;
-        this.readCount = all.readCount;
-        this.unreadNotifications = unread.notifications;
+        this.readPaginatedNotifications = all.notifications;
+        this.unreadCount = all.unread_count;
+        this.readCount = all.read_count;
+        console.log(this.unreadCount, this.readCount);
+        console.log(all.unread_count, all.read_count);
+        this.unreadPaginatedNotifications = unread;
       },
       error: () => {
         this.notificationsState = 'error';
@@ -107,7 +116,8 @@ export class NotificationsComponent implements OnInit {
       confirmLabel: 'Eliminar',
       confirmVariant: 'danger',
 
-      onConfirm: () => this.notificationsService.deleteNotification(notification.id),
+      onConfirm: () =>
+        this.notificationsService.deleteNotification(notification.id),
 
       onSuccess: () => {
         this.loadAllNotifications();
@@ -115,36 +125,50 @@ export class NotificationsComponent implements OnInit {
     });
   }
 
-  onRefresh() {
-    this.loadAllNotifications();
+  onRefreshRead() {
+    const updatedParams = QueryParamsHelper.refreshData(this.readNotificationsParams);
+    this.readListController.update(updatedParams);
   }
 
-  onPageChange(newPage: number) {
+  onRefreshUnread() {
+    const updatedParams = QueryParamsHelper.refreshData(this.unreadNotificationsParams);
+    this.unreadListController.update(updatedParams);
+  }
+
+  onRefresh() {
+    this.onRefreshRead();
+    this.onRefreshUnread();
+  }
+
+  onReadPageChange(newPage: number) {
     const updatedParams = QueryParamsHelper.changePage(
-      this.notificationsParams,
+      this.readNotificationsParams,
       newPage,
     );
-    this.listController.update(updatedParams);
+    this.readListController.update(updatedParams);
   }
 
-  onPageSizeChange(newSize: number) {
+  onReadPageSizeChange(newSize: number) {
     const updatedParams = QueryParamsHelper.changePageSize(
-      this.notificationsParams,
+      this.readNotificationsParams,
       newSize,
     );
-    this.listController.update(updatedParams);
+    this.readListController.update(updatedParams);
   }
 
-  getNotificationIcon(type: string): string {
-    switch (type) {
-      case 'warning':
-        return 'warning';
-      case 'error':
-        return 'error';
-      case 'success':
-        return 'check_circle';
-      default:
-        return 'notifications';
-    }
+  onUnreadPageChange(newPage: number) {
+    const updatedParams = QueryParamsHelper.changePage(
+      this.unreadNotificationsParams,
+      newPage,
+    );
+    this.unreadListController.update(updatedParams);
+  }
+
+  onUnreadPageSizeChange(newSize: number) {
+    const updatedParams = QueryParamsHelper.changePageSize(
+      this.unreadNotificationsParams,
+      newSize,
+    );
+    this.unreadListController.update(updatedParams);
   }
 }

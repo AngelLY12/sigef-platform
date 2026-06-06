@@ -1,0 +1,68 @@
+<app-record-list
+  [items]="paginatedNotifications.data.items"
+  [itemTemplate]="notificationTemplate"
+  [imageTemplate]="iconTemplate"
+  [trackByKey]="'id'"
+>
+</app-record-list>
+
+<app-paginator
+  *ngIf="paginatedNotifications.data.total > 0"
+  [paginator]="paginatedNotifications"
+  (pageChange)="pageChange.emit($event)"
+  (perPageChange)="pageSizeChange.emit($event)"
+></app-paginator>
+
+<ng-template #notificationTemplate let-notification>
+  <div class="notification-item" [ngClass]="getNotificationClass(notification)">
+    <div class="notification-top">
+      <span class="notification-title">
+        {{ notification.data?.title }}
+      </span>
+      <div class="notification-actions">
+        <app-button
+          *ngIf="!notification.read_at"
+          size="sm"
+          variant="ghost"
+          iconLeft="done"
+          [iconOnly]="true"
+          (click)="markAsRead.emit(notification)"
+        >
+        </app-button>
+
+        <app-button
+          size="sm"
+          variant="ghost"
+          iconLeft="delete"
+          [iconOnly]="true"
+          (click)="deleteNotification.emit(notification)"
+        >
+        </app-button>
+      </div>
+    </div>
+
+    <div class="notification-message">
+      {{ notification.data?.message }}
+    </div>
+
+    <app-expandable-section *ngIf="notification.data?.metadata" [maxHeight]="0">
+      <app-notification-details
+        [notification]="notification"
+      ></app-notification-details>
+    </app-expandable-section>
+
+    <div class="notification-meta">
+      <span>{{ notification.created_at | date: "short" }}</span>
+
+      <span *ngIf="!notification.read_at" class="unread-dot"></span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #iconTemplate let-notification>
+  <div class="notification-icon">
+    <span class="material-icons">
+      {{ getNotificationIcon(notification) }}
+    </span>
+  </div>
+</ng-template>

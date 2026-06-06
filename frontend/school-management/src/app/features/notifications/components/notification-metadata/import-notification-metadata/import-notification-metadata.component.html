@@ -1,0 +1,7 @@
+<app-metadata-card title="Importación">
+  <div metadata-body>
+    <app-metadata-badge *ngIf="metadata.error" [type]="'error'" [text]="metadata.error"></app-metadata-badge>
+    <app-metadata-row *ngIf="metadata.details" label="Detalles" [value]="metadata.details"></app-metadata-row>
+    <app-metadata-badge *ngIf="!metadata.error && !metadata.details" [type]="'success'" [text]="'Importación completada correctamente'"></app-metadata-badge>
+  </div>
+</app-metadata-card>
