@@ -50,7 +50,7 @@ export class PaginatorComponent implements OnChanges {
     const total = this.paginator.totalPages;
     const current = this.paginator.currentPage;
 
-    const delta = 5;
+    const delta = 3;
     const range: (number | '...')[] = [];
 
     const start = Math.max(1, current - delta);
