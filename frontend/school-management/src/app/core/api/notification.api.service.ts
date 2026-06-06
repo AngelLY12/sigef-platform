@@ -3,15 +3,11 @@ import { inject, Injectable } from '@angular/core';
 import { NotificationParams } from '../models/domain/notification-params.model';
 import { map, Observable } from 'rxjs';
 import { Paginated } from '../utils/paginated-helper.utils';
-import {
-  NotificationsPaginatedResponse,
-  NotificationsResponse,
-  UnreadNotificationsResponse,
-} from '../models/responses/notifications-response.model';
 import { NOTIFICATIONS_URL } from '../constants/api.constants';
 import { ApiSuccessResponse } from '../models/api-success-response.model';
-import { mapNotificationsPagination } from '../utils/pagination.adapter.utils';
 import { Notification } from '../models/domain/notification.model';
+import { ReadNotificationsPaginatedResponse } from '../models/responses/notifications-response.model';
+import { PaginatedResponse } from '../models/domain/paginated-response.model';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
@@ -19,30 +15,32 @@ export class NotificationService {
 
   getAllNotifications(
     params: NotificationParams,
-  ): Observable<NotificationsPaginatedResponse> {
-    const { page, perPage } = params;
+  ): Observable<ReadNotificationsPaginatedResponse> {
+    const { page, perPage, forceRefresh } = params;
 
-    const url = `${NOTIFICATIONS_URL}?page=${page}&per_page=${perPage}`;
+    const url = `${NOTIFICATIONS_URL}?page=${page}&perPage=${perPage} ${forceRefresh ? `&forceRefresh=true` : ''}`;
 
-    return this.http.get<ApiSuccessResponse<NotificationsResponse>>(url).pipe(
+    return this.http.get<ApiSuccessResponse<{ notifications: PaginatedResponse<Notification>, unread_count: number, read_count: number }>>(url).pipe(
       map((res) => {
-        const pagination = mapNotificationsPagination(res.data);
-
         return {
-          notifications: new Paginated<Notification>(pagination),
-          unreadCount: res.data.unread_count,
-          readCount: res.data.read_count,
+          notifications: new Paginated(res.data.notifications),
+          unread_count: res.data.unread_count,
+          read_count: res.data.read_count,
         };
       }),
     );
   }
 
-  getUnreadNotifications(): Observable<UnreadNotificationsResponse> {
+  getUnreadNotifications(params: NotificationParams): Observable<Paginated<Notification>> {
+    const { page, perPage, forceRefresh } = params;
+
+    const url = `${NOTIFICATIONS_URL}/unread?page=${page}&perPage=${perPage} ${forceRefresh ? `&forceRefresh=true` : ''}`;
+
     return this.http
       .get<
-        ApiSuccessResponse<UnreadNotificationsResponse>
-      >(`${NOTIFICATIONS_URL}/unread`)
-      .pipe(map((res) => res.data));
+        ApiSuccessResponse<{ notifications: PaginatedResponse<Notification> }>
+      >(url)
+      .pipe(map((res) => new Paginated(res.data.notifications)));
   }
 
   markAsRead(notificationId: string): Observable<void> {
