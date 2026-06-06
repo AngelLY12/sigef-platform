@@ -5,6 +5,7 @@ namespace App\Notifications;
 use App\Core\Application\DTO\Response\Notifications\PaymentConceptStatusChangedDataDTO;
 use App\Core\Application\Factories\Notifications\PaymentConceptNotificationFactory;
 use App\Core\Domain\Entities\PaymentConcept;
+use App\Core\Domain\Enum\Notification\NotificationConceptPriority;
 use App\Core\Domain\Enum\PaymentConcept\PaymentConceptStatus;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\BroadcastMessage;
@@ -40,13 +41,12 @@ class PaymentConceptStatusUpdated extends Notification
     public function toDatabase($notifiable): array
     {
         $data = new PaymentConceptStatusChangedDataDTO(
-            concept_id: $this->concept['id'],
             concept_name: $this->concept['concept_name'],
+            amount: $this->concept['amount'],
             old_status: $this->oldStatus,
             new_status: $this->newStatus,
-            amount: $this->concept['amount'],
-            applies_to: $this->concept['applies_to']->value,
             status_transition: "{$this->oldStatus}_to_{$this->newStatus}",
+            priority: NotificationConceptPriority::MEDIUM,
             timestamp: now()->toImmutable(),
         );
 

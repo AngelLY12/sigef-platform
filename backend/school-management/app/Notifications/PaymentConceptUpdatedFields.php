@@ -4,11 +4,11 @@ namespace App\Notifications;
 
 use App\Core\Application\DTO\Response\Notifications\PaymentConceptChangedDataDTO;
 use App\Core\Application\Factories\Notifications\PaymentConceptNotificationFactory;
+use App\Core\Domain\Enum\Notification\NotificationConceptAction;
+use App\Core\Domain\Enum\Notification\NotificationConceptPriority;
 use App\Core\Domain\Utils\Helpers\Money;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class PaymentConceptUpdatedFields extends Notification
@@ -38,14 +38,10 @@ class PaymentConceptUpdatedFields extends Notification
     public function toDatabase(object $notifiable): array
     {
         $data = new PaymentConceptChangedDataDTO(
-            concept_id: $this->paymentConcept['id'],
             concept_name: $this->paymentConcept['concept_name'],
-            amount: $this->paymentConcept['amount'],
-            changes: $this->getFilteredChanges(),
-            action: 'field_update',
+            changes: $this->buildChangeMessages(),
+            action: NotificationConceptAction::FIELD_UPDATE,
             timestamp: now()->toImmutable(),
-            start_date: $this->paymentConcept['start_date']?->toImmutable(),
-            end_date: $this->paymentConcept['end_date']?->toImmutable(),
             priority: $this->getPriority(),
         );
 
@@ -86,6 +82,10 @@ class PaymentConceptUpdatedFields extends Notification
         $conceptName = $this->paymentConcept['concept_name'];
         $amount = Money::from($this->paymentConcept['amount'])->finalize();
         $userName = $notifiable->name ?? 'Estudiante';
+        return "Hola {$userName}, el concepto '{$conceptName}' ({$amount} MXN) ha sido actualizado.";
+    }
+    private function buildChangeMessages(): array
+    {
         $changeMessages = [];
         foreach ($this->changes as $change) {
             if ($change['field'] === 'amount') {
@@ -107,40 +107,20 @@ class PaymentConceptUpdatedFields extends Notification
             }
         }
 
-        $baseMessage = "Hola {$userName}, el concepto '{$conceptName}' ({$amount} MXN) ha sido actualizado.";
-        if (!empty($changeMessages)) {
-            $limitedChanges = array_slice($changeMessages, 0, 3);
-            $baseMessage .= " Cambios: " . implode(', ', $limitedChanges);
-
-            if (count($changeMessages) > 3) {
-                $baseMessage .= ", y otros cambios más.";
-            } else {
-                $baseMessage .= ".";
-            }
-        }
-
-        return $baseMessage;
-    }
-    private function getFilteredChanges(): array
-    {
-        $relevantFields = ['concept_name', 'amount', 'start_date', 'end_date'];
-
-        return array_filter($this->changes, function($change) use ($relevantFields) {
-            return in_array($change['field'], $relevantFields);
-        });
+        return $changeMessages;
     }
 
-    private function getPriority(): string
+    private function getPriority(): NotificationConceptPriority
     {
         foreach ($this->changes as $change) {
             if ($change['field'] === 'amount' && bccomp($change['new'], $change['old']) === 1) {
-                return 'high';
+                return NotificationConceptPriority::HIGH;
             }
             if ($change['field'] === 'start_date' || $change['field'] === 'end_date') {
-                return 'high';
+                return NotificationConceptPriority::HIGH;
             }
         }
 
-        return 'medium';
+        return NotificationConceptPriority::LOW;
     }
 }

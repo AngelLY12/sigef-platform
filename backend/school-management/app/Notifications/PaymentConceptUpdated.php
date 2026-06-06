@@ -4,6 +4,8 @@ namespace App\Notifications;
 
 use App\Core\Application\DTO\Response\Notifications\PaymentConceptChangedDataDTO;
 use App\Core\Application\Factories\Notifications\PaymentConceptNotificationFactory;
+use App\Core\Domain\Enum\Notification\NotificationConceptAction;
+use App\Core\Domain\Enum\Notification\NotificationConceptPriority;
 use App\Core\Domain\Utils\Helpers\Money;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\BroadcastMessage;
@@ -35,15 +37,11 @@ class PaymentConceptUpdated extends Notification
     public function toDatabase(object $notifiable): array
     {
         $data = new PaymentConceptChangedDataDTO(
-            concept_id: $this->paymentConcept['id'],
             concept_name: $this->paymentConcept['concept_name'],
-            amount: $this->paymentConcept['amount'],
-            changes: $this->getFilteredChanges(),
+            changes: $this->buildChangeMessages(),
             action: $this->determineMainChangeType(),
             timestamp: now()->toImmutable(),
-            start_date: $this->paymentConcept['start_date']?->toImmutable(),
-            end_date: $this->paymentConcept['end_date']?->toImmutable(),
-            priority: 'high',
+            priority: NotificationConceptPriority::HIGH,
         );
         return PaymentConceptNotificationFactory::changed(
             data: $data,
@@ -77,38 +75,38 @@ class PaymentConceptUpdated extends Notification
         $mainChangeType = $this->determineMainChangeType();
 
         return match($mainChangeType) {
-            'created_concept' => 'Concepto de pago creado',
-            'relation_update' => 'Actualización del concepto de pago',
-            'relation_removed' => 'Concepto de pago ya no aplica',
-            'applies_to_changed' => 'Nuevo concepto de pago aplicado',
-            'exceptions_update' => 'Actualización de las excepciones del concepto de pago',
+            NotificationConceptAction::CREATED_CONCEPT => 'Concepto de pago creado',
+            NotificationConceptAction::RELATION_UPDATE => 'Actualización del concepto de pago',
+            NotificationConceptAction::RELATION_REMOVED => 'Concepto de pago ya no aplica',
+            NotificationConceptAction::APPLIES_TO_CHANGED => 'Nuevo concepto de pago aplicado',
+            NotificationConceptAction::EXCEPTIONS_UPDATE => 'Actualización de las excepciones del concepto de pago',
             default => 'Actualización de concepto de pago'
 
         };
     }
 
-    private function determineMainChangeType(): string
+    private function determineMainChangeType(): NotificationConceptAction
     {
         foreach ($this->changes as $change) {
             if ($change['type'] === 'applies_to_changed') {
-                return 'applies_to_changed';
+                return NotificationConceptAction::APPLIES_TO_CHANGED;
             }
             if ($change['type'] === 'exceptions_update') {
-                return 'exceptions_update';
+                return NotificationConceptAction::EXCEPTIONS_UPDATE;
             }
             if ($change['type'] === 'relation_update') {
-                return 'relation_update';
+                return NotificationConceptAction::RELATION_UPDATE;
             }
             if ($change['type'] === 'relation_removed') {
-                return 'relation_removed';
+                return NotificationConceptAction::RELATION_REMOVED;
             }
             if($change['type'] === 'created_concept'){
-                return 'created_concept';
+                return NotificationConceptAction::CREATED_CONCEPT;
             }
 
         }
 
-        return 'field_update';
+        return NotificationConceptAction::FIELD_UPDATE;
     }
 
 
@@ -117,21 +115,29 @@ class PaymentConceptUpdated extends Notification
         $conceptName = $this->paymentConcept['concept_name'];
         $amount = Money::from($this->paymentConcept['amount'])->finalize();
         $userName = $notifiable->name;
-        if (empty($this->changes)) {
-            return "Hola {$userName}, te informamos que el concepto de pago '{$conceptName}' (monto: {$amount} MXN) ha sido actualizado.";
-        }
+        $mainType = $this->determineMainChangeType();
+        return match($mainType) {
+            NotificationConceptAction::CREATED_CONCEPT =>
+            "Hola {$userName}, te informamos que el concepto de pago '{$conceptName}' (monto: {$amount} MXN) ha sido creado.",
 
+            default =>
+            "Hola {$userName}, te informamos que el concepto de pago '{$conceptName}' (monto: {$amount} MXN) ha sido actualizado.",
+        };
+    }
+    private function buildChangeMessages(): array
+    {
+        $conceptName = $this->paymentConcept['concept_name'];
+        $amount = Money::from($this->paymentConcept['amount'])->finalize();
         $changeMessages = [];
-        $createdMessage=[];
         foreach ($this->changes as $change) {
             if($change['type'] === 'created_concept')
             {
                 $startDate = $this->paymentConcept['start_date']?->format('d/m/Y') ?? 'N/A';
                 $endDate = $this->paymentConcept['end_date']?->format('d/m/Y') ?? 'N/A';
 
-                $createdMessage[] = "Nombre del concepto: {$conceptName}";
-                $createdMessage[] = "Monto: {$amount} MXN";
-                $createdMessage[] = "Válido del {$startDate} al {$endDate}";
+                $changeMessages[] = "Nombre del concepto: {$conceptName}";
+                $changeMessages[] = "Monto: {$amount} MXN";
+                $changeMessages[] = "Válido del {$startDate} al {$endDate}";
             }
 
             if ($change['type'] === 'applies_to_changed') {
@@ -193,41 +199,7 @@ class PaymentConceptUpdated extends Notification
             }
         }
 
-        if(!empty($createdMessage))
-        {
-            $message = "Hola {$userName}, te informamos que hay un nuevo concepto de pago creado. ";
-            $message .= "Detalles importantes: " . implode(", ", $createdMessage) . '.';
-            return $message;
-        }
-
-        $baseMessage = "Hola {$userName}, te informamos que el concepto de pago '{$conceptName}' (monto: {$amount} MXN) ha sido actualizado.";
-        if (!empty($changeMessages)) {
-            $limitedChanges = array_slice($changeMessages, 0, 3);
-            $baseMessage .= " Cambios: " . implode(', ', $limitedChanges);
-
-            if (count($changeMessages) > 3) {
-                $baseMessage .= ", y otros cambios más.";
-            } else {
-                $baseMessage .= ".";
-            }
-        }
-
-        return $baseMessage;
-    }
-    private function getFilteredChanges(): array
-    {
-        $relevantTypes = [
-            'relation_update',
-            'applies_to_changed',
-            'exceptions_update',
-            'created_concept',
-            'relation_removed'
-        ];
-
-        return array_values(array_filter(
-            $this->changes,
-            fn($change) => in_array($change['type'], $relevantTypes)
-        ));
+        return $changeMessages;
     }
 
 }
