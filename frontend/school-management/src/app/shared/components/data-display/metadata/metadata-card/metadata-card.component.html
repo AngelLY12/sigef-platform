@@ -1,0 +1,15 @@
+<div class="metadata-card">
+  <div class="metadata-header">
+    <div class="metadata-title">
+      {{ title }}
+    </div>
+
+    <div class="metadata-header-actions">
+      <ng-content select="[metadata-header]"></ng-content>
+    </div>
+  </div>
+
+  <div class="metadata-body">
+    <ng-content select="[metadata-body]"></ng-content>
+  </div>
+</div>

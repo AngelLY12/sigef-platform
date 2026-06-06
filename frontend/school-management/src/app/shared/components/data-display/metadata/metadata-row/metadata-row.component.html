@@ -1,0 +1,13 @@
+<div class="metadata-row">
+  <span class="metadata-label">{{ label }}:</span>
+
+  <span class="metadata-value">
+    <ng-container *ngIf="value !== undefined && value !== null; else empty">
+      {{ value }}
+    </ng-container>
+
+    <ng-template #empty>
+      -
+    </ng-template>
+  </span>
+</div>
