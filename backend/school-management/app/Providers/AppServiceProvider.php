@@ -101,18 +101,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        Event::listen(AdministrationEvent::class, SendAmoutExceededNotification::class);
-        Event::listen(PaymentConceptStatusChanged::class, NotifyUsersOfConceptStatusChange::class);
-        Event::listen(PaymentConceptCreated::class,ProcessRecipientsListener::class);
-        Event::listen(PaymentConceptUpdatedFields::class,SendConceptUpdatedFieldsNotification::class);
-        Event::listen(PaymentConceptUpdatedRelations::class, ProcessRecipientsUpdateListener::class);
-        Event::listen(StudentsPromotionCompleted::class, SendPromotionNotification::class);
-        Event::listen(StudentsPromotionFailed::class,SendStudentsPromotionFailedNotification::class);
-        Event::listen(ParentInvitationAccepted::class,SendParentInvitationAcceptedNotification::class);
-        Event::listen(ParentInvitationFailed::class,SendParentInvitationFailedNotification::class);
-        Event::listen(ParentStudentRelationDelete::class,SendParentStudentDeleteNotification::class);
-        Event::listen(PaymentReconciledEvent::class, CreateReconciliationEvent::class);
-        Event::listen(PaymentReconciledBatchEvent::class, CreateReconciliationBatchEvent::class);
         $this->app->bind(StripeGatewayInterface::class, StripeGateway::class);
         $this->app->bind(StripeGatewayQueryInterface::class, StripeGatewayQuery::class);
         $this->app->bind(PaymentMethodRepInterface::class, EloquentPaymentMethodRepository::class);
