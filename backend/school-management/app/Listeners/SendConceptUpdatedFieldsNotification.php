@@ -31,7 +31,7 @@ class SendConceptUpdatedFieldsNotification implements ShouldQueue
         $concept=$this->pcqRepo->findById($event->conceptId);
         $userIds=$this->uqRepo->getRecipientsIds($concept, $concept->applies_to->value);
 
-        if (empty($event->userIds)) {
+        if (empty($userIds)) {
             Log::info('No user IDs to notify', ['concept_id' => $event->conceptId]);
             return;
         }
@@ -39,7 +39,7 @@ class SendConceptUpdatedFieldsNotification implements ShouldQueue
         $notification = new \App\Notifications\PaymentConceptUpdatedFields($concept->toArray(), $event->changes);
 
 
-        foreach (array_chunk($event->userIds, 500) as $chunk) {
+        foreach (array_chunk($userIds, 500) as $chunk) {
             \App\Models\User::whereIn('id', $chunk)
                 ->each(function ($user) use ($notification) {
                     $user->notify($notification);
