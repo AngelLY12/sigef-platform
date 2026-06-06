@@ -3,6 +3,8 @@
 namespace App\Core\Application\DTO\Response\Notifications;
 
 use App\Core\Application\DTO\Response\Notifications\Contracts\NotificationMetadata;
+use App\Core\Domain\Enum\Notification\NotificationConceptAction;
+use App\Core\Domain\Enum\Notification\NotificationConceptPriority;
 use Carbon\CarbonImmutable;
 
 /**
@@ -10,9 +12,7 @@ use Carbon\CarbonImmutable;
  *     schema="PaymentConceptChangedData",
  *     type="object",
  *
- *     @OA\Property(property="concept_id", type="integer", example=10),
  *     @OA\Property(property="concept_name", type="string", example="Inscripción"),
- *     @OA\Property(property="amount", type="string", example="1500.00"),
  *
  *     @OA\Property(
  *         property="changes",
@@ -34,20 +34,6 @@ use Carbon\CarbonImmutable;
  *     ),
  *
  *     @OA\Property(
- *         property="start_date",
- *         type="string",
- *         format="date-time",
- *         nullable=true
- *     ),
- *
- *     @OA\Property(
- *         property="end_date",
- *         type="string",
- *         format="date-time",
- *         nullable=true
- *     ),
- *
- *     @OA\Property(
  *         property="priority",
  *         type="string",
  *         enum={"low","medium","high"}
@@ -57,29 +43,21 @@ use Carbon\CarbonImmutable;
 final readonly class PaymentConceptChangedDataDTO implements NotificationMetadata
 {
     public function __construct(
-        public ?int $concept_id = null,
         public ?string $concept_name = null,
-        public ?string $amount = null,
         public ?array $changes = null,
-        public ?string $action = null,
+        public ?NotificationConceptAction $action = null,
         public ?CarbonImmutable $timestamp = null,
-        public ?CarbonImmutable $start_date = null,
-        public ?CarbonImmutable $end_date = null,
-        public ?string $priority = null,
+        public ?NotificationConceptPriority $priority = null,
     ) {}
 
     public function toArray(): array
     {
         return array_filter([
-            'concept_id' => $this->concept_id,
             'concept_name' => $this->concept_name,
-            'amount' => $this->amount,
             'changes' => $this->changes,
-            'action' => $this->action,
+            'action' => $this->action->value,
             'timestamp' => $this->timestamp->toISOString(),
-            'start_date' => $this->start_date->toISOString(),
-            'end_date' => $this->end_date->toISOString(),
-            'priority' => $this->priority
+            'priority' => $this->priority->value
         ], fn ($value) => $value !== null);
     }
 
