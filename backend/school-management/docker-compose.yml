@@ -37,12 +37,30 @@ services:
             context: .
             dockerfile: Dockerfile.dev
         container_name: laravel-worker
-        command: php artisan queue:work redis --sleep=3 --tries=3 --timeout=90 --backoff=5 --verbose
+        command: >
+            php artisan queue:work redis
+            --queue=high,emails,notifications,processing,cache,default,maintenance-heavy,backups,imports
         restart: unless-stopped
         env_file:
             - .env
         environment:
             APP_ROLE: worker
+        depends_on:
+            - app
+            - redis
+        networks:
+            - laravel
+    laravel-scheduler:
+        build:
+            context: .
+            dockerfile: Dockerfile.dev
+        container_name: laravel-scheduler
+        command: php artisan schedule:work
+        restart: unless-stopped
+        env_file:
+            - .env
+        environment:
+            APP_ROLE: scheduler
         depends_on:
             - app
             - redis
