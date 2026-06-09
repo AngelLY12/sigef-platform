@@ -1,3 +1,19 @@
-<a [routerLink]="link" class="link">
-          {{ anchorMessage }}
-</a>
+<ng-container *ngIf="external; else internalLink">
+  <a
+    [href]="link"
+    [target]="target"
+    [rel]="rel"
+    class="link"
+  >
+    {{ anchorMessage }}
+  </a>
+</ng-container>
+
+<ng-template #internalLink>
+  <a
+    [routerLink]="link"
+    class="link"
+  >
+    {{ anchorMessage }}
+  </a>
+</ng-template>
