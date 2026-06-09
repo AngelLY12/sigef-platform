@@ -40,6 +40,11 @@ services:
         command: >
             php artisan queue:work redis
             --queue=high,emails,notifications,processing,cache,default,maintenance-heavy,backups,imports
+            --sleep=3
+            --tries=3
+            --timeout=90
+            --backoff=5
+            --verbose
         restart: unless-stopped
         env_file:
             - .env
