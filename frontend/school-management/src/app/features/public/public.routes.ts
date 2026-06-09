@@ -6,6 +6,8 @@ import { UnauthorizedComponent } from "./pages/unauthorized/unauthorized.compone
 import { RoleSelectorPageComponent } from "./pages/role-selector-page/role-selector-page.component";
 import { protectedGuard } from "../../core/guards/protected.guard";
 import { roleGuard } from "../../core/guards/role.guard";
+import { CheckoutSuccessComponent } from "./pages/checkout-success/checkout-success.component";
+import { CheckoutCancelComponent } from "./pages/checkout-cancel/checkout-cancel.component";
 
 export const PUBLIC_ROUTES: Routes = [
   {
@@ -30,7 +32,14 @@ export const PUBLIC_ROUTES: Routes = [
     component: RoleSelectorPageComponent,
     canActivate: [protectedGuard],
 
-
+  },
+  {
+    path: 'checkout/success',
+    component: CheckoutSuccessComponent
+  },
+  {
+    path: 'checkout/cancel',
+    component: CheckoutCancelComponent
   },
   {path: '**', redirectTo: '/common/404'}
 
