@@ -5,6 +5,9 @@ import { Router } from '@angular/router';
 import { ThemeButtonComponent } from '../../shared/components/ui/theme-button/theme-button.component';
 import { ButtonConfig } from '../../core/models/types/button/btn-config.type';
 import { LogoutService } from '../../core/services/logout.service';
+import { NAVIGATION } from '../../core/navigation/navigation.config';
+import { NavigationService } from '../../core/services/navigation.service';
+import { AuthService } from '../../core/api/auth.api.service';
 
 @Component({
   selector: 'app-public-layout',
@@ -26,12 +29,20 @@ export class PublicLayoutComponent {
   @Input() secondaryButton?: ButtonConfig;
 
   @Input() showIllustration: boolean = true;
-  @Input() illustrationType: 'default' | 'unverified' | 'maintenance' | 'unauthorized' = 'default';
+  @Input() illustrationType:
+    | 'default'
+    | 'unverified'
+    | 'maintenance'
+    | 'unauthorized'
+    | 'success'
+    | 'warning' = 'default';
 
   @Output() primaryAction = new EventEmitter<void>();
   @Output() secondaryAction = new EventEmitter<void>();
 
   private logoutService = inject(LogoutService);
+  private navigationService = inject(NavigationService);
+  private authService = inject(AuthService);
   private router = inject(Router);
 
   handleAction(button: ButtonConfig | undefined, event: Event) {
@@ -44,7 +55,7 @@ export class PublicLayoutComponent {
       currentButton.loading = false;
     };
 
-    switch(button.action) {
+    switch (button.action) {
       case 'navigate':
         if (button.route) {
           this.router.navigate([button.route]);
@@ -52,18 +63,34 @@ export class PublicLayoutComponent {
         completeAction();
         break;
 
+      case 'home':
+        const user = this.authService.currentUser();
+
+        if (!user) {
+          this.router.navigate([NAVIGATION.auth.login]);
+          return;
+        }
+
+        if (user.roles.length > 1) {
+          this.navigationService.goToSelector();
+          return;
+        }
+
+        this.navigationService.navigateToRoleDashboard(user.roles[0]);
+        break;
+
       case 'function':
-       if (button.handler) {
-        button.handler();
-      } else {
-        this.primaryAction.emit();
-      }
-      completeAction();
-      break;
+        if (button.handler) {
+          button.handler();
+        } else {
+          this.primaryAction.emit();
+        }
+        completeAction();
+        break;
 
       case 'logout':
         this.logoutService.logout().subscribe({
-          complete: () => completeAction()
+          complete: () => completeAction(),
         });
         break;
 
