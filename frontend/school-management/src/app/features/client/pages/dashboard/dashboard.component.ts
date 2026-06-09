@@ -16,6 +16,7 @@ import { ChartCardComponent } from '../../../../shared/components/data-display/c
 import { ChartService } from '../../../../core/services/chart.service';
 import { ChartConfiguration, ChartData } from 'chart.js';
 import { CurrencyMXNPipe } from '../../../../shared/pipes/currency-mxn.pipe';
+import { getPercentage } from '../../../../core/helpers';
 
 @Component({
   selector: 'app-dashboard',
@@ -28,7 +29,7 @@ import { CurrencyMXNPipe } from '../../../../shared/pipes/currency-mxn.pipe';
     RecordListComponent,
     SectionDividerComponent,
     ChartCardComponent,
-    CurrencyMXNPipe
+    CurrencyMXNPipe,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
@@ -36,11 +37,12 @@ import { CurrencyMXNPipe } from '../../../../shared/pipes/currency-mxn.pipe';
 export class DashboardComponent implements OnInit {
   private dashboardService = inject(DashboardService);
   private chartService = inject(ChartService);
-  paymentsChartData!: ChartData<'bar'>;
-  barChartOptions!: ChartConfiguration<'bar'>['options'];
+  paymentsLineData!: ChartData<'line'>;
+  lineChartOptions!: ChartConfiguration<'line'>['options'];
 
   distributionChartData!: ChartData<'doughnut'>;
-  pieChartOptions!: ChartConfiguration<'doughnut'>['options'];
+  doghnutChartOptions!: ChartConfiguration<'doughnut'>['options'];
+
   pendingSummary: TotalPending | null = null;
   paidSummary: PaidData | null = null;
   overdueSummary: TotalPending | null = null;
@@ -79,24 +81,34 @@ export class DashboardComponent implements OnInit {
       ([a], [b]) => a.localeCompare(b),
     );
 
-    this.paymentsChartData = this.chartService.buildBarChart({
+    this.paymentsLineData = this.chartService.buildLineChart({
       labels: entries.map(([key]) => key),
-      data: entries.map(([, value]) => Number(value)),
-      label: 'Pagos',
+      datasets: [
+        {
+          label: 'Pagos',
+          data: entries.map(([, value]) => Number(value)),
+        },
+      ],
     });
-    this.barChartOptions = this.chartService.buildBarOptions();
+    this.lineChartOptions = this.chartService.buildLineOptions();
 
     this.distributionChartData = this.chartService.buildDoughnutChart({
       labels: ['Pagado', 'Pendiente', 'Vencido'],
-      data: [
-        Number(this.paidSummary.totalPayments || 0),
-        Number(this.pendingSummary.totalAmount || 0),
-        Number(this.overdueSummary.totalAmount || 0),
+      datasets: [
+        {
+          label: 'Distribución',
+          data: [
+            Number(this.paidSummary.totalPayments || 0),
+            Number(this.pendingSummary.totalAmount || 0),
+            Number(this.overdueSummary.totalAmount || 0),
+          ],
+        },
       ],
     });
 
-    this.pieChartOptions = this.chartService.buildDoughnutOptions();
+    this.doghnutChartOptions = this.chartService.buildDoughnutOptions();
   }
+
   historyColumns = [
     { key: 'concept', label: 'Concepto' },
     { key: 'amount', label: 'Monto' },
@@ -119,4 +131,17 @@ export class DashboardComponent implements OnInit {
     },
     { key: 'date', label: 'Fecha' },
   ];
+
+  get recoveryRate(): string {
+    const paid = Number(this.paidSummary?.totalPayments ?? 0);
+
+    const total =
+      paid +
+      Number(this.pendingSummary?.totalAmount ?? 0) +
+      Number(this.overdueSummary?.totalAmount ?? 0);
+
+    const percentage = getPercentage(paid, total);
+
+    return `${percentage}%`;
+  }
 }

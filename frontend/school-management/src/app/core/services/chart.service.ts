@@ -50,24 +50,26 @@ export class ChartService {
 
   buildDoughnutChart(config: DoughnutChartConfig): ChartData<'doughnut'> {
     const colors = this.getStylesCached();
-    const hasData = config.data.some((v) => Number(v) > 0);
+    const hasData = config.datasets.some((dataset) =>
+      dataset.data.some((v) => Number(v) > 0),
+    );
+
     return {
       labels: hasData ? config.labels : ['Sin datos'],
-      datasets: [
-        {
-          data: hasData ? config.data : [1],
-          backgroundColor: hasData
-            ? (config.colors ?? [
-                colors.primary,
-                colors.success,
-                colors.warning,
-                colors.danger,
-              ])
-            : [colors.border],
-          borderColor: colors.border,
-          borderWidth: 0,
-        },
-      ],
+      datasets: config.datasets.map((dataset) => ({
+        label: hasData ? (dataset.label ?? '') : 'Sin datos',
+        data: hasData ? dataset.data : [1],
+        borderColor: colors.border,
+        backgroundColor: hasData
+          ? (dataset.colors ?? [
+              colors.primary,
+              colors.success,
+              colors.warning,
+              colors.danger,
+            ])
+          : [colors.border],
+        borderWidth: 0,
+      })),
     };
   }
 
@@ -86,20 +88,20 @@ export class ChartService {
 
   buildLineChart(config: LineChartConfig): ChartData<'line'> {
     const colors = this.getStylesCached();
-    const hasData = config.data.some((v) => Number(v) > 0);
-
+    const hasData = config.datasets.some((dataset) =>
+      dataset.data.some((v) => Number(v) > 0),
+    );
     return {
       labels: hasData ? config.labels : ['Sin datos'],
-      datasets: [
-        {
-          label: hasData ? (config.label ?? '') : 'Sin datos',
-          data: hasData ? config.data : [0],
-          borderColor: colors.primary,
-          backgroundColor: this.withOpacity(colors.primary, 0.2),
-          fill: true,
-          tension: 0.4,
-        },
-      ],
+      datasets: config.datasets.map(dataset => ({
+
+        label: hasData ? (dataset.label ?? '') : 'Sin datos',
+        data: hasData ? dataset.data : [0],
+        borderColor: dataset.color ?? colors.primary,
+        backgroundColor: this.withOpacity(dataset.color ?? colors.primary, 0.2),
+        tension: 0.4,
+        fill: dataset.fill ?? true
+      })),
     };
   }
 

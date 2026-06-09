@@ -27,7 +27,13 @@
       iconType="inactive"
       label="Vencidos"
       [value]="overdueSummary?.totalAmount | currencyMXN"
-      [subtext]="overdueSummary?.totalCount + ' pagos'"
+      [subtext]="(overdueSummary?.totalCount ?? '0') + ' pagos'"
+    />
+    <app-kpi-card
+      icon="payments"
+      iconType="growth"
+      label="Recuperación"
+      [value]="recoveryRate"
     />
   </div>
 
@@ -36,16 +42,16 @@
   <div class="charts-grid">
     <app-chart-card
       title="Pagos por mes"
-      type="bar"
-      [data]="paymentsChartData"
-      [options]="barChartOptions"
+      type="line"
+      [data]="paymentsLineData"
+      [options]="lineChartOptions"
     />
 
     <app-chart-card
       title="Distribución de pagos"
       type="doughnut"
       [data]="distributionChartData"
-      [options]="pieChartOptions"
+      [options]="doghnutChartOptions"
     />
   </div>
 
@@ -58,8 +64,8 @@
   />
 
   <app-record-list
-    *ngIf="paymentHistory?.data?.items"
-    [items]="paymentHistory?.data?.items || []"
+    *ngIf="paymentHistory"
+    [items]="paymentHistory.data.items || []"
     [itemTemplate]="historyItemTemplate"
     trackByKey="id"
   />

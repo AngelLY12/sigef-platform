@@ -136,8 +136,12 @@ export class DashboardComponent implements OnInit {
 
     this.feesChartData = this.chartService.buildLineChart({
       labels: feesSemesters,
-      data: feesTotals,
-      label: 'Comisiones',
+      datasets: [
+        {
+          label: 'Comisiones',
+          data: feesTotals,
+        },
+      ],
     });
 
     this.financialSummaryChartData = this.chartService.buildStackedBarChart({
@@ -157,9 +161,14 @@ export class DashboardComponent implements OnInit {
 
     this.distributionChartData = this.chartService.buildDoughnutChart({
       labels: ['Disponible', 'Pendiente'],
-      data: [
-        Number(this.paymentsSummary.totalBalanceAvailable),
-        Number(this.paymentsSummary.totalBalancePending),
+      datasets: [
+        {
+          label: 'Distribución',
+          data: [
+            Number(this.paymentsSummary.totalBalanceAvailable),
+            Number(this.paymentsSummary.totalBalancePending),
+          ],
+        },
       ],
     });
 
