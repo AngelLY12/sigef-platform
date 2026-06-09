@@ -73,11 +73,15 @@ private authService = inject(AuthService);
 
     const baseClientMenu: MenuItem[] = [
       { label: 'Dashboard', icon: 'dashboard', route: NAVIGATION.client.dashboard, key: 'dashboard' },
+      { label: 'Conceptos de pago', icon: 'receipt_long', route: NAVIGATION.client.concepts, key: 'pending_concepts' },
+      { label: 'Tarjetas de pago', icon: 'card_membership', route: NAVIGATION.client.cards, key: 'cards' },
+      { label: 'Historial de pago', icon: 'payments', route: NAVIGATION.client.paymentHistory, key: 'payment_history' }
     ];
 
     const baseFinancialMenu: MenuItem[] = [
       { label: 'Dashboard', icon: 'dashboard', route: NAVIGATION.financial.dashboard, key: 'dashboard' },
       { label: 'Conceptos de pago', icon: 'receipt_long', route: NAVIGATION.financial.concepts, key: 'concepts'},
+      { label: 'Pagos', icon: 'payments', route: NAVIGATION.financial.payments, key: 'payments' },
       { label: 'Adeudos', icon: 'request_quote ', route: NAVIGATION.financial.debts, key: 'debts' },
     ];
 
