@@ -1,0 +1,58 @@
+<app-page-layout
+  title="Pagos"
+  welcomeMessage="Aquí puedes gestionar los pagos de la escuela."
+  loadingMessage="Cargando pagos..."
+  icon="request_quote "
+  [state]="state"
+  (retry)="loadData()"
+>
+  <app-filter-bar (reset)="onResetFilters()">
+    <div class="filters-grid">
+      <app-input
+        [placeholder]="placeholder"
+        iconRight="search"
+        [formControl]="searchControl"
+        (iconRightClick)="onSearchData()"
+        (keyup.enter)="onSearchData()"
+      ></app-input>
+
+      <app-select
+        [options]="views"
+        [(ngModel)]="currentView"
+        (ngModelChange)="loadData()"
+      >
+      </app-select>
+
+      <app-button
+        variant="outline"
+        size="md"
+        iconLeft="refresh"
+        (click)="onRefreshData()"
+      >
+        Refrescar datos
+      </app-button>
+    </div>
+  </app-filter-bar>
+  @switch (currentView) {
+    @case (PaymentsView.Payments) {
+      <app-payments-table [data]="paymentsData"> </app-payments-table>
+    }
+
+    @case (PaymentsView.ByConcept) {
+      <app-payments-by-concept-table [data]="paymentsByConceptData">
+      </app-payments-by-concept-table>
+    }
+
+    @case (PaymentsView.ByStudent) {
+      <app-payments-by-student-table [data]="paymentsByStudentData">
+      </app-payments-by-student-table>
+    }
+  }
+  <app-paginator
+    *ngIf="paginatedData"
+    [paginator]="paginatedData"
+    (pageChange)="onPageChange($event)"
+    (perPageChange)="onPageSizeChange($event)"
+  >
+  </app-paginator>
+</app-page-layout>
