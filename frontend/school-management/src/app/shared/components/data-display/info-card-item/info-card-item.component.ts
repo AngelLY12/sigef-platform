@@ -11,5 +11,6 @@ export class InfoCardItemComponent {
   @Input() label: string = '';
   @Input() value: any;
   @Input() icon: string = '';
+  @Input() customContent = false;
 
 }
