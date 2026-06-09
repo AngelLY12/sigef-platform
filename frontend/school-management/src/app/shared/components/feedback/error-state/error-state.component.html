@@ -1,0 +1,14 @@
+<div class="error-state">
+  <span class="material-icons">{{ icon }}</span>
+
+  <p>{{ message }}</p>
+
+  <app-button
+    *ngIf="showRetryButton"
+    (click)="onRetry()"
+  >
+    {{ retryLabel }}
+  </app-button>
+
+  <ng-content select="[error-state-content]"></ng-content>
+</div>

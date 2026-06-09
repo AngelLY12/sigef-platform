@@ -1,0 +1,13 @@
+<div class="empty-state">
+  <span class="material-icons">{{ icon }}</span>
+
+  <p>{{ message }}</p>
+
+  <div class="empty-state-content">
+    <ng-content select="[empty-state-content]"></ng-content>
+  </div>
+
+  <div class="empty-state-actions">
+    <ng-content select="[empty-state-actions]"></ng-content>
+  </div>
+</div>
