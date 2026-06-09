@@ -57,6 +57,10 @@ export class NavigationService {
     this.navigateToRoleDashboard(role);
   }
 
+  getPreferredRole(): Role | null {
+    return localStorage.getItem('preferredRole') as Role | null;
+  }
+
   cancelRoleSelection(): void {
     this.pendingRoles = [];
     this.router.navigate([NAVIGATION.auth.login]);
