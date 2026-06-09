@@ -1,0 +1,14 @@
+<app-page-layout
+  title="Tarjetas bancarias"
+  welcomeMessage="Aquí puedes ver las tarjetas guardadas."
+  loadingMessage="Cargando tarjetas..."
+  icon="card_membership"
+  [state]="loading"
+  (retry)="loadCards()"
+>
+  <app-cards-list
+  [cards]="cards ?? []"
+  (deleteCard)="onDeleteCard($event)"
+  ></app-cards-list>
+
+</app-page-layout>

@@ -1,0 +1,47 @@
+<app-page-layout
+  title="Conceptos de pago"
+  welcomeMessage="Aquí puedes ver los conceptos de pago que aplican a ti."
+  loadingMessage="Cargando conceptos..."
+  icon="receipt"
+  [state]="loading"
+  (retry)="loadConcepts()"
+>
+  <app-filter-bar>
+    <app-button
+      [variant]="!onlyOverdue ? 'primary' : 'ghost'"
+      iconLeft="pending"
+      (click)="onlyOverdue = false"
+    >
+      Pendientes
+    </app-button>
+
+    <app-button
+      [variant]="onlyOverdue ? 'primary' : 'ghost'"
+      iconLeft="pending"
+      (click)="onlyOverdue = true"
+    >
+      Vencidos
+    </app-button>
+
+    <app-button
+      [variant]="'outline'"
+      iconLeft="refresh"
+      (click)="onRefreshData()"
+    >
+      Refrescar datos
+    </app-button>
+
+  </app-filter-bar>
+  <app-pending-concepts-list
+  *ngIf="!onlyOverdue"
+  [concepts]="pending ?? []"
+  [loadingConceptId]="loadingConceptId"
+  (pay)="onPay($event)"
+  >
+  </app-pending-concepts-list>
+  <app-pending-concepts-list
+  *ngIf="onlyOverdue"
+  [concepts]="overdue ?? []"
+  >
+  </app-pending-concepts-list>
+</app-page-layout>

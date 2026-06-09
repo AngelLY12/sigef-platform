@@ -1,0 +1,50 @@
+<div class="concepts-grid">
+  <app-info-card
+    *ngFor="let concept of concepts"
+    [title]="concept.concept_name"
+    icon="receipt_long"
+  >
+    <div class="concept-card">
+      <div class="concept-header">
+        <div class="concept-amount">
+          {{ concept.amount | currencyMXN }}
+        </div>
+
+        <span class="status-badge" [ngClass]="concept.expiration_info.urgency">
+          {{ concept.expiration_info.text }}
+        </span>
+      </div>
+
+      <p class="concept-description">
+        {{ concept.description || "Sin descripción disponible" }}
+      </p>
+
+      <div class="concept-details">
+        <div class="detail-item">
+          <span class="label">Periodo</span>
+          <span class="value">
+            {{ concept.start_date | date:'dd/MM/yyyy' }} - {{ concept.end_date | date:'dd/MM/yyyy' }}
+          </span>
+        </div>
+
+        <div class="detail-item">
+          <span class="label">Vencimiento</span>
+          <span class="value">
+            {{ concept.expiration_info.date_formatted }}
+          </span>
+        </div>
+      </div>
+
+      <app-button
+        variant="primary"
+        iconLeft="payments"
+        [fullWidth]="true"
+        size="sm"
+        [loading]="loadingConceptId === concept.id"
+        (click)="pay.emit(concept.id)"
+      >
+        Pagar
+      </app-button>
+    </div>
+  </app-info-card>
+</div>

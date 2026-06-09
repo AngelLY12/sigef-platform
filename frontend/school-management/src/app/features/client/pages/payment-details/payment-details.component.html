@@ -1,0 +1,165 @@
+<app-page-layout
+  title="Detalles de pago"
+  welcomeMessage="Información completa del pago seleccionado."
+  loadingMessage="Cargando pago..."
+  icon="arrow_back"
+  (iconAction)="goBack()"
+  [iconClickeable]="true"
+  [state]="loading"
+  (retry)="loadPayment()"
+>
+  <ng-container *ngIf="loading === 'success' && payment">
+    <div class="container-details">
+      <app-info-card title="Resumen del pago" icon="receipt_long">
+        <app-info-card-item
+          icon="description"
+          label="Concepto"
+          [value]="payment.concept_name"
+        />
+
+        <app-info-card-item
+          icon="verified"
+          label="Estado"
+          [value]="payment.status"
+        />
+
+        <app-info-card-item
+          icon="event"
+          label="Fecha"
+          [value]="payment.created_at_human"
+        />
+
+        <app-info-card-item
+          icon="payments"
+          label="Monto"
+          [value]="payment.amount | currencyMXN"
+        />
+
+        <app-info-card-item
+          icon="account_balance_wallet"
+          label="Monto recibido"
+          [value]="payment.amount_received | currencyMXN"
+        />
+
+        <app-info-card-item
+          icon="balance"
+          label="Balance"
+          [value]="payment.balance"
+        />
+      </app-info-card>
+
+      <app-info-card title="Método de pago" icon="credit_card">
+        <ng-container *ngIf="isCard(payment.payment_method_details)">
+          <app-info-card-item icon="credit_card" label="Tipo" value="Tarjeta" />
+
+          <app-info-card-item
+            icon="branding_watermark"
+            label="Marca"
+            [value]="payment.payment_method_details.brand"
+          />
+
+          <app-info-card-item
+            icon="pin"
+            label="Últimos 4 dígitos"
+            [value]="payment.payment_method_details.last4"
+          />
+
+          <app-info-card-item
+            *ngIf="payment.payment_method_details.funding"
+            icon="account_balance_wallet"
+            label="Funding"
+            [value]="payment.payment_method_details.funding"
+          />
+        </ng-container>
+
+        <ng-container *ngIf="isOxxo(payment.payment_method_details)">
+          <app-info-card-item icon="store" label="Tipo" value="OXXO" />
+
+          <app-info-card-item
+            icon="tag"
+            label="Referencia"
+            [value]="payment.payment_method_details.reference"
+          />
+
+          <app-info-card-item
+            icon="schedule"
+            label="Expira"
+            [value]="payment.payment_method_details.expires_after"
+          />
+        </ng-container>
+
+        <ng-container *ngIf="isSpei(payment.payment_method_details)">
+          <app-info-card-item
+            icon="account_balance"
+            label="Tipo"
+            value="Transferencia SPEI"
+          />
+
+          <app-info-card-item
+            icon="account_balance"
+            label="Banco"
+            [value]="payment.payment_method_details.bank_name"
+          />
+
+          <app-info-card-item
+            icon="numbers"
+            label="CLABE"
+            [value]="payment.payment_method_details.clabe"
+          />
+
+          <app-info-card-item
+            icon="tag"
+            label="Referencia"
+            [value]="payment.payment_method_details.reference"
+          />
+        </ng-container>
+
+        <ng-container
+          *ngIf="
+            payment.payment_method_details.type !== 'tarjeta' &&
+            payment.payment_method_details.type !== 'oxxo' &&
+            payment.payment_method_details.type !== 'spei'
+          "
+        >
+          <app-info-card-item
+            icon="help"
+            label="Tipo"
+            [value]="payment.payment_method_details.type"
+          />
+        </ng-container>
+      </app-info-card>
+
+      <app-info-card title="Acciones" icon="settings">
+        <app-info-card-item
+          icon="badge"
+          label="Referencia interna"
+          [value]="payment.reference"
+        />
+        <app-info-card-item
+        *ngIf="payment.url"
+          icon="receipt"
+          label="Stripe"
+          [customContent]="true"
+        >
+        <app-anchor
+          *ngIf="payment.url"
+          [link]="payment.url"
+          [external]="true"
+          target="_blank"
+          anchorMessage="Ver enlace de Stripe"
+        >
+        </app-anchor>
+        </app-info-card-item>
+
+        <app-button
+        variant="secondary"
+        iconLeft="receipt"
+        (click)="loadReceipt(payment.id)"
+        >
+          Ver comprobante
+        </app-button>
+
+      </app-info-card>
+    </div>
+  </ng-container>
+</app-page-layout>

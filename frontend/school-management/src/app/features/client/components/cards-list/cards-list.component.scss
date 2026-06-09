@@ -1,0 +1,265 @@
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1rem;
+}
+
+.card-container {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+
+.card-item {
+  position: relative;
+  overflow: hidden;
+
+  min-height: 210px;
+
+  background: linear-gradient(
+    135deg,
+    var(--card-bg-primary),
+    var(--card-bg-secondary)
+  );
+
+  border: 1px solid var(--card-border-light);
+  border-radius: 1.25rem;
+
+  padding: 1.5rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.card-actions {
+  opacity: 0;
+  transform: translateY(8px);
+
+  transition: all .2s ease;
+
+  display: flex;
+  justify-content: center;
+}
+
+.card-container:hover .card-actions {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.card-item:hover {
+  transform: translateY(-4px);
+
+  box-shadow: 0 12px 28px var(--card-hover-shadow);
+}
+
+.card-background-circle {
+  position: absolute;
+  top: -50px;
+  right: -50px;
+
+  width: 180px;
+  height: 180px;
+
+  border-radius: 50%;
+
+  background: var(--card-hover-shadow);
+
+  pointer-events: none;
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  position: relative;
+  z-index: 1;
+}
+.card-chip {
+  position: relative;
+  overflow: hidden;
+  width: 48px;
+  height: 34px;
+
+  border-radius: 8px;
+
+  background: linear-gradient(135deg, #d4af37 0%, #f7dc6f 50%, #cfa93a 100%);
+
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.35),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.card-chip::before {
+  content: "";
+
+  position: absolute;
+
+  top: 4px;
+  bottom: 4px;
+  left: 50%;
+
+  width: 1px;
+
+  transform: translateX(-50%);
+
+  background: rgba(0, 0, 0, 0.18);
+
+  box-shadow:
+    -10px 0 rgba(0, 0, 0, 0.12),
+    10px 0 rgba(0, 0, 0, 0.12);
+}
+
+.card-chip::after {
+  content: "";
+
+  position: absolute;
+
+  left: 4px;
+  right: 4px;
+  top: 50%;
+
+  height: 1px;
+
+  transform: translateY(-50%);
+
+  background: rgba(0, 0, 0, 0.18);
+
+  box-shadow:
+    0 -8px rgba(0, 0, 0, 0.12),
+    0 8px rgba(0, 0, 0, 0.12);
+}
+
+.card-brand {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.12rem;
+
+  color: var(--card-text-primary);
+}
+
+.card-number {
+  position: relative;
+  z-index: 1;
+
+  margin: 1.5rem 0;
+
+  font-size: 1.4rem;
+  font-weight: 700;
+
+  letter-spacing: 0.2rem;
+
+  color: var(--card-text-primary);
+
+  word-break: break-word;
+}
+
+.card-footer {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.card-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+
+  color: var(--card-text-secondary);
+}
+
+.value {
+  font-size: 1rem;
+  font-weight: 700;
+
+  color: var(--card-text-primary);
+}
+
+.status-badge {
+  padding: 0.45rem 0.85rem;
+
+  border-radius: 999px;
+
+  font-size: 0.75rem;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+.status-badge.active {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--card-accent-success);
+}
+
+.status-badge.inactive {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--card-accent-danger);
+}
+
+.empty-state {
+  padding: 3rem 1rem;
+
+  text-align: center;
+
+  color: var(--card-text-secondary);
+}
+
+.empty-state .material-icons {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card-item {
+    min-height: 190px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-item {
+    padding: 1.25rem;
+  }
+
+  .card-number {
+    font-size: 1.1rem;
+    letter-spacing: 0.1rem;
+  }
+
+  .card-brand {
+    font-size: 0.85rem;
+  }
+
+  .card-chip {
+    width: 42px;
+    height: 30px;
+  }
+
+  .status-badge {
+    font-size: 0.7rem;
+  }
+}

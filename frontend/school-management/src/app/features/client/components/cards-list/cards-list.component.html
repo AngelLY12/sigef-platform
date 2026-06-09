@@ -1,0 +1,50 @@
+<div class="cards-grid">
+  <div class="card-container"  *ngFor="let card of cards">
+    <div class="card-item">
+      <div class="card-background-circle"></div>
+
+      <div class="card-top">
+        <div class="card-chip"></div>
+
+        <div class="card-brand">
+          {{ card.brand | uppercase }}
+        </div>
+      </div>
+
+      <div class="card-number">
+        {{ card.masked_card }}
+      </div>
+
+      <div class="card-footer">
+        <div class="card-detail">
+          <span class="label">Expira</span>
+          <span class="value">
+            {{ card.expiration_date }}
+          </span>
+        </div>
+
+        <span
+          class="status-badge"
+          [class.active]="card.status === 'Vigente'"
+          [class.inactive]="card.status !== 'Vigente'"
+        >
+          {{ card.status }}
+        </span>
+      </div>
+    </div>
+    <div class="card-actions">
+      <app-button
+        variant="danger"
+        iconLeft="delete"
+        [iconOnly]="true"
+        (click)="deleteCard.emit(card.id)"
+      ></app-button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="cards.length === 0" class="empty-state">
+  <span class="material-icons"> credit_card_off </span>
+
+  <p>No tienes tarjetas registradas.</p>
+</div>
