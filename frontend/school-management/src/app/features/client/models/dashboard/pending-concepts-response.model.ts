@@ -1,5 +1,5 @@
 export interface PendingConceptsResponse {
-  totalPending: TotalPending;
+  total_pending: TotalPending;
 }
 
 export interface TotalPending {

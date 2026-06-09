@@ -19,7 +19,7 @@ export class DashboardService {
   {
     return this.http.get<ApiSuccessResponse<PendingConceptsResponse>>(`${STUDENTS_URL.dashboard}/pending`)
     .pipe(
-      map(res => res.data.totalPending)
+      map(res => res.data.total_pending)
     );
   }
   getOverdue(params?: DashboardParams): Observable<TotalPending> {
