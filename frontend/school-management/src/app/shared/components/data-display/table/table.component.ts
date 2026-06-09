@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { TableColumn } from '../../../../core/models/domain/table-column.model';
+import { EmptyStateComponent } from '../../feedback/empty-state/empty-state.component';
 
 @Component({
   selector: 'app-table',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, EmptyStateComponent],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss'
 })
