@@ -1,5 +1,11 @@
 export interface LineChartConfig {
   labels: string[];
-  data: number[];
+  datasets: LineChartDataset[];
+}
+
+export interface LineChartDataset {
   label?: string;
+  data: number[];
+  color?: string;
+  fill?: boolean;
 }
