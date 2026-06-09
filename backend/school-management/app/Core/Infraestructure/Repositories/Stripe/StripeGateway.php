@@ -22,10 +22,14 @@ use Stripe\Stripe;
 
 class StripeGateway implements StripeGatewayInterface
 {
+    private readonly string $successUrl;
+    private readonly string $cancelUrl;
     public function __construct(
     )
     {
         Stripe::setApiKey(config('services.stripe.secret'));
+        $this->successUrl = (string) config('services.stripe.success');
+        $this->cancelUrl = (string) config('services.stripe.cancel');
     }
 
     public function createStripeUser(User $user): string
@@ -67,8 +71,8 @@ class StripeGateway implements StripeGatewayInterface
                 'expires_at' => time() + 3600,
                 'payment_method_types' => ['card'],
                 'customer' => $customerId,
-                'success_url' => config('app.frontend_url') . '/Estudiante/Tarjetas?result=added',
-                'cancel_url' => config('app.frontend_url') . '/Estudiante/Tarjetas?result=canceled',
+                'success_url' => $this->successUrl,
+                'cancel_url' => $this->cancelUrl,
             ]);
         }catch(ApiErrorException $e){
             logger()->error("Stripe error setupSession: " . $e->getMessage());
@@ -116,8 +120,8 @@ class StripeGateway implements StripeGatewayInterface
                 ],
             ],
             'saved_payment_method_options' => ['payment_method_save' => 'enabled'],
-            'success_url' => config('app.frontend_url') . '/Estudiante/Historial?result=paid',
-            'cancel_url' => config('app.frontend_url') . '/Estudiante/Adeudos?result=canceled',
+            'success_url' => $this->successUrl,
+            'cancel_url' => $this->cancelUrl,
         ];
 
         return Session::create($sessionData);
