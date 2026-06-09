@@ -7,7 +7,7 @@ export type ButtonConfig = {
   loading?: boolean;
   variant?: ButtonVariant;
   size?: ButtonSize;
-  action: 'navigate' | 'function' | 'logout' | 'back';
+  action: 'navigate' | 'function' | 'logout' | 'back' | 'home';
   route?: string;
   handler?: () => void;
 };
