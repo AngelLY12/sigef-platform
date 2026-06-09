@@ -74,8 +74,6 @@ export class NotificationsComponent implements OnInit {
         this.readPaginatedNotifications = all.notifications;
         this.unreadCount = all.unread_count;
         this.readCount = all.read_count;
-        console.log(this.unreadCount, this.readCount);
-        console.log(all.unread_count, all.read_count);
         this.unreadPaginatedNotifications = unread;
       },
       error: () => {
