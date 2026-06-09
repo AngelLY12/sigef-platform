@@ -10,6 +10,7 @@ import { SpinnerComponent } from '../../ui/spinner/spinner.component';
 import { CommonModule } from '@angular/common';
 import { LoadingState } from '../../../../core/models/types/loading-state.type';
 import { ButtonComponent } from '../../ui/button/button.component';
+import { ErrorStateComponent } from '../../feedback/error-state/error-state.component';
 
 @Component({
   selector: 'app-page-layout',
@@ -19,6 +20,7 @@ import { ButtonComponent } from '../../ui/button/button.component';
     SpinnerComponent,
     CommonModule,
     ButtonComponent,
+    ErrorStateComponent
   ],
   templateUrl: './page-layout.component.html',
   styleUrl: './page-layout.component.scss',
@@ -51,9 +53,6 @@ export class PageLayoutComponent {
     return this.state === 'loading';
   }
 
-  onRetry() {
-    this.retry.emit();
-  }
   onIconAction() {
     this.iconAction.emit();
   }
