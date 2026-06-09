@@ -302,15 +302,7 @@ input:-webkit-autofill:focus {
 }
 
 .input-container:has(.icon.right) input {
-  padding-right: 2.75rem; /* 44px */
-
-  @media (max-width: 768px) {
-    padding-right: 2.5rem; /* 40px */
-  }
-
-  @media (max-width: 480px) {
-    padding-right: 2.25rem; /* 36px */
-  }
+  padding-right: 0rem;
 }
 
 .input-container:has(.clear-button):not(:has(.icon.right)) input {
