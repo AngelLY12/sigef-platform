@@ -4,6 +4,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { ConceptsComponent } from './pages/concepts/concepts.component';
 import { ConceptDetailComponent } from './pages/concept-detail/concept-detail.component';
 import { DebtsComponent } from './pages/debts/debts.component';
+import { PaymentsComponent } from './pages/payments/payments.component';
 
 export const FINANCIAL_ROUTES: Routes = [
   {
@@ -31,6 +32,10 @@ export const FINANCIAL_ROUTES: Routes = [
         path: 'debts',
         component: DebtsComponent
       },
+      {
+        path: 'payments',
+        component: PaymentsComponent
+      }
     ],
   },
 ];

@@ -3,4 +3,5 @@ export const  FINANCIAL_NAVIGATION = {
   concepts: '/financial/concepts',
   conceptDetail: (id: number) => ['/financial/concepts', id],
   debts: '/financial/debts',
+  payments: '/financial/payments'
 }

@@ -8,11 +8,15 @@ export const PROFILE_URL = `${API_URL}/users`;
 export const CAREER_URL = `${API_URL}/careers`;
 export const NOTIFICATIONS_URL = `${API_URL}/notifications`;
 export const STUDENTS_URL = {
-  dashboard: `${API_URL}/dashboard`
+  dashboard: `${API_URL}/dashboard`,
+  pending: `${API_URL}/pending-payments`,
+  cards: `${API_URL}/cards`,
+  paymentsHistory: `${API_URL}/payments/history`
 };
 export const FINANCIAL_STAFF_URLS = {
   dashboard: `${API_URL}/dashboard-staff`,
   concepts: `${API_URL}/concepts`,
-  debts: `${API_URL}/debts`
+  debts: `${API_URL}/debts`,
+  payments: `${API_URL}/payments`
 };
 

@@ -1,6 +1,10 @@
 import { Routes } from '@angular/router';
 import { MainLayoutComponent } from '../../layouts/main-layout/main-layout.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { PendingConceptsComponent } from './pages/pending-concepts/pending-concepts.component';
+import { CardsComponent } from './pages/cards/cards.component';
+import { PaymentHistoryComponent } from './pages/payment-history/payment-history.component';
+import { PaymentDetailsComponent } from './pages/payment-details/payment-details.component';
 
 export const CLIENT_ROUTES: Routes = [
   {
@@ -16,6 +20,22 @@ export const CLIENT_ROUTES: Routes = [
         path: 'dashboard',
         component: DashboardComponent,
       },
+      {
+        path: 'concepts',
+        component: PendingConceptsComponent
+      },
+      {
+        path: 'cards',
+        component: CardsComponent
+      },
+      {
+        path: 'payment/history',
+        component: PaymentHistoryComponent
+      },
+      {
+        path: 'payment/:id',
+        component: PaymentDetailsComponent
+      }
     ],
   },
 ];
