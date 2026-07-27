@@ -1,0 +1,40 @@
+<div class="import-controls">
+  <app-button
+    variant="outline"
+    iconLeft="swap_horiz"
+    (click)="modeChange.emit()"
+  >
+    Cambiar a {{ mode === "users" ? "estudiantes" : "usuarios" }}
+  </app-button>
+
+  <app-button
+    variant="ghost"
+    iconLeft="download"
+    (click)="downloadTemplate.emit()"
+  >
+    Descargar plantilla
+  </app-button>
+</div>
+
+<app-info-card [icon]="icon" [title]="title">
+  <p class="description">
+    {{ description }}
+  </p>
+
+  <app-file-input
+    [file]="file"
+    [label]="inputLabel"
+    (fileChange)="fileChange.emit($event)"
+  />
+
+  <div class="actions">
+    <app-button
+      variant="primary"
+      [loading]="loading"
+      [disabled]="!file"
+      (click)="import.emit()"
+    >
+      {{ title }}
+    </app-button>
+  </div>
+</app-info-card>

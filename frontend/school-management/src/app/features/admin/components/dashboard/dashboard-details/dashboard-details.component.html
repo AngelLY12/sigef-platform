@@ -1,0 +1,15 @@
+<app-section-divider>Información Detallada</app-section-divider>
+
+<div class="info-grid">
+  <app-info-card icon="menu_book" title="Situación Académica" type="academic">
+    <app-progress-list [items]="academicProgressItems"></app-progress-list>
+  </app-info-card>
+
+  <app-info-card icon="warning" title="Alertas del Sistema" type="alerts">
+    <app-alerts-list [alerts]="alertItems"></app-alerts-list>
+  </app-info-card>
+
+  <app-info-card icon="pie_chart" title="Estado de Cuentas" type="demographics">
+    <app-demographics-grid [items]="demographicItems"></app-demographics-grid>
+  </app-info-card>
+</div>

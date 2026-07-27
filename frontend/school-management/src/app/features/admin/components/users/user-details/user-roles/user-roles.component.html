@@ -1,0 +1,7 @@
+<app-button variant="ghost" size="sm" iconLeft="edit" (click)="edit.emit()">
+  Editar
+</app-button>
+
+@for (item of rolesItems; track item.label) {
+  <app-info-card-item [item]="item"></app-info-card-item>
+}

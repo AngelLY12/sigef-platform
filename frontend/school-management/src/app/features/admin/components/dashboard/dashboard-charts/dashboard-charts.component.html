@@ -1,0 +1,43 @@
+<app-section-divider>Distribución de Usuarios</app-section-divider>
+
+<div class="charts-grid">
+  <app-chart-card
+    title="Distribución de Usuarios"
+    [data]="userDistributionChartData"
+    [options]="userDistributionChartOptions"
+    type="doughnut"
+  >
+    <app-chart-footer-legend footer [items]="userDistributionLegend">
+    </app-chart-footer-legend>
+  </app-chart-card>
+
+  <app-chart-card
+    title="Crecimiento de Usuarios"
+    [data]="activityChartData"
+    [options]="activityChartOptions"
+    type="line"
+    size="line-chart"
+    [fullWidth]="true"
+  >
+  </app-chart-card>
+
+  <app-chart-card
+    title="Usuarios por Rol"
+    [data]="roleChartData"
+    [options]="userDistributionChartOptions"
+    type="doughnut"
+    size="small"
+  >
+    <app-chart-footer-stats footer [items]="roleStats">
+    </app-chart-footer-stats>
+  </app-chart-card>
+  <app-chart-card
+    title="Información Académica"
+    [data]="academicChartData"
+    [options]="userDistributionChartOptions"
+    type="doughnut"
+  >
+    <app-chart-footer-stats footer [items]="academicStats">
+    </app-chart-footer-stats>
+  </app-chart-card>
+</div>

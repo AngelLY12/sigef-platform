@@ -1,0 +1,71 @@
+<div class="list-actions-bar">
+  <div class="selected">
+    <app-checkbox
+      [ngModel]="allSelected"
+      (ngModelChange)="toggleAll.emit($event)"
+    />
+
+    <span class="selected-count"> {{ selected.length }} seleccionados </span>
+  </div>
+
+  <div class="actions">
+    <app-menu #menu>
+      <app-button
+        trigger
+        variant="ghost"
+        size="sm"
+        [iconOnly]="true"
+        iconLeft="more_vert"
+      />
+
+      <div menu>
+        <app-menu-item icon="delete" (itemClick)="delete.emit(); menu.close()">
+          Eliminar
+        </app-menu-item>
+
+        <app-menu-item
+          icon="check_circle"
+          (itemClick)="activate.emit(); menu.close()"
+        >
+          Activar
+        </app-menu-item>
+
+        <app-menu-item icon="block" (itemClick)="disable.emit(); menu.close()">
+          Dar de baja
+        </app-menu-item>
+
+        <app-menu-item
+          icon="schedule"
+          (itemClick)="temporaryDisable.emit(); menu.close()"
+        >
+          Baja temporal
+        </app-menu-item>
+
+        <app-menu-item
+          icon="admin_panel_settings"
+          (itemClick)="updateRoles.emit(); menu.close()"
+        >
+          Actualizar roles
+        </app-menu-item>
+
+        <app-menu-item
+          icon="lock"
+          (itemClick)="updatePermissions.emit(); menu.close()"
+        >
+          Actualizar permisos
+        </app-menu-item>
+
+        <app-menu-item
+          icon="trending_up"
+          (itemClick)="promoteStudents.emit(); menu.close()"
+        >
+          <div>
+            <span>Incrementar semestre</span>
+            <br />
+            <small>Afecta a todos los estudiantes</small>
+          </div>
+        </app-menu-item>
+      </div>
+    </app-menu>
+  </div>
+</div>

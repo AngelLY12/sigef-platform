@@ -4,144 +4,55 @@
   loadingMessage="Cargando usuario..."
   icon="chevron_left"
   (iconAction)="onUsersNavigation()"
+  [refreshable]="true"
+  [refreshing]="state === 'loading'"
+  (refresh)="onRefreshData()"
   [iconClickeable]="true"
   [state]="state"
   (retry)="loadUserDetails(userId!)"
 >
-  <div
-    class="user-container"
-    [class.edit-mode]="updateMode"
-    *ngIf="state === 'success' && userDetails"
-  >
-    <div class="bar">
-      <app-button
-        [iconLeft]="updateMode ? 'close' : 'edit'"
-        variant="ghost"
-        (click)="onUpdateState()"
-      >
-        {{ updateMode ? "Cancelar" : "Editar" }}
-      </app-button>
-    </div>
+   @if (state === 'success' && userDetails) {
 
-    <div class="user-details">
-      <app-info-card
-        *ngIf="!updateMode"
-        icon="account_circle"
-        title="Información del Usuario"
-      >
-        <app-info-card-item
-          *ngFor="let item of basicInfoItems"
-          [icon]="item.icon"
-          [label]="item.label"
-          [value]="item.value"
-        >
-        </app-info-card-item>
-      </app-info-card>
+    <app-folder-tabs
+      [tabs]="userDetailTabs"
+      [(activeTab)]="activeTab"
+    >
+      @switch (activeTab) {
+        @case ('general') {
+          <app-user-basic-info
+            [basicInfo]="userDetails.basicInfo"
+          />
+        }
 
-      <app-info-card
-        *ngIf="!updateMode"
-        icon="home"
-        title="Dirección del Usuario"
-      >
-        <app-expandable-section [maxHeight]="200">
-          <app-info-card-item
-            *ngFor="let item of addressInfoItems"
-            [icon]="item.icon"
-            [label]="item.label"
-            [value]="item.value"
-          >
-          </app-info-card-item>
-        </app-expandable-section>
-      </app-info-card>
+        @case ('address') {
+          <app-user-address
+            [userAddress]="userDetails.basicInfo.address"
+          />
+        }
 
-      <app-info-card
-        class="editable-card"
-        icon="badge"
-        title="Roles del Usuario"
-        [actionConfig]="
-          updateMode
-            ? {
-                singleButton: {
-                  label: 'Editar',
-                  icon: 'edit',
-                },
-              }
-            : undefined
-        "
-        (action)="onUpdateRoles()"
-      >
-        <app-info-card-item
-          *ngFor="let item of rolesItems"
-          [icon]="item.icon"
-          [label]="item.label"
-          [value]="item.value"
-        >
-        </app-info-card-item>
-      </app-info-card>
+        @case ('roles') {
+          <app-user-roles
+            [userRoles]="userDetails.roles"
+            (edit)="onUpdateRoles()"
+          />
+        }
 
-      <app-info-card
-        class="editable-card"
-        icon="security"
-        title="Permisos del usuario"
-        [actionConfig]="
-          updateMode
-            ? {
-                singleButton: {
-                  label: 'Editar',
-                  icon: 'edit',
-                  loading: permissionsState === 'loading',
-                  disabled: permissionsState === 'loading',
-                },
-              }
-            : undefined
-        "
-        (action)="onUpdatePermissions()"
-      >
-        <app-expandable-section [maxHeight]="200">
-          <app-info-card-item
-            *ngFor="let item of permissionsItems"
-            [icon]="item.icon"
-            [label]="item.label"
-            [value]="item.value"
-          >
-          </app-info-card-item>
+        @case ('permissions') {
+          <app-user-permissions
+            [userPermissions]="userDetails.permissions"
+            [loading]="permissionsState === 'loading'"
+            (edit)="onUpdatePermissions()"
+          />
+        }
 
-          <span class="no-info" *ngIf="permissionsItems!.length === 0">
-            No hay permisos asignados
-          </span>
-        </app-expandable-section>
-      </app-info-card>
-
-      <app-info-card
-        class="editable-card"
-        icon="history"
-        title="Información académica"
-        [actionConfig]="
-          updateMode
-            ? {
-                singleButton: {
-                  label: 'Editar',
-                  icon: 'edit',
-                  loading: studentDetailsState === 'loading',
-                  disabled: studentDetailsState === 'loading',
-                },
-              }
-            : undefined
-        "
-        (action)="onManageStudentDetails()"
-      >
-        <app-info-card-item
-          *ngFor="let item of studentDetailItems"
-          [icon]="item.icon"
-          [label]="item.label"
-          [value]="item.value"
-        >
-        </app-info-card-item>
-
-        <span class="no-info" *ngIf="studentDetailItems!.length === 0">
-          No hay información académica disponible
-        </span>
-      </app-info-card>
-    </div>
-  </div>
+        @case ('academic') {
+          <app-user-academic-info
+            [userStudentDetail]="userDetails.studentDetail"
+            [loading]="studentDetailsState === 'loading'"
+            (edit)="onManageStudentDetails()"
+          />
+        }
+      }
+    </app-folder-tabs>
+  }
 </app-page-layout>

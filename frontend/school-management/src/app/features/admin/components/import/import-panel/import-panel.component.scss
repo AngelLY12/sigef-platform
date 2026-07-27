@@ -1,0 +1,36 @@
+.import-controls {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.description {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .actions {
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .import-controls {
+    flex-direction: column;
+    margin-top: 1rem;
+    align-items: center;
+    align-items: center;
+  }
+}

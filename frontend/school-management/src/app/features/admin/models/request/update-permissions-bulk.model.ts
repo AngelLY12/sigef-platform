@@ -1,4 +1,4 @@
-import { Role } from "../../../core/models/enums/role.enum"
+import { Role } from "../../../../core/models/enums/role.enum"
 
 export interface UpdatePermissionsBulk {
   curps?: string[],

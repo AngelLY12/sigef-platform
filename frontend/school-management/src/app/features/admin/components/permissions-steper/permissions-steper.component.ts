@@ -9,13 +9,13 @@ import { SelectComponent } from '../../../../shared/components/form/select/selec
 import { RadioGroupComponent } from '../../../../shared/components/form/radio-group/radio-group.component';
 import { StepperComponent } from '../../../../shared/components/features/stepper/stepper.component';
 import { Role } from '../../../../core/models/enums/role.enum';
-import { UserListItem } from '../../models/user-list-item.model';
-import { UpdatePermissionsBulk } from '../../models/update-permissions-bulk.model';
+import { UpdatePermissionsBulk } from '../../models/request/update-permissions-bulk.model';
 import { SelectorActionState } from '../../../../core/models/types/permissions-state.type';
 import { GroupedOption } from '../../../../core/models/domain/action-field.modal';
 import { PermissionsByCurps } from '../../../../core/models/responses/permissions-by-curp-response.model';
 import { GroupStateSelectorListComponent } from '../../../../shared/components/form/selector/group-state-selector-list/group-state-selector-list.component';
 import { LoadingState } from '../../../../core/models/types/loading-state.type';
+import { UserListItem } from '../../models/response/user-list-item.model';
 
 @Component({
   selector: 'app-permissions-steper',

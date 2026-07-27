@@ -1,0 +1,27 @@
+<div class="user-record">
+  <div class="user-top">
+    <span class="user-name">{{ user.fullName }}</span>
+
+    <div class="badge-container">
+      <span class="badge" [ngClass]="statusColor">
+        {{ user.status.toUpperCase() }}
+      </span>
+    </div>
+  </div>
+
+  <div class="user-bottom">
+    @if (user.status === "eliminado") {
+      <span class="badge" [ngClass]="statusColor">
+        Faltan {{ user.deletedAtHuman }} días para su eliminación total
+      </span>
+    } @else {
+      <span>{{ user.email }}</span>
+      <span class="separator">|</span>
+      <span>{{ user.curp }}</span>
+      <span class="separator">|</span>
+      <span>Creado {{ user.createdAtHuman }}</span>
+      <span class="separator">|</span>
+      <span>{{ user.roles_count }} roles</span>
+    }
+  </div>
+</div>

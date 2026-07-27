@@ -1,0 +1,18 @@
+<app-button
+  variant="ghost"
+  size="sm"
+  iconLeft="edit"
+  [loading]="loading"
+  [disabled]="loading"
+  (click)="edit.emit()"
+>
+  {{ studentDetailItems!.length > 0 ? "Editar" : "Agregar" }}
+</app-button>
+
+@if (studentDetailItems!.length > 0) {
+  @for (item of studentDetailItems; track item.label) {
+    <app-info-card-item [item]="item"> </app-info-card-item>
+  }
+} @else {
+  <span class="no-info"> No hay información académica disponible </span>
+}
