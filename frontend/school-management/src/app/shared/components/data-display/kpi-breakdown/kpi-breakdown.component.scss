@@ -1,0 +1,11 @@
+.kpi-breakdown {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  .badge {
+    padding: 0.2rem 0.5rem;
+    border-radius: 1rem;
+    background: var(--card-bg-tertiary);
+
+    &.warning { color: var(--card-accent-warning); }
+  }
+}

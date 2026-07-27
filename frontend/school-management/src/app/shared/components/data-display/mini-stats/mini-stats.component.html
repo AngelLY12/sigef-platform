@@ -1,0 +1,14 @@
+<div class="mini-stats">
+  @for (item of items; track item.label) {
+    <div class="stat-row">
+      <span>{{ item.label }}:</span>
+
+      <span
+        class="value"
+        [class]="item.type || 'default'"
+      >
+        {{ item.value }}
+      </span>
+    </div>
+  }
+</div>

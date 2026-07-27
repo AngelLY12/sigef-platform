@@ -1,0 +1,12 @@
+.mini-stats {
+  margin-top: 0.5rem;
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    .value.warning {
+      color: var(--card-accent-warning);
+      font-weight: 600;
+    }
+  }
+}

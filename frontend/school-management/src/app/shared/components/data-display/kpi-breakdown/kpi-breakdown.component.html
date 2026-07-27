@@ -1,0 +1,10 @@
+<div class="kpi-breakdown">
+  @for (item of items; track item.label) {
+    <span
+      class="badge"
+      [class]="item.type || 'default'"
+    >
+      {{ item.label }}: {{ item.value }}
+    </span>
+  }
+</div>
