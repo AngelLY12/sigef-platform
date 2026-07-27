@@ -1,0 +1,38 @@
+<div class="folder-tabs">
+  <div class="folder-tabs__header">
+    @for (tab of tabs; track tab.id) {
+      <button
+        type="button"
+        class="folder-tab"
+        [class.active]="activeTab === tab.id"
+        [disabled]="tab.disabled"
+        (click)="selectTab(tab)"
+      >
+        @if (tab.icon) {
+          <span class="material-icons">
+            {{ tab.icon }}
+          </span>
+        }
+
+        <span>{{ tab.label }}</span>
+
+        @if (tab.badge !== undefined) {
+          <span class="folder-tab__badge">
+            {{ tab.badge }}
+          </span>
+        }
+      </button>
+    }
+  </div>
+
+  <div class="folder-tabs__content">
+    @if (actionsTemplate) {
+      <div class="folder-tabs__actions">
+        <ng-container [ngTemplateOutlet]="actionsTemplate" />
+      </div>
+    }
+    <div class="folder-tabs__body">
+      <ng-content/>
+    </div>
+  </div>
+</div>
