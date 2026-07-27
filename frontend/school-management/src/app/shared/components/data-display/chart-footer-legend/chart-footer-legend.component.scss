@@ -1,0 +1,34 @@
+
+.chart-footer {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--card-text-secondary);
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+
+      &.active { background: var(--card-accent-success); }
+      &.inactive { background: var(--card-accent-warning); }
+      &.danger { background: var(--card-accent-danger);}
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .chart-footer {
+    flex-direction: column;
+    gap: .5rem;
+    align-items: center;
+  }
+
+}

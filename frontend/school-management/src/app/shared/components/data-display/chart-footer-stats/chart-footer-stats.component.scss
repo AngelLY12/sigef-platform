@@ -1,0 +1,41 @@
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100px, 100%), 1fr));
+  gap: 0.5rem;
+  margin-top: 1rem;
+
+  .stat-item {
+    text-align: center;
+    padding: 0.5rem;
+    background: var(--card-stat-bg);
+    border-radius: 0.5rem;
+
+    .name {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--card-text-tertiary);
+      margin-bottom: 0.25rem;
+    }
+
+    .value {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--card-accent-primary);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+
+  .stats {
+    display: flex;
+    overflow-x: auto;
+    gap: 0.5rem;
+  }
+
+  .stat-item {
+    min-width: 120px;
+    flex-shrink: 0;
+  }
+
+}

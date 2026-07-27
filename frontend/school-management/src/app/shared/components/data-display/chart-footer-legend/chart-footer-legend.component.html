@@ -1,0 +1,14 @@
+<div class="chart-footer">
+  @for (item of items; track item.label) {
+    <div class="legend-item">
+      <span class="dot" [class]="item.type"></span>
+
+      <span>
+        {{ item.label }}
+        @if (item.value !== undefined) {
+          ({{ item.value }})
+        }
+      </span>
+    </div>
+  }
+</div>

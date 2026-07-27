@@ -1,0 +1,13 @@
+<div class="stats">
+  @for (item of items; track item.label) {
+    <div class="stat-item">
+      <span class="name">
+        {{ item.label }}
+      </span>
+
+      <span class="value">
+        {{ item.value }}
+      </span>
+    </div>
+  }
+</div>
