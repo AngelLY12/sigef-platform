@@ -1,0 +1,71 @@
+<div [formGroup]="form">
+  <app-input
+    label="Nombre(s)"
+    type="text"
+    placeholder="Pedro Antonio"
+    iconRight="badge"
+    formControlName="name"
+    [customErrors]="{
+      required: 'El nombre es obligatorio',
+      minlength: 'El nombre debe tener al menos 2 caracteres',
+      maxlength: 'El nombre no puede tener más de 50 caracteres',
+      pattern: 'Solo se permiten letras y espacios',
+    }"
+  />
+
+  <app-input
+    label="Apellidos"
+    type="text"
+    placeholder="Sánchez Pérez"
+    iconRight="badge"
+    formControlName="last_name"
+    [customErrors]="{
+      required: 'Los apellidos son obligatorios',
+      minlength: 'Los apellidos deben tener al menos 2 caracteres',
+      maxlength: 'Los apellidos no pueden tener más de 50 caracteres',
+      pattern: 'Solo se permiten letras y espacios',
+    }"
+  />
+
+  <app-input
+    label="Fecha de nacimiento"
+    dateFormat="yyyy-mm-dd"
+    placeholder="DD/MM/AAAA"
+    type="date"
+    formControlName="birthdate"
+    [customErrors]="{
+      underage: 'Debes ser mayor de 10 años',
+      tooOld: 'La fecha no puede ser hace más de 100 años',
+      invalidDate: 'Ingresa una fecha válida',
+    }"
+  />
+
+  <app-select
+    label="Género"
+    placeholder="Selecciona un género"
+    iconRight="wc"
+    [options]="genderOptions"
+    formControlName="gender"
+  />
+
+  <app-input
+    label="CURP"
+    type="text"
+    placeholder="XXXX000000XXXXXX00"
+    iconRight="fingerprint"
+    formControlName="curp"
+    [customErrors]="{
+      required: 'El CURP es obligatorio',
+      minlength: 'El CURP debe tener 18 caracteres',
+      maxlength: 'El CURP debe tener 18 caracteres',
+    }"
+  />
+
+  <app-select
+    label="Tipo de sangre"
+    placeholder="Selecciona tu tipo de sangre"
+    iconRight="bloodtype"
+    [options]="bloodTypeOptions"
+    formControlName="blood_type"
+  />
+</div>

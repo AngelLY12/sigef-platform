@@ -7,6 +7,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ModalService } from '../../../../core/services/modal.service';
 import { AuthNavigationHelper } from '../../../../core/helpers/navigation/auth-navigation.helper';
 import { AuthService } from '../../../../core/api/auth.api.service';
+import { LoadingState } from '../../../../core/models/types/loading-state.type';
 
 @Component({
   selector: 'app-forgot-password',
@@ -20,7 +21,7 @@ export class ForgotPasswordComponent {
   private modalService = inject(ModalService);
   protected navHelper = inject(AuthNavigationHelper);
 
-  loading = false;
+  loading: LoadingState = 'idle';
   form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
   });
@@ -28,17 +29,18 @@ export class ForgotPasswordComponent {
   submit() {
     if(this.form.invalid) return;
 
-    this.loading = true;
+    this.loading = 'loading';
 
     const { email } = this.form.value;
 
     this.authService.forgotPassword(email!)
     .subscribe({
       next: (res) => {
+        this.loading = 'success';
         this.modalService.show({ message: res.message, type: 'success', display: 'modal' })
       },
       error: (err) => {
-        this.loading = false;
+        this.loading = 'error';
       }
     })
 

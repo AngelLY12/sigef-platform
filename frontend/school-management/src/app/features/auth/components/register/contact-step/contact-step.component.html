@@ -1,0 +1,28 @@
+<div [formGroup]="form">
+  <app-input
+    label="Email"
+    type="email"
+    placeholder="correo@ejemplo.com"
+    iconRight="mail"
+    formControlName="email"
+    [customErrors]="{
+      required: 'El email es obligatorio',
+      email: 'Ingresa un email válido',
+    }"
+  >
+  </app-input>
+
+  <app-input
+    label="Teléfono"
+    type="tel"
+    prefix="+52"
+    placeholder="1234567890"
+    iconRight="phone"
+    formControlName="phone_number"
+    [customErrors]="{
+      required: 'El teléfono es obligatorio',
+      pattern: 'Ingresa 10 dígitos (ej: 5512345678)',
+    }"
+  >
+  </app-input>
+</div>

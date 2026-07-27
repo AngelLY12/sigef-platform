@@ -1,0 +1,22 @@
+<div [formGroup]="form">
+  <app-password-input
+    label="Password"
+    placeholder="••••••••"
+    [control]="passwordControl"
+  >
+  </app-password-input>
+
+  <app-password-input
+    label="Confirmar password"
+    placeholder="••••••••"
+    [showStrength]="false"
+    [control]="confirmPasswordControl"
+    [showHint]="true"
+    [hint]="
+      passwordControl.value !== confirmPasswordControl.value
+        ? 'Las contraseñas no coinciden'
+        : ''
+    "
+  >
+  </app-password-input>
+</div>
