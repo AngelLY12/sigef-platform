@@ -1,0 +1,19 @@
+<app-section-divider title="Resumen financiero" />
+
+<div class="charts-grid">
+  <app-chart-card
+    title="Pagos por mes"
+    type="line"
+    [data]="paymentsLineData"
+    [options]="lineChartOptions"
+  />
+
+  <app-chart-card
+    title="Distribución de pagos"
+    type="doughnut"
+    [data]="distributionChartData"
+    [options]="doghnutChartOptions"
+  >
+  <app-chart-footer-stats footer [items]="paymentsStats"></app-chart-footer-stats>
+  </app-chart-card>
+</div>

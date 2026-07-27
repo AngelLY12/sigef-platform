@@ -1,0 +1,33 @@
+<app-info-card-item
+  [item]="{
+    icon: 'badge',
+    label: 'Referencia interna',
+    value: payment.reference,
+  }"
+/>
+
+@if (payment.url) {
+  <app-info-card-item
+    [item]="{
+      icon: 'receipt',
+      label: 'Stripe',
+      value: '',
+    }"
+    [customContent]="true"
+  >
+    <app-anchor
+      [link]="payment.url"
+      [external]="true"
+      target="_blank"
+      anchorMessage="Ver enlace de Stripe"
+    />
+  </app-info-card-item>
+}
+
+<app-button
+  variant="secondary"
+  iconLeft="receipt"
+  (click)="receipt.emit(payment.id)"
+>
+  Ver comprobante
+</app-button>

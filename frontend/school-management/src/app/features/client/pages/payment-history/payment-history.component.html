@@ -6,59 +6,23 @@
   [state]="loading"
   (retry)="loadPaymentHistory()"
 >
-  <div *ngIf="loading === 'success' && paginatedHistory">
+  @if (loading === "success" && paginatedHistory) {
     <app-record-list
       [items]="paginatedHistory.data.items"
-      [itemTemplate]="payments"
+      [itemTemplate]="paymentTemplate"
       (itemClick)="openDetails($event)"
-    ></app-record-list>
-    <app-paginator
-      *ngIf="paginatedHistory.data.total > 0"
-      [paginator]="paginatedHistory"
-      (pageChange)="onPageChange($event)"
-      (perPageChange)="onPageSizeChange($event)"
-    >
-    </app-paginator>
-  </div>
+    />
+
+    @if (paginatedHistory.data.total > 0) {
+      <app-paginator
+        [paginator]="paginatedHistory"
+        (pageChange)="onPageChange($event)"
+        (perPageChange)="onPageSizeChange($event)"
+      />
+    }
+  }
 </app-page-layout>
 
-<ng-template #payments let-payment>
-
-  <div class="payment-item">
-
-    <div class="payment-left">
-
-      <div class="payment-title">
-        {{ payment.concept }}
-      </div>
-
-      <div class="payment-meta">
-        <span class="payment-date">
-          {{ payment.date }}
-        </span>
-
-        <span class="dot">•</span>
-
-        <span class="payment-amount">
-          {{ payment.amount | currencyMXN}}
-        </span>
-      </div>
-
-    </div>
-
-    <div class="payment-right">
-
-      <span class="payment-status"
-            [ngClass]="getStatusClass(payment.status)">
-        {{ payment.status }}
-      </span>
-
-      <span class="material-icons payment-icon">
-        payments
-      </span>
-
-    </div>
-
-  </div>
-
+<ng-template #paymentTemplate let-payment>
+  <app-payment-history-item [payment]="payment"></app-payment-history-item>
 </ng-template>

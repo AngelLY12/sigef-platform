@@ -1,0 +1,27 @@
+<div class="payment-item">
+  <div class="payment-left">
+    <div class="payment-title">
+      {{ payment.concept }}
+    </div>
+
+    <div class="payment-meta">
+      <span class="payment-date">
+        {{ payment.date }}
+      </span>
+
+      <span class="dot">•</span>
+
+      <span class="payment-amount">
+        {{ payment.amount | currencyMXN }}
+      </span>
+    </div>
+  </div>
+
+  <div class="payment-right">
+    <span class="payment-status" [ngClass]="statusClass">
+      {{ payment.status }}
+    </span>
+
+    <span class="material-icons payment-icon"> payments </span>
+  </div>
+</div>

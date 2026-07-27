@@ -5,7 +5,6 @@ import { LoadingState } from '../../../../core/models/types/loading-state.type';
 import { PendingConceptsResponse } from '../../models/pending-concepts/pending-concepts-response.model';
 import { PageLayoutComponent } from '../../../../shared/components/navigation/page-layout/page-layout.component';
 import { forkJoin } from 'rxjs';
-import { FilterBarComponent } from '../../../../shared/components/features/filter-bar/filter-bar.component';
 import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
 import { PendingConceptsListComponent } from '../../components/pending-concepts-list/pending-concepts-list.component';
 import { ListController } from '../../../../core/utils/list-controller.utils';
@@ -14,6 +13,9 @@ import {
   PendingConceptsParams,
 } from '../../models/pending-concepts/pending-concepts-params.model';
 import { QueryParamsHelper } from '../../../../core/utils/query-params-helper.utils';
+import { FolderTabsComponent } from '../../../../shared/components/navigation/folder-tabs/folder-tabs.component';
+import { FolderTab } from '../../../../core/models/domain/folder-tabs-config.model';
+import { PENDING_CONCEPTS_TABS } from '../../config/client.config';
 
 @Component({
   selector: 'app-pending-concepts',
@@ -21,9 +23,8 @@ import { QueryParamsHelper } from '../../../../core/utils/query-params-helper.ut
   imports: [
     CommonModule,
     PageLayoutComponent,
-    FilterBarComponent,
-    ButtonComponent,
     PendingConceptsListComponent,
+    FolderTabsComponent,
   ],
   templateUrl: './pending-concepts.component.html',
   styleUrl: './pending-concepts.component.scss',
@@ -35,8 +36,9 @@ export class PendingConceptsComponent implements OnInit {
   overdue: PendingConceptsResponse[] | null = null;
   listController!: ListController<PendingConceptsParams>;
   conceptsParams = createPendingConceptsListParams();
-  onlyOverdue: boolean = false;
   loadingConceptId: number | null = null;
+  activeConceptTab = 'pending';
+  conceptsTabs: FolderTab[] = PENDING_CONCEPTS_TABS;
 
   ngOnInit(): void {
     this.listController = new ListController<PendingConceptsParams>(
@@ -80,9 +82,8 @@ export class PendingConceptsComponent implements OnInit {
   }
 
   onRefreshData() {
-    const updatedParams = QueryParamsHelper.refreshData(
-      this.conceptsParams,
-    );
+    const updatedParams = QueryParamsHelper.refreshData(this.conceptsParams);
     this.listController.update(updatedParams);
   }
+
 }

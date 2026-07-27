@@ -16,6 +16,7 @@ import { QueryParamsHelper } from '../../../../core/utils/query-params-helper.ut
 import { CurrencyMXNPipe } from '../../../../shared/pipes/currency-mxn.pipe';
 import { Router } from '@angular/router';
 import { NAVIGATION } from '../../../../core/navigation/navigation.config';
+import { PaymentHistoryItemComponent } from '../../components/payment-history-item/payment-history-item.component';
 
 @Component({
   selector: 'app-payment-history',
@@ -25,7 +26,7 @@ import { NAVIGATION } from '../../../../core/navigation/navigation.config';
     PageLayoutComponent,
     RecordListComponent,
     PaginatorComponent,
-    CurrencyMXNPipe
+    PaymentHistoryItemComponent
   ],
   templateUrl: './payment-history.component.html',
   styleUrl: './payment-history.component.scss',
@@ -77,21 +78,6 @@ export class PaymentHistoryComponent implements OnInit {
       newSize,
     );
     this.listController.update(updatedParams);
-  }
-
-  getStatusClass(status: string): string {
-    const map: Record<string, string> = {
-      Pagado: 'status-paid',
-      Completado: 'status-paid',
-      Pendiente: 'status-pending',
-      'No pagado': 'status-pending',
-      'Requiere acción': 'status-action',
-      'Pago parcial': 'status-action',
-      Sobrepago: 'status-action',
-      Fallido: 'status-failed',
-    };
-
-    return map[status] ?? 'status-pending';
   }
 
   openDetails(payment: PaymentHistoryResponse) {

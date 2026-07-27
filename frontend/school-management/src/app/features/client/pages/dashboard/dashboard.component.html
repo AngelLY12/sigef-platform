@@ -5,80 +5,20 @@
   icon="dashboard"
   [state]="state"
 >
-  <div class="kpi-grid">
-    <app-kpi-card
-      icon="pending_actions"
-      iconType="alerts"
-      label="Pendientes"
-      [value]="pendingSummary?.totalAmount | currencyMXN"
-      [subtext]="(pendingSummary?.totalCount ?? '0') + ' pagos'"
-    />
+  <app-dashboard-kpis
+    [pendingSummary]="pendingSummary"
+    [paidSummary]="paidSummary"
+    [overdueSummary]="overdueSummary"
+  ></app-dashboard-kpis>
 
-    <app-kpi-card
-      icon="payments"
-      iconType="growth"
-      label="Pagado"
-      [value]="paidSummary?.totalPayments | currencyMXN"
-      subtext="Total acumulado"
-    />
+  <app-dashboard-charts
+    [pendingSummary]="pendingSummary"
+    [paidSummary]="paidSummary"
+    [overdueSummary]="overdueSummary"
+  ></app-dashboard-charts>
 
-    <app-kpi-card
-      icon="warning"
-      iconType="inactive"
-      label="Vencidos"
-      [value]="overdueSummary?.totalAmount | currencyMXN"
-      [subtext]="(overdueSummary?.totalCount ?? '0') + ' pagos'"
-    />
-    <app-kpi-card
-      icon="payments"
-      iconType="growth"
-      label="Recuperación"
-      [value]="recoveryRate"
-    />
-  </div>
-
-  <app-section-divider title="Resumen financiero" />
-
-  <div class="charts-grid">
-    <app-chart-card
-      title="Pagos por mes"
-      type="line"
-      [data]="paymentsLineData"
-      [options]="lineChartOptions"
-    />
-
-    <app-chart-card
-      title="Distribución de pagos"
-      type="doughnut"
-      [data]="distributionChartData"
-      [options]="doghnutChartOptions"
-    />
-  </div>
-
-  <app-section-divider title="Historial reciente" />
-
-  <app-table
-    [columns]="historyColumns"
-    [data]="paymentHistory?.data?.items || []"
-    noDataMessage="No hay historial disponible"
+  <app-dashboard-history
+  [paymentHistory]="paymentHistory"
   />
 
-  <app-record-list
-    *ngIf="paymentHistory"
-    [items]="paymentHistory.data.items || []"
-    [itemTemplate]="historyItemTemplate"
-    trackByKey="id"
-  />
-
-  <ng-template #historyItemTemplate let-item>
-    <div class="record-item">
-      <div>
-        <strong>{{ item.concept }}</strong>
-        <p>{{ item.date }}</p>
-      </div>
-      <div>
-        <span>{{ item.amount }}</span>
-      </div>
-    </div>
-  </ng-template>
 </app-page-layout>

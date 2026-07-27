@@ -1,0 +1,31 @@
+<div class="kpi-grid">
+    <app-kpi-card
+      icon="pending_actions"
+      iconType="alerts"
+      label="Pendientes"
+      [value]="pendingSummary?.totalAmount | currencyMXN"
+      [subtext]="(pendingSummary?.totalCount ?? '0') + ' pagos'"
+    />
+
+    <app-kpi-card
+      icon="payments"
+      iconType="growth"
+      label="Pagado"
+      [value]="paidSummary?.totalPayments | currencyMXN"
+      subtext="Total acumulado"
+    />
+
+    <app-kpi-card
+      icon="warning"
+      iconType="inactive"
+      label="Vencidos"
+      [value]="overdueSummary?.totalAmount | currencyMXN"
+      [subtext]="(overdueSummary?.totalCount ?? '0') + ' pagos'"
+    />
+    <app-kpi-card
+      icon="payments"
+      iconType="growth"
+      label="Recuperación"
+      [value]="recoveryRate"
+    />
+  </div>

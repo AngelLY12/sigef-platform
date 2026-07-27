@@ -4,6 +4,9 @@
   loadingMessage="Cargando tarjetas..."
   icon="card_membership"
   [state]="loading"
+  [refreshable]="true"
+  [refreshing]="loading === 'loading'"
+  (refresh)="onRefreshData()"
   (retry)="loadCards()"
 >
   <app-cards-list

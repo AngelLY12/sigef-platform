@@ -1,0 +1,79 @@
+.payment-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  transition: all .2s ease;
+
+  cursor: pointer;
+}
+
+.payment-item:hover {
+  transform: translateY(-2px);
+}
+
+.payment-left {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+}
+
+.payment-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--card-text-primary);
+}
+
+.payment-meta {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+
+  font-size: .85rem;
+  color: var(--card-text-secondary);
+}
+
+.dot {
+  opacity: .4;
+}
+
+.payment-right {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+
+.payment-icon {
+  font-size: 1.4rem;
+  opacity: .6;
+}
+
+.payment-status {
+  padding: .3rem .75rem;
+  border-radius: 999px;
+
+  font-size: .75rem;
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+.status-paid {
+  background: rgba(34, 197, 94, .12);
+  color: var(--card-accent-success);
+}
+
+.status-pending {
+  background: rgba(245, 158, 11, .12);
+  color: var(--card-accent-warning);
+}
+
+.status-failed {
+  background: rgba(239, 68, 68, .12);
+  color: var(--card-accent-danger);
+}
+
+.status-action {
+  background: rgba(59, 130, 246, .12);
+  color: var(--color-info);
+}

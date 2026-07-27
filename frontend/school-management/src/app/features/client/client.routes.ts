@@ -15,6 +15,7 @@ export const CLIENT_ROUTES: Routes = [
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full',
+        data: { title: 'Dashboard'}
       },
       {
         path: 'dashboard',

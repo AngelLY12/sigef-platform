@@ -3,45 +3,26 @@
   welcomeMessage="Aquí puedes ver los conceptos de pago que aplican a ti."
   loadingMessage="Cargando conceptos..."
   icon="receipt"
+  [refreshable]="true"
+  [refreshing]="loading === 'loading'"
+  (refresh)="onRefreshData()"
   [state]="loading"
   (retry)="loadConcepts()"
 >
-  <app-filter-bar>
-    <app-button
-      [variant]="!onlyOverdue ? 'primary' : 'ghost'"
-      iconLeft="pending"
-      (click)="onlyOverdue = false"
-    >
-      Pendientes
-    </app-button>
+  <app-folder-tabs [tabs]="conceptsTabs" [(activeTab)]="activeConceptTab">
+    @switch (activeConceptTab) {
+      @case ("pending") {
+        <app-pending-concepts-list
+          [concepts]="pending ?? []"
+          [loadingConceptId]="loadingConceptId"
+          message="No hay conceptos pendientes disponibles"
+          (pay)="onPay($event)"
+        />
+      }
 
-    <app-button
-      [variant]="onlyOverdue ? 'primary' : 'ghost'"
-      iconLeft="pending"
-      (click)="onlyOverdue = true"
-    >
-      Vencidos
-    </app-button>
-
-    <app-button
-      [variant]="'outline'"
-      iconLeft="refresh"
-      (click)="onRefreshData()"
-    >
-      Refrescar datos
-    </app-button>
-
-  </app-filter-bar>
-  <app-pending-concepts-list
-  *ngIf="!onlyOverdue"
-  [concepts]="pending ?? []"
-  [loadingConceptId]="loadingConceptId"
-  (pay)="onPay($event)"
-  >
-  </app-pending-concepts-list>
-  <app-pending-concepts-list
-  *ngIf="onlyOverdue"
-  [concepts]="overdue ?? []"
-  >
-  </app-pending-concepts-list>
+      @case ("overdue") {
+        <app-pending-concepts-list [concepts]="overdue ?? []" message="No hay conceptos vencidos disponibles" />
+      }
+    }
+  </app-folder-tabs>
 </app-page-layout>

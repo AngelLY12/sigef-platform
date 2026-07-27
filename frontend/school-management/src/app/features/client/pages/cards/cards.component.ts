@@ -18,6 +18,7 @@ export class CardsComponent implements OnInit {
   private modalService = inject(ModalService);
   loading: LoadingState = 'idle';
   cards: CardsListResponse[] | null = null;
+  forceRefresh: boolean = false;
 
   ngOnInit(): void {
     this.loadCards();
@@ -25,15 +26,22 @@ export class CardsComponent implements OnInit {
 
   loadCards() {
     this.loading = 'loading';
-    this.cardsService.getCards().subscribe({
+    this.cardsService.getCards(this.forceRefresh).subscribe({
       next: (res) => {
         this.cards = res;
         this.loading = 'success';
+        this.forceRefresh = false;
       },
       error: () => {
         this.loading = 'error';
+        this.forceRefresh = false;
       },
     });
+  }
+
+  onRefreshData() {
+    this.forceRefresh = true;
+    this.loadCards();
   }
 
   onDeleteCard(paymentMethodId: number) {

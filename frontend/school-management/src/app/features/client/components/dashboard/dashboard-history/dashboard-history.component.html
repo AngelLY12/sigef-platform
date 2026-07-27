@@ -1,0 +1,7 @@
+<app-section-divider title="Historial reciente" />
+
+  <app-table
+    [columns]="historyColumns"
+    [data]="paymentHistory?.data?.items || []"
+    noDataMessage="No hay historial disponible"
+  />

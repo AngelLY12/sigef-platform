@@ -5,7 +5,7 @@ import { LoadingState } from '../../../../core/models/types/loading-state.type';
 import { PaymentDetailsResponse } from '../../models/payment-history/payment-details-response.model';
 import { PageLayoutComponent } from '../../../../shared/components/navigation/page-layout/page-layout.component';
 import { InfoCardComponent } from '../../../../shared/components/data-display/info-card/info-card.component';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { InfoCardItemComponent } from '../../../../shared/components/data-display/info-card-item/info-card-item.component';
 import {
   CardPaymentMethod,
@@ -17,7 +17,13 @@ import { AnchorComponent } from '../../../../shared/components/ui/anchor/anchor.
 import { CurrencyMXNPipe } from '../../../../shared/pipes/currency-mxn.pipe';
 import { ModalService } from '../../../../core/services/modal.service';
 import { PaymentReceiptResponse } from '../../models/payment-history/payment-receipt-response.model';
-import { ButtonComponent } from "../../../../shared/components/ui/button/button.component";
+import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
+import { PaymentSummaryComponent } from '../../components/payment-details/payment-summary/payment-summary.component';
+import { PaymentMethodComponent } from '../../components/payment-details/payment-method/payment-method.component';
+import { PaymentActionsComponent } from '../../components/payment-details/payment-actions/payment-actions.component';
+import { FolderTabsComponent } from '../../../../shared/components/navigation/folder-tabs/folder-tabs.component';
+import { FolderTab } from '../../../../core/models/domain/folder-tabs-config.model';
+import { PAYMENT_DETAILS_TABS } from '../../config/client.config';
 
 @Component({
   selector: 'app-payment-details',
@@ -25,12 +31,11 @@ import { ButtonComponent } from "../../../../shared/components/ui/button/button.
   imports: [
     CommonModule,
     PageLayoutComponent,
-    InfoCardComponent,
-    InfoCardItemComponent,
-    AnchorComponent,
-    CurrencyMXNPipe,
-    ButtonComponent
-],
+    FolderTabsComponent,
+    PaymentSummaryComponent,
+    PaymentMethodComponent,
+    PaymentActionsComponent
+  ],
   templateUrl: './payment-details.component.html',
   styleUrl: './payment-details.component.scss',
 })
@@ -39,11 +44,12 @@ export class PaymentDetailsComponent implements OnInit {
   private modalService = inject(ModalService);
   private route = inject(ActivatedRoute);
   private location = inject(Location);
-  private router = inject(Router);
 
   loading: LoadingState = 'idle';
   payment: PaymentDetailsResponse | null = null;
   paymentId!: number;
+  activeTab = 'summary';
+  readonly paymentTabs: FolderTab[] = PAYMENT_DETAILS_TABS;
 
   ngOnInit(): void {
     this.paymentId = Number(this.route.snapshot.paramMap.get('id'));
@@ -74,22 +80,10 @@ export class PaymentDetailsComponent implements OnInit {
       confirmVariant: 'primary',
       onConfirm: () => this.paymentHistoryService.getReceipt(paymentId),
       onSuccess: (res: PaymentReceiptResponse) => {
-        this.router.navigate([res.url]);
-      },onFailure: () => this.modalService.closeCustom()
+        window.open(res.url, '_blank');
+      },
+      onFailure: () => this.modalService.closeCustom(),
     });
-
-  }
-
-  isCard(pm: PaymentMethodDetails): pm is CardPaymentMethod {
-    return pm.type === 'tarjeta';
-  }
-
-  isOxxo(pm: PaymentMethodDetails): pm is OxxoPaymentMethod {
-    return pm.type === 'oxxo';
-  }
-
-  isSpei(pm: PaymentMethodDetails): pm is SpeiPaymentMethod {
-    return pm.type === 'spei';
   }
 
   goBack() {
