@@ -1,5 +1,4 @@
 .profile {
-
   @media (max-width: 768px) {
     padding: 1rem;
   }
@@ -19,15 +18,16 @@
 
   .profile-grid {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 1.5rem;
+    width: 100%;
+    min-width: 0;
 
     @media (max-width: 1024px) {
       gap: 1.25rem;
     }
 
     @media (max-width: 768px) {
-      grid-template-columns: 1fr;
       gap: 1rem;
     }
 
@@ -67,18 +67,12 @@
       font-size: 0.75rem;
     }
   }
-
 }
-
 
 @media (max-width: 768px) and (orientation: landscape) {
   .profile {
     .profile-badges {
-        justify-content: flex-start;
-    }
-
-    .profile-grid {
-      grid-template-columns: 1fr 1fr;
+      justify-content: flex-start;
     }
   }
 }

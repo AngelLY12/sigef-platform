@@ -38,6 +38,9 @@
   iconSize="lg"
   [state]="state"
   (retry)="loadProfile()"
+  [refreshable]="true"
+  [refreshing]="state === 'loading'"
+  (refresh)="onRefreshData()"
   [headerActions]="headerActions"
   [headerBottom]="headerBottom"
 >
@@ -45,68 +48,82 @@
     <div *ngIf="profile && state === 'success'" class="profile-content">
       <div class="profile-grid">
         <app-alerts-list [alerts]="accountAlerts"></app-alerts-list>
-        <app-info-card
-          icon="contact_mail"
-          title="Contacto"
-          [actionConfig]="{
-            singleButton: {
-              label: 'Editar',
-              icon: 'edit',
-            },
-          }"
-          (action)="editContact()"
+        <ng-template #profileFolderActions>
+          @switch (activeProfileTab) {
+            @case ("contact") {
+              <app-button
+                variant="ghost"
+                size="sm"
+                iconLeft="edit"
+                (click)="editContact()"
+              >
+                Editar
+              </app-button>
+            }
+
+            @case ("personal") {
+              <app-button
+                variant="ghost"
+                size="sm"
+                iconLeft="edit"
+                (click)="editPersonal()"
+              >
+                Editar
+              </app-button>
+            }
+
+            @case ("address") {
+              <app-button
+                variant="ghost"
+                size="sm"
+                iconLeft="edit"
+                (click)="editAddress()"
+              >
+                Editar
+              </app-button>
+            }
+          }
+        </ng-template>
+
+        <app-folder-tabs
+          [tabs]="profileTabs"
+          [(activeTab)]="activeProfileTab"
+          [actionsTemplate]="activeProfileTab != 'account' ? profileFolderActions : undefined"
         >
-          <app-info-card-item
-            *ngFor="let item of contactItems"
-            [icon]="item.icon"
-            [label]="item.label"
-            [value]="item.value"
-          ></app-info-card-item>
-        </app-info-card>
-        <app-info-card
-          icon="badge"
-          title="Información personal"
-          [actionConfig]="{
-            singleButton: {
-              label: 'Editar',
-              icon: 'edit',
-            },
-          }"
-          (action)="editPersonal()"
-        >
-          <app-info-card-item
-            *ngFor="let item of personalItems"
-            [icon]="item.icon"
-            [label]="item.label"
-            [value]="item.value"
-          ></app-info-card-item>
-        </app-info-card>
-        <app-info-card
-          icon="location_on"
-          title="Dirección"
-          [actionConfig]="{
-            singleButton: {
-              label: 'Editar',
-              icon: 'edit',
-            },
-          }"
-          (action)="editAddress()"
-        >
-          <app-info-card-item
-            *ngFor="let item of addressItems"
-            [icon]="item.icon"
-            [label]="item.label"
-            [value]="item.value"
-          ></app-info-card-item>
-        </app-info-card>
-        <app-info-card icon="info" title="Cuenta">
-          <app-info-card-item
-            *ngFor="let item of accountItems"
-            [icon]="item.icon"
-            [label]="item.label"
-            [value]="item.value"
-          ></app-info-card-item>
-        </app-info-card>
+          @switch (activeProfileTab) {
+            @case ("contact") {
+              @for (item of contactItems; track item.label) {
+                <app-info-card-item
+                  [item]="item"
+                />
+              }
+            }
+
+            @case ("personal") {
+              @for (item of personalItems; track item.label) {
+                <app-info-card-item
+                  [item]="item"
+                />
+              }
+            }
+
+            @case ("address") {
+              @for (item of addressItems; track item.label) {
+                <app-info-card-item
+                  [item]="item"
+                />
+              }
+            }
+
+            @case ("account") {
+              @for (item of accountItems; track item.label) {
+                <app-info-card-item
+                  [item]="item"
+                />
+              }
+            }
+          }
+        </app-folder-tabs>
       </div>
     </div>
   </div>
