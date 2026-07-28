@@ -1,30 +1,30 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { InputComponent } from '../../../../shared/components/form/input/input.component';
-import { SelectComponent } from '../../../../shared/components/form/select/select.component';
-import { MultiSelectComponent } from '../../../../shared/components/form/multi-select/multi-select.component';
-import { ModalService } from '../../../../core/services/modal.service';
-import { PaymentConceptApiService } from '../../../../core/api/financial-staff/payment-concepts.api.service';
-import { ConceptDetailResponse } from '../../models/concepts/concept-detail-response.model';
-import { ConceptRelationsResponse } from '../../models/concepts/concept-relations-response.model';
-import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
-import { CareersResponse } from '../../../../core/models/responses/careers-response.model';
+import { InputComponent } from '../../../../../shared/components/form/input/input.component';
+import { SelectComponent } from '../../../../../shared/components/form/select/select.component';
+import { MultiSelectComponent } from '../../../../../shared/components/form/multi-select/multi-select.component';
+import { ModalService } from '../../../../../core/services/modal.service';
+import { PaymentConceptApiService } from '../../../../../core/api/financial-staff/payment-concepts.api.service';
+import { ConceptDetailResponse } from '../../../models/concepts/concept-detail-response.model';
+import { ConceptRelationsResponse } from '../../../models/concepts/concept-relations-response.model';
+import { ButtonComponent } from '../../../../../shared/components/ui/button/button.component';
+import { CareersResponse } from '../../../../../core/models/responses/careers-response.model';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { enumToOptions } from '../../../../core/utils/enum-helper.utils';
-import { ConceptAppliesTo } from '../../../../core/models/enums/applies-to-concepts.enum';
-import { SEMESTERS } from '../../../../core/constants/semesters.constants';
-import { PaymentConceptApplicantTags } from '../../../../core/models/enums/payment-concept-applicant-tags.enum';
-import { FormItem } from '../../models/concepts/edit-config.type';
-import { LoadingState } from '../../../../core/models/types/loading-state.type';
+import { enumToOptions } from '../../../../../core/utils/enum-helper.utils';
+import { ConceptAppliesTo } from '../../../../../core/models/enums/applies-to-concepts.enum';
+import { SEMESTERS } from '../../../../../core/constants/semesters.constants';
+import { PaymentConceptApplicantTags } from '../../../../../core/models/enums/payment-concept-applicant-tags.enum';
+import { FormItem } from '../../../models/concepts/edit-config.type';
+import { LoadingState } from '../../../../../core/models/types/loading-state.type';
 import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
-import { SearchStudentsByNControlResponse } from '../../models/concepts/search-students-response.model';
-import { CheckboxComponent } from '../../../../shared/components/form/checkbox/checkbox.component';
-import { ConceptHelper } from '../../helpers/concept.helper';
-import { CareersService } from '../../../../core/api/careers.api.service';
+import { SearchStudentsByNControlResponse } from '../../../models/concepts/search-students-response.model';
+import { CheckboxComponent } from '../../../../../shared/components/form/checkbox/checkbox.component';
+import { ConceptHelper } from '../../../helpers/concept.helper';
+import { CareersService } from '../../../../../core/api/careers.api.service';
 import {
   ConceptUpdateRelationsRequest,
   ConceptUpdateRequest,
-} from '../../models/concepts/concept-update-request.model';
+} from '../../../models/concepts/concept-update-request.model';
 
 @Component({
   selector: 'app-concept-edit-form',

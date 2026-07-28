@@ -4,152 +4,77 @@
   loadingMessage="Cargando conceptos..."
   icon="receipt"
   [state]="conceptsState"
+  [refreshable]="true"
+  [refreshing]="conceptsState === 'loading'"
+  (refresh)="onRefreshData()"
   (retry)="loadConcepts()"
 >
-  <app-filter-bar (reset)="onResetFilters()">
-    <app-select
-      placeholder="Selecciona un estatus"
-      [options]="conceptStatus"
-      iconRight="expand_more"
-      [(ngModel)]="conceptsListParams.status"
-      (ngModelChange)="onStatusFilterChange()"
-    >
-    </app-select>
-  </app-filter-bar>
-  <div
-    *ngIf="
-      conceptsState === 'success' &&
-        paginatedConcepts &&
-        paginatedConcepts.data.items.length > 0;
-      else noDataTemplate
-    "
-  >
-    <div class="floating-button">
-      <app-button
-        variant="primary"
-        iconLeft="add"
-        size="lg"
-        [iconOnly]="true"
-        (click)="onCreateConcept()"
-      >
-      </app-button>
-    </div>
-
-    <div class="concepts-grid">
-      <app-info-card
-        *ngFor="let concept of paginatedConcepts.data.items"
-        [title]="concept.concept_name"
-        [loading]="isLoading(concept.id)"
-        icon="receipt_long"
-        [defaultExpanded]="true"
-        [actionConfig]="{
-          listActionsTemplate: actionsTpl,
-        }"
-      >
-        <ng-template #actionsTpl>
-          <app-dropdown #dropdown position="bottom-right">
-            <div dropdown-trigger>
-              <app-button
-                [iconOnly]="true"
-                variant="ghost"
-                iconLeft="more_vert"
-              >
-              </app-button>
-            </div>
-
-            <div dropdown-content>
-              <app-menu-item icon="visibility" (itemClick)="onView(concept)">
-                Ver concepto
-              </app-menu-item>
-              <app-menu-item
-                icon="check_circle"
-                (itemClick)="onActivate(concept)"
-              >
-                Activar concepto
-              </app-menu-item>
-              <app-menu-item icon="flag" (itemClick)="onFinalize(concept)">
-                Finalizar concepto
-              </app-menu-item>
-              <app-menu-item icon="block" (itemClick)="onDesactivate(concept)">
-                Desactivar concepto
-              </app-menu-item>
-              <app-menu-item
-                icon="delete"
-                variant="danger"
-                (itemClick)="onDelete(concept, dropdown)"
-              >
-                Eliminar concepto
-              </app-menu-item>
-            </div>
-          </app-dropdown>
-        </ng-template>
-        <div class="concept-card">
-          <div class="concept-header">
-            <div class="concept-amount">
-              {{ concept.amount | currencyMXN }}
-            </div>
-
-            <span class="status-badge" [class]="concept.status">
-              {{ concept.status }}
-            </span>
-          </div>
-
-          <div class="concept-description">
-            {{ concept.description || "Sin descripción disponible" }}
-          </div>
-
-          <div class="concept-details">
-            <div class="detail-item">
-              <span class="label">Aplica a</span>
-              <span class="value">{{ concept.applies_to | uppercase }}</span>
-            </div>
-
-            <div class="detail-item">
-              <span class="label">Estado</span>
-              <span class="value">{{ concept.status | uppercase }}</span>
-            </div>
-
-            <div class="detail-item">
-              <span class="label">Eliminación</span>
-              <span class="value">
-                {{
-                  concept.is_deleted
-                    ? "Sera eliminado en " +
-                      concept.days_until_deletion +
-                      " día(s)"
-                    : "N/A"
-                }}
-              </span>
-            </div>
-
-            <div class="detail-item">
-              <span class="label">Expira</span>
-              <span class="value">
-                {{
-                  concept.has_expiration
-                    ? concept.expiration_human
-                    : "Sin tiempo de expiración"
-                }}
-              </span>
-            </div>
-          </div>
-        </div>
-      </app-info-card>
-    </div>
-    <app-paginator
-      [paginator]="paginatedConcepts"
-      (pageChange)="onPageChange($event)"
-      (perPageChange)="onPageSizeChange($event)"
-    ></app-paginator>
-  </div>
-
-  <ng-template #noDataTemplate>
-    <div class="no-data">
-      <span class="material-icons">receipt_long</span>
-      <p>No se encontraron conceptos de pago.</p>
+  <ng-template #conceptActions>
+    @if (paginatedConcepts && paginatedConcepts.data.items.length > 0) {
       <app-button variant="primary" iconLeft="add" (click)="onCreateConcept()">
-        Agregar concepto
+        Crear concepto
       </app-button>
-    </div>
+    }
   </ng-template>
+
+  <app-folder-tabs
+    [tabs]="conceptTabs"
+    [activeTab]="activeConceptTab"
+    (activeTabChange)="onStatusFilterChange($event)"
+    [actionsTemplate]="conceptActions"
+  >
+    @if (
+      conceptsState === "success" &&
+      paginatedConcepts &&
+      paginatedConcepts.data.items.length > 0
+    ) {
+      <div class="concepts-grid">
+        @for (concept of paginatedConcepts.data.items; track concept.id) {
+          <app-info-card
+            [title]="concept.concept_name"
+            [loading]="isLoading(concept.id)"
+            icon="receipt_long"
+            [defaultExpanded]="true"
+            [actionConfig]="{
+              listActionsTemplate: actionsTpl,
+            }"
+          >
+            <ng-template #actionsTpl>
+              <app-concept-actions
+                [concept]="concept"
+                (view)="onView($event)"
+                (activate)="onActivate($event)"
+                (finalize)="onFinalize($event)"
+                (desactivate)="onDesactivate($event)"
+                (delete)="onDelete($event)"
+              />
+            </ng-template>
+
+            <app-concept-card [concept]="concept" />
+          </app-info-card>
+        }
+      </div>
+
+      <app-paginator
+        [paginator]="paginatedConcepts"
+        (pageChange)="onPageChange($event)"
+        (perPageChange)="onPageSizeChange($event)"
+      />
+    } @else if (conceptsState === "success") {
+      <app-empty-state
+        icon="receipt_long"
+        message="No se encontraron conceptos de pago."
+      >
+        <div empty-state-actions>
+          <app-button
+            variant="primary"
+            iconLeft="add"
+            (click)="onCreateConcept()"
+          >
+            Crear concepto
+          </app-button>
+        </div>
+      </app-empty-state>
+    }
+  </app-folder-tabs>
 </app-page-layout>

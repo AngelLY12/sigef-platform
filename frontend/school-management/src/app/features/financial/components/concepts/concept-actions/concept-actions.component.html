@@ -1,0 +1,31 @@
+<app-dropdown #dropdown position="bottom-right">
+  <div dropdown-trigger>
+    <app-button [iconOnly]="true" variant="ghost" iconLeft="more_vert" />
+  </div>
+
+  <div dropdown-content>
+    <app-menu-item icon="visibility" (itemClick)="view.emit(concept)">
+      Ver concepto
+    </app-menu-item>
+
+    <app-menu-item icon="check_circle" (itemClick)="activate.emit(concept)">
+      Activar concepto
+    </app-menu-item>
+
+    <app-menu-item icon="flag" (itemClick)="finalize.emit(concept)">
+      Finalizar concepto
+    </app-menu-item>
+
+    <app-menu-item icon="block" (itemClick)="desactivate.emit(concept)">
+      Desactivar concepto
+    </app-menu-item>
+
+    <app-menu-item
+      icon="delete"
+      variant="danger"
+      (itemClick)="delete.emit(); dropdown.closeDropdown()"
+    >
+      Eliminar concepto
+    </app-menu-item>
+  </div>
+</app-dropdown>

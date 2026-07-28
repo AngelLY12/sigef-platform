@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { DebtsApiService } from '../../../../core/api/financial-staff/debts.api.service';
 import { ModalService } from '../../../../core/services/modal.service';
-import { Router } from '@angular/router';
 import { ListController } from '../../../../core/utils/list-controller.utils';
 import {
   createDebtsListParams,
@@ -13,17 +12,17 @@ import { DebtsList } from '../../models/debts/debts-list-response.model';
 import { LoadingState } from '../../../../core/models/types/loading-state.type';
 import { PageLayoutComponent } from '../../../../shared/components/navigation/page-layout/page-layout.component';
 import { TableComponent } from '../../../../shared/components/data-display/table/table.component';
-import { RecordListComponent } from '../../../../shared/components/data-display/record-list/record-list.component';
-import { FilterBarComponent } from '../../../../shared/components/features/filter-bar/filter-bar.component';
-import { CurrencyMXNPipe } from '../../../../shared/pipes/currency-mxn.pipe';
 import { PaginatorComponent } from '../../../../shared/components/data-display/paginator/paginator.component';
 import { QueryParamsHelper } from '../../../../core/utils/query-params-helper.utils';
 import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
 import { InputComponent } from '../../../../shared/components/form/input/input.component';
-import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
-import { SearchHelper } from '../../../../core/utils/search-helper.utils';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { StripePaymentsComponent } from '../stripe-payments/stripe-payments.component';
+import { EmptyStateComponent } from '../../../../shared/components/feedback/empty-state/empty-state.component';
+import { FolderTabsComponent } from '../../../../shared/components/navigation/folder-tabs/folder-tabs.component';
+import { FolderTab } from '../../../../core/models/domain/folder-tabs-config.model';
+import { DEBTS_LIST_TABS } from '../../config/financial.config';
+import { FilterBarComponent } from '../../../../shared/components/features/filter-bar/filter-bar.component';
 
 @Component({
   selector: 'app-debts',
@@ -32,11 +31,13 @@ import { StripePaymentsComponent } from '../stripe-payments/stripe-payments.comp
     CommonModule,
     PageLayoutComponent,
     TableComponent,
-    FilterBarComponent,
     InputComponent,
     ButtonComponent,
     PaginatorComponent,
     ReactiveFormsModule,
+    EmptyStateComponent,
+    FolderTabsComponent,
+    FilterBarComponent
   ],
   templateUrl: './debts.component.html',
   styleUrl: './debts.component.scss',
@@ -86,8 +87,12 @@ export class DebtsComponent implements OnInit {
     { key: 'user_name', label: 'Nombre de usuario' },
     { key: 'n_control', label: 'Número de control' },
     { key: 'concept_name', label: 'Concepto de pago' },
-    {key: 'amount', label: 'Monto'}
+    { key: 'amount', label: 'Monto' },
   ];
+
+  debtsTabs: FolderTab[] = DEBTS_LIST_TABS;
+  activeTab = 'all';
+
   onPageChange(newPage: number) {
     const updatedParams = QueryParamsHelper.changePage(
       this.debtsListParams,
@@ -130,6 +135,11 @@ export class DebtsComponent implements OnInit {
         nControl: item.n_control,
         fullName: item.user_name,
         year: new Date().getFullYear(),
+      },
+      onClose: (result) => {
+        if (result?.refreshed) {
+          this.loadDebts();
+        }
       },
     });
   }

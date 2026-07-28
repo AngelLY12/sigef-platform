@@ -26,6 +26,8 @@ import { FilterBarComponent } from '../../../../shared/components/features/filte
 import { QueryParamsHelper } from '../../../../core/utils/query-params-helper.utils';
 import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
 import { InputComponent } from '../../../../shared/components/form/input/input.component';
+import { FolderTab } from '../../../../core/models/domain/folder-tabs-config.model';
+import { FolderTabsComponent } from '../../../../shared/components/navigation/folder-tabs/folder-tabs.component';
 
 @Component({
   selector: 'app-payments',
@@ -35,14 +37,13 @@ import { InputComponent } from '../../../../shared/components/form/input/input.c
     PageLayoutComponent,
     PaginatorComponent,
     FilterBarComponent,
-    SelectComponent,
     InputComponent,
-    ButtonComponent,
     FormsModule,
     ReactiveFormsModule,
     PaymentsTableComponent,
     PaymentsByConceptTableComponent,
     PaymentsByStudentTableComponent,
+    FolderTabsComponent,
   ],
   templateUrl: './payments.component.html',
   styleUrl: './payments.component.scss',
@@ -56,7 +57,6 @@ export class PaymentsComponent implements OnInit {
   paymentsListParams: PaymentsParams = createPaymentsListParams();
   state: LoadingState = 'idle';
   searchControl = new FormControl('');
-  placeholder: string = '';
   currentView = PaymentsView.Payments;
   PaymentsView = PaymentsView;
   paginatedData:
@@ -74,10 +74,22 @@ export class PaymentsComponent implements OnInit {
     this.loadData();
   }
 
-  readonly views = [
-    { label: 'Pagos', value: PaymentsView.Payments },
-    { label: 'Por concepto', value: PaymentsView.ByConcept },
-    { label: 'Por alumno', value: PaymentsView.ByStudent },
+  readonly paymentTabs: FolderTab[] = [
+    {
+      id: PaymentsView.Payments,
+      label: 'Pagos',
+      icon: 'payments',
+    },
+    {
+      id: PaymentsView.ByConcept,
+      label: 'Por concepto',
+      icon: 'receipt_long',
+    },
+    {
+      id: PaymentsView.ByStudent,
+      label: 'Por alumno',
+      icon: 'school',
+    },
   ];
 
   loadData(): void {
@@ -92,17 +104,18 @@ export class PaymentsComponent implements OnInit {
     switch (this.currentView) {
       case PaymentsView.Payments:
         request$ = this.paymentsService.getPayments(this.paymentsListParams);
-        this.placeholder = 'Concepto, email o nombre del estudiante';
         break;
 
       case PaymentsView.ByConcept:
-        request$ = this.paymentsService.getPaymentsByConcept(this.paymentsListParams);
-        this.placeholder = 'Nombre del concepto';
+        request$ = this.paymentsService.getPaymentsByConcept(
+          this.paymentsListParams,
+        );
         break;
 
       case PaymentsView.ByStudent:
-        request$ = this.paymentsService.getPaymentsByStudent(this.paymentsListParams);
-        this.placeholder = 'CURP, email o número de control';
+        request$ = this.paymentsService.getPaymentsByStudent(
+          this.paymentsListParams,
+        );
         break;
     }
 
@@ -121,6 +134,19 @@ export class PaymentsComponent implements OnInit {
     });
   }
 
+  get placeholder(): string {
+    switch (this.currentView) {
+      case PaymentsView.Payments:
+        return 'Concepto, email o nombre del estudiante';
+
+      case PaymentsView.ByConcept:
+        return 'Nombre del concepto';
+
+      case PaymentsView.ByStudent:
+        return 'CURP, email o número de control';
+    }
+  }
+
   get paymentsData(): PaymentsResponse[] {
     return (this.paginatedData?.data?.items as PaymentsResponse[]) ?? [];
   }
@@ -135,6 +161,17 @@ export class PaymentsComponent implements OnInit {
     return (
       (this.paginatedData?.data?.items as PaymentsByStudentResponse[]) ?? []
     );
+  }
+
+  onViewChange(view: string): void {
+    this.currentView = view as PaymentsView;
+
+    this.paymentsListParams = QueryParamsHelper.changePage(
+      this.paymentsListParams,
+      1,
+    );
+
+    this.loadData();
   }
 
   onPageChange(newPage: number) {

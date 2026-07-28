@@ -1,0 +1,117 @@
+.stripe-payments {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  min-height: 200px;
+}
+
+.payment-card {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 12px;
+  padding: 18px;
+  border: 1px solid var(--card-border-default);
+  color: var(--card-text-primary);
+}
+
+.payment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+
+  h3 {
+    font-size: 16px;
+    margin: 0;
+    font-weight: 600;
+    color: var(--card-text-primary);
+  }
+
+  .status {
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .status[data-status="paid"] {
+    background: var(--color-success-bg);
+    color: var(--color-success);
+    border: 1px solid var(--color-success-border);
+  }
+
+  .status[data-status="pending"] {
+    background: var(--color-warning-bg);
+    color: var(--color-warning);
+    border: 1px solid var(--color-warning);
+  }
+
+  .status[data-status="failed"] {
+    background: var(--color-error-bg);
+    color: var(--color-error);
+    border: 1px solid var(--color-error-border);
+  }
+}
+
+.payment-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 13px;
+
+  .label {
+    color: var(--card-text-tertiary);
+  }
+
+  .value {
+    color: var(--card-text-primary);
+    text-align: right;
+  }
+
+  &.highlight {
+    padding-top: 6px;
+    border-top: 1px dashed var(--card-border-light);
+
+    .value.money {
+      font-weight: 700;
+      color: var(--card-accent-primary);
+    }
+  }
+}
+
+.mono {
+  font-family: monospace;
+  font-size: 12px;
+  color: var(--card-text-secondary);
+}
+
+.link {
+  color: var(--color-info);
+  text-decoration: none;
+  font-size: 13px;
+
+  &:hover {
+    color: var(--color-info-hover);
+    text-decoration: underline;
+  }
+}
+
+.actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.counter {
+  font-size: 12px;
+  color: var(--card-text-tertiary);
+}

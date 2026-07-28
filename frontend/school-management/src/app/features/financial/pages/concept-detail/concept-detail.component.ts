@@ -5,26 +5,26 @@ import { PaymentConceptApiService } from '../../../../core/api/financial-staff/p
 import { ActivatedRoute } from '@angular/router';
 import { LoadingState } from '../../../../core/models/types/loading-state.type';
 import { ConceptDetailResponse } from '../../models/concepts/concept-detail-response.model';
-import { InfoCardComponent } from '../../../../shared/components/data-display/info-card/info-card.component';
 import { CurrencyMXNPipe } from '../../../../shared/pipes/currency-mxn.pipe';
 import { InfoCardItemComponent } from '../../../../shared/components/data-display/info-card-item/info-card-item.component';
 import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
-import { ExpandableSectionComponent } from '../../../../shared/components/layout/expandable-section/expandable-section.component';
 import { catchError, forkJoin, of } from 'rxjs';
 import { ConceptRelationsResponse } from '../../models/concepts/concept-relations-response.model';
 import { CareersService } from '../../../../core/api/careers.api.service';
 import { CareersResponse } from '../../../../core/models/responses/careers-response.model';
 import { ModalService } from '../../../../core/services/modal.service';
-import { ConceptEditFormComponent } from '../../components/concept-edit-form/concept-edit-form.component';
+import { ConceptEditFormComponent } from '../../components/concepts/concept-edit-form/concept-edit-form.component';
+import { FolderTab } from '../../../../core/models/domain/folder-tabs-config.model';
+import { FolderTabsComponent } from '../../../../shared/components/navigation/folder-tabs/folder-tabs.component';
 
 @Component({
   selector: 'app-concept-detail',
   imports: [
     CommonModule,
     PageLayoutComponent,
-    InfoCardComponent,
     InfoCardItemComponent,
     ButtonComponent,
+    FolderTabsComponent,
   ],
   providers: [CurrencyMXNPipe],
   templateUrl: './concept-detail.component.html',
@@ -43,16 +43,6 @@ export class ConceptDetailComponent implements OnInit {
   state: LoadingState = 'idle';
   detailSections: any[] = [];
   activeSection = 'general';
-
-  isMobile = window.innerWidth <= 768;
-  @HostListener('window:resize')
-  onResize() {
-    const isNowMobile = window.innerWidth <= 768;
-
-    if (this.isMobile !== isNowMobile) {
-      this.isMobile = isNowMobile;
-    }
-  }
 
   ngOnInit(): void {
     this.conceptId = this.loadConceptIdFromRoute();
@@ -93,6 +83,20 @@ export class ConceptDetailComponent implements OnInit {
       return null;
     }
     return +idParam;
+  }
+
+  get conceptTabs(): FolderTab[] {
+    return this.detailSections.map((section) => ({
+      id: section.key,
+      label: section.title,
+      icon: section.icon,
+    }));
+  }
+
+  get activeDetailSection() {
+    return this.detailSections.find(
+      (section) => section.key === this.activeSection,
+    );
   }
 
   private buildDetailSections() {
@@ -312,11 +316,10 @@ export class ConceptDetailComponent implements OnInit {
         careers: this.careers,
       },
       onClose: (updated) => {
-        if(updated) {
-          this.loadConceptData(this.conceptId!)
+        if (updated) {
+          this.loadConceptData(this.conceptId!);
         }
-      }
-    })
+      },
+    });
   }
-
 }

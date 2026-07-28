@@ -4,54 +4,59 @@
   loadingMessage="Cargando adeudos..."
   icon="request_quote "
   [state]="debtsState"
+  [refreshable]="true"
+  [refreshing]="debtsState === 'loading'"
+  (refresh)="onRefreshData()"
   (retry)="loadDebts()"
 >
-  <app-filter-bar (reset)="onResetFilters()">
-    <app-input
-      placeholder="Buscar por CURP, email o número de control del estudiante"
-      iconRight="search"
-      [formControl]="searchControl"
-      (iconRightClick)="onSearchData()"
-      (keyup.enter)="onSearchData()"
-    />
-
-    <app-button
-      variant="outline"
-      size="md"
-      iconLeft="refresh"
-      (click)="onRefreshData()"
-    >
-      Refrescar datos
-    </app-button>
-  </app-filter-bar>
-
-  <div
-    *ngIf="
-      debtsState === 'success' &&
-        paginatedDebts &&
-        paginatedDebts.data.items.length > 0;
-      else noDataTemplate
-    "
-  >
-    <app-table
-      [columns]="debtsColumns"
-      [data]="paginatedDebts.data.items"
-      [actionsTemplate]="actionsTemplate"
-      noDataMessage="Sin historial disponible"
-    ></app-table>
-    <app-paginator
-      [paginator]="paginatedDebts"
-      (pageChange)="onPageChange($event)"
-      (perPageChange)="onPageSizeChange($event)"
-    >
-    </app-paginator>
-  </div>
-  <ng-template #noDataTemplate>
-    <div class="no-data">
-      <span class="material-icons">receipt_long</span>
-      <p>No se encontraron adeudos.</p>
-    </div>
+  <ng-template #debtsActions>
+    @if (
+      debtsState === "success" &&
+      paginatedDebts &&
+      paginatedDebts.data.items.length > 0
+    ) {
+      <app-filter-bar variant="embedded" (reset)="onResetFilters()">
+        <span class="search-input"
+          ><app-input
+            placeholder="Buscar por CURP, email o número de control del estudiante"
+            iconRight="search"
+            [formControl]="searchControl"
+            (iconRightClick)="onSearchData()"
+            (keyup.enter)="onSearchData()"
+            [fullWidth]="true"
+          />
+        </span>
+      </app-filter-bar>
+    }
   </ng-template>
+
+  @if (
+    debtsState === "success" &&
+    paginatedDebts &&
+    paginatedDebts.data.items.length > 0
+  ) {
+    <app-folder-tabs
+      [activeTab]="activeTab"
+      [tabs]="debtsTabs"
+      [actionsTemplate]="debtsActions"
+    >
+      <app-table
+        [columns]="debtsColumns"
+        [data]="paginatedDebts.data.items"
+        [actionsTemplate]="actionsTemplate"
+        noDataMessage="Sin historial disponible"
+      ></app-table>
+      <app-paginator
+        [paginator]="paginatedDebts"
+        (pageChange)="onPageChange($event)"
+        (perPageChange)="onPageSizeChange($event)"
+      >
+      </app-paginator>
+    </app-folder-tabs>
+  } @else {
+    <app-empty-state icon="receipt_long" message="No se encontraron adeudos" />
+  }
+
   <ng-template #actionsTemplate let-item>
     <div class="table-actions">
       <app-button

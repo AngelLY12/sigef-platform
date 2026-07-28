@@ -1,1 +1,85 @@
-<p>stripe-payments works!</p>
+<div class="stripe-payments">
+  <app-spinner [loading]="stripeState === 'loading'" size="lg"></app-spinner>
+
+  <div class="payment-card" *ngIf="stripeState === 'success' && currentPayment as item">
+
+    <div class="payment-header">
+      <h3>{{ item.concept_name }}</h3>
+      <span class="status" [attr.data-status]="item.status">
+        {{ item.status }}
+      </span>
+    </div>
+
+    <div class="payment-body">
+
+      <div class="row">
+        <span class="label">ID</span>
+        <span class="value mono">{{ item.id }}</span>
+      </div>
+
+      <div class="row">
+        <span class="label">Payment Intent</span>
+        <span class="value mono">{{ item.payment_intent_id }}</span>
+      </div>
+
+      <div class="row">
+        <span class="label">Fecha</span>
+        <span class="value">{{ item.created | date:'medium' }}</span>
+      </div>
+
+      <div class="row highlight">
+        <span class="label">Monto total</span>
+        <span class="value money">{{ item.amount_total | currency:'MXN' }}</span>
+      </div>
+
+      <div class="row highlight">
+        <span class="label">Monto recibido</span>
+        <span class="value money">{{ item.amount_received | currency:'MXN' }}</span>
+      </div>
+
+      <div class="row" *ngIf="item.receipt_url">
+        <span class="label">Recibo</span>
+        <app-anchor *ngIf="item.receipt_url"
+          [link]="item.receipt_url"
+          [external]="true"
+          target="_blank"
+          anchorMessage="Ver enlace de Stripe"
+           >
+        </app-anchor>
+      </div>
+
+      <div class="row">
+        <app-button
+        variant="ghost"
+        (click)="onValidatePayment(item.id)"
+        >
+          Validar pago
+        </app-button>
+      </div>
+
+    </div>
+
+    <div class="actions">
+      <app-button
+        variant="primary"
+        [iconOnly]="true"
+        iconLeft="chevron_left"
+        (click)="prev()"
+        [disabled]="currentIndex === 0">
+      </app-button>
+
+      <span class="counter">
+        {{ currentIndex + 1 }} / {{ stripeList.length }}
+      </span>
+
+      <app-button
+        variant="primary"
+        [iconOnly]="true"
+        iconLeft="chevron_right"
+        (click)="next()"
+        [disabled]="currentIndex === stripeList.length - 1">
+      </app-button>
+    </div>
+
+  </div>
+</div>

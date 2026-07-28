@@ -1,0 +1,27 @@
+<div class="kpi-grid">
+    <app-kpi-card
+      icon="schedule"
+      iconType="alerts"
+      label="Pendientes"
+      [value]="pendingSummary?.totalAmount | currencyMXN"
+      [subtext]="(pendingSummary?.totalCount || 0) + ' conceptos'"
+    />
+
+    <app-kpi-card
+      icon="groups"
+      iconType="students"
+      label="Estudiantes"
+      [value]="studentsSummary?.totalStudents"
+      [subtext]="(studentsSummary?.totalApplicants || 0) + ' aspirantes'"
+    />
+
+    <app-kpi-card
+      icon="payments"
+      iconType="growth"
+      label="Total de pagos"
+      [value]="this.paymentsSummary?.totalPayments | currencyMXN"
+      [subtext]="
+        'Ratio total: ' + (this.paymentsSummary?.totalPayouts | currencyMXN)
+      "
+    />
+  </div>

@@ -18,15 +18,21 @@ import { QueryParamsHelper } from '../../../../core/utils/query-params-helper.ut
 import { FilterBarComponent } from '../../../../shared/components/features/filter-bar/filter-bar.component';
 import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
 import { CurrencyMXNPipe } from '../../../../shared/pipes/currency-mxn.pipe';
-import { ConceptCreatedFormComponent } from '../../components/concept-created-form/concept-created-form.component';
+import { ConceptCreatedFormComponent } from '../../components/concepts/concept-created-form/concept-created-form.component';
 import { DropdownComponent } from '../../../../shared/components/layout/dropdown/dropdown.component';
 import { MenuItemComponent } from '../../../../shared/components/navigation/menu-item/menu-item.component';
 import { PaymentConceptStatus } from '../../../../core/models/enums/payment-concepts-status.enum';
 import { EMPTY, Observable } from 'rxjs';
-import { SelectComponent } from '../../../../shared/components/form/select/select.component';
 import { enumToOptions } from '../../../../core/utils/enum-helper.utils';
 import { FormsModule } from '@angular/forms';
 import { FINANCIAL_NAVIGATION } from '../../../../core/navigation/financial-staff-navigation.config';
+import { FolderTab } from '../../../../core/models/domain/folder-tabs-config.model';
+import { FolderTabsComponent } from '../../../../shared/components/navigation/folder-tabs/folder-tabs.component';
+import { EmptyStateComponent } from '../../../../shared/components/feedback/empty-state/empty-state.component';
+import { ConceptActionsComponent } from '../../components/concepts/concept-actions/concept-actions.component';
+import { ConceptCardComponent } from '../../components/concepts/concept-card/concept-card.component';
+import { CONCEPT_LIST_TABS } from '../../config/financial.config';
+import { ConceptsActionsService } from '../../services/concepts-actions.service';
 
 @Component({
   selector: 'app-concepts',
@@ -35,15 +41,14 @@ import { FINANCIAL_NAVIGATION } from '../../../../core/navigation/financial-staf
     CommonModule,
     ButtonComponent,
     InfoCardComponent,
-    FilterBarComponent,
     PageLayoutComponent,
     PaginatorComponent,
-    CurrencyMXNPipe,
     ButtonComponent,
-    DropdownComponent,
-    MenuItemComponent,
-    SelectComponent,
     FormsModule,
+    FolderTabsComponent,
+    EmptyStateComponent,
+    ConceptActionsComponent,
+    ConceptCardComponent,
   ],
   templateUrl: './concepts.component.html',
   styleUrl: './concepts.component.scss',
@@ -51,6 +56,7 @@ import { FINANCIAL_NAVIGATION } from '../../../../core/navigation/financial-staf
 export class ConceptsComponent implements OnInit {
   private conceptsService = inject(PaymentConceptApiService);
   private modalService = inject(ModalService);
+  private conceptActions = inject(ConceptsActionsService);
   private router = inject(Router);
   private listController!: ListController<ConceptsParams>;
   paginatedConcepts: Paginated<ConceptsListResponse> | null = null;
@@ -58,6 +64,8 @@ export class ConceptsComponent implements OnInit {
   conceptsState: LoadingState = 'idle';
   loadingConceptIds = new Set<number>();
   conceptStatus = enumToOptions(PaymentConceptStatus);
+  conceptTabs: FolderTab[] = CONCEPT_LIST_TABS;
+  activeConceptTab = 'all';
 
   ngOnInit(): void {
     this.listController = new ListController<ConceptsParams>(
@@ -108,10 +116,12 @@ export class ConceptsComponent implements OnInit {
     this.loadConcepts();
   }
 
-  onStatusFilterChange() {
+  onStatusFilterChange(tab: string) {
+    this.activeConceptTab = tab;
     const updatedParams = QueryParamsHelper.changeStatus(
       this.conceptsListParams,
-      this.conceptsListParams.status,
+      (this.conceptsListParams.status =
+        tab === 'all' ? null : (tab as PaymentConceptStatus)),
     );
     this.listController.update(updatedParams);
   }
@@ -140,113 +150,37 @@ export class ConceptsComponent implements OnInit {
   }
 
   onActivate(concept: ConceptsListResponse) {
-    this.handleConceptAction(concept, {
+    this.conceptActions.execute(concept, {
       forbiddenStatus: PaymentConceptStatus.ACTIVO,
       forbiddenMessage: 'Este concepto ya está activo',
       request: () => this.conceptsService.activateConcept(concept.id),
+      onReload: () => this.loadConcepts(),
+      setLoading: (loading) => this.setLoading(concept.id, loading),
     });
   }
+
   onFinalize(concept: ConceptsListResponse) {
-    this.handleConceptAction(concept, {
+    this.conceptActions.execute(concept, {
       forbiddenStatus: PaymentConceptStatus.FINALIZADO,
       forbiddenMessage: 'Este concepto ya está finalizado',
       request: () => this.conceptsService.finalizeConcept(concept.id),
+      onReload: () => this.loadConcepts(),
+      setLoading: (loading) => this.setLoading(concept.id, loading),
     });
   }
+
   onDesactivate(concept: ConceptsListResponse) {
-    this.handleConceptAction(concept, {
+    this.conceptActions.execute(concept, {
       forbiddenStatus: PaymentConceptStatus.DESACTIVADO,
       forbiddenMessage: 'Este concepto ya está desactivado',
       request: () => this.conceptsService.disableConcept(concept.id),
+      onReload: () => this.loadConcepts(),
+      setLoading: (loading) => this.setLoading(concept.id, loading),
     });
   }
-  onDelete(concept: ConceptsListResponse, dropdown: DropdownComponent) {
-    dropdown.closeDropdown();
-    this.modalService.openActions(
-      {
-        title: 'Eliminar concepto',
-        entityName: 'concepto',
-        description:
-          'Escribe TEMPORAL si no quieres eliminar el concepto totalmente y TOTAL si quieres que la acción no se pueda deshacer.',
-        fields: [
-          {
-            name: 'deleteConcept',
-            type: 'input',
-            label: 'Eliminación del concepto',
-            placeHolder: 'TEMPORAL O TOTAL',
-            fullWidth: true,
-            isBulkOperation: false,
-          },
-        ],
-        onSubmit: (data) => {
-          const state = data.deleteConcept;
-          if (state === 'TEMPORAL') {
-            return this.conceptsService.elimintaLogicalConcept(concept.id);
-          }
 
-          if (state === 'TOTAL') {
-            return this.conceptsService.eliminateConcept(concept.id);
-          }
-
-          this.modalService.show({
-            message: 'Debes escribir TEMPORAL o TOTAL',
-            type: 'info',
-            display: 'alert',
-          });
-
-          return EMPTY;
-        },
-        onSuccess: (res: string) => {
-          const message = res;
-
-          this.modalService.show({
-            message: `
-                ${message}
-              `,
-            type: 'success',
-            display: 'modal',
-          });
-          this.loadConcepts();
-        },
-      },
-      [concept],
-    );
+  onDelete(concept: ConceptsListResponse) {
+    this.conceptActions.delete(concept, () => this.loadConcepts());
   }
 
-  private handleConceptAction(
-    concept: ConceptsListResponse,
-    options: {
-      forbiddenStatus?: PaymentConceptStatus;
-      forbiddenMessage?: string;
-      request: () => Observable<{ message: string }>;
-    },
-  ) {
-    if (options.forbiddenStatus && concept.status === options.forbiddenStatus) {
-      this.modalService.show({
-        message: options.forbiddenMessage ?? 'Acción no permitida',
-        type: 'info',
-        display: 'alert',
-      });
-      return;
-    }
-
-    this.setLoading(concept.id, true);
-
-    options.request().subscribe({
-      next: (res) => {
-        this.setLoading(concept.id, false);
-
-        this.modalService.show({
-          message: res.message,
-          type: 'success',
-          display: 'alert',
-        });
-
-        this.loadConcepts();
-      },
-      error: () => {
-        this.setLoading(concept.id, false);
-      },
-    });
-  }
 }

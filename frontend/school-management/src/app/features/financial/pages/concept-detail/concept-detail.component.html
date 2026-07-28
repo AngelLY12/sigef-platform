@@ -6,47 +6,31 @@
   [state]="state"
   (retry)="loadConceptData(conceptId!)"
 >
-  <div *ngIf="concept && state === 'success'" class="concept-detail">
-    <div class="floating-button">
-      <app-button
-        variant="primary"
-        iconLeft="edit"
-        size="lg"
-        [iconOnly]="true"
-        (click)="openEdit()"
-      >
-      </app-button>
-    </div>
+  @if (concept && state === "success") {
+    <ng-template #conceptActions>
+      @if (activeDetailSection?.editable) {
+        <app-button variant="primary" iconLeft="edit" (click)="openEdit()">
+          Editar
+        </app-button>
+      }
+    </ng-template>
 
-    <div class="concept-sections">
-      <app-button
-        *ngFor="let section of detailSections"
-        variant="ghost"
-        [iconLeft]="section.icon"
-        [class.active]="activeSection === section.key"
-        (click)="activeSection = section.key"
-      >
-        {{ section.title }}
-      </app-button>
-    </div>
-    <div class="detail-grid">
-      <app-info-card
-        *ngFor="let section of detailSections"
-        [title]="section.title"
-        [icon]="section.icon"
-        [hidden]="!isMobile && activeSection !== section.key"
-        [defaultExpanded]="!isMobile"
-      >
-        <div class="detail-list">
-          <app-info-card-item
-            *ngFor="let item of section.items"
-            [icon]="item.icon"
-            [label]="item.label"
-            [value]="item.value"
-          >
-          </app-info-card-item>
-        </div>
-      </app-info-card>
-    </div>
-  </div>
+    <app-folder-tabs
+      [tabs]="conceptTabs"
+      [(activeTab)]="activeSection"
+      [actionsTemplate]="conceptActions"
+    >
+      @for (section of detailSections; track section.key) {
+        @if (activeSection === section.key) {
+          <div class="detail-list">
+            @for (item of section.items; track item.label) {
+              <app-info-card-item
+                [item]="item"
+              />
+            }
+          </div>
+        }
+      }
+    </app-folder-tabs>
+  }
 </app-page-layout>

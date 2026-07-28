@@ -1,0 +1,18 @@
+<div class="analysis-block">
+  @if (title) {
+    <h3 class="analysis-title">{{ title }}</h3>
+  }
+  <div class="analysis-kpis">
+    @for (kpi of kpiCards; track kpi.label) {
+      <app-kpi-card
+      [icon]="kpi.icon"
+      [iconType]="kpi.iconType"
+      [label]="kpi.label"
+      [value]="kpi.value"
+      [subtext]="kpi.subtext"/>
+    }
+  </div>
+  <div class="analysis-content">
+    <ng-content />
+  </div>
+</div>

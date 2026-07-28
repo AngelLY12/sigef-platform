@@ -1,0 +1,53 @@
+<div class="concept-card">
+  <div class="concept-header">
+    <div class="concept-amount">
+      {{ concept.amount | currencyMXN }}
+    </div>
+
+    <span class="status-badge" [class]="concept.status">
+      {{ concept.status }}
+    </span>
+  </div>
+
+  <div class="concept-description">
+    {{ concept.description || "Sin descripción disponible" }}
+  </div>
+
+  <div class="concept-details">
+    <div class="detail-item">
+      <span class="label">Aplica a</span>
+      <span class="value">
+        {{ concept.applies_to | uppercase }}
+      </span>
+    </div>
+
+    <div class="detail-item">
+      <span class="label">Estado</span>
+      <span class="value">
+        {{ concept.status | uppercase }}
+      </span>
+    </div>
+
+    <div class="detail-item">
+      <span class="label">Eliminación</span>
+      <span class="value">
+        {{
+          concept.is_deleted
+            ? "Será eliminado en " + concept.days_until_deletion + " día(s)"
+            : "N/A"
+        }}
+      </span>
+    </div>
+
+    <div class="detail-item">
+      <span class="label">Expira</span>
+      <span class="value">
+        {{
+          concept.has_expiration
+            ? concept.expiration_human
+            : "Sin tiempo de expiración"
+        }}
+      </span>
+    </div>
+  </div>
+</div>

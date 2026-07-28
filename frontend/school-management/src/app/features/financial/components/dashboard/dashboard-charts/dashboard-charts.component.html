@@ -1,0 +1,49 @@
+<app-section-divider title="Análisis financiero" />
+
+<div class="charts-grid">
+  <app-analysis-card title="Comisiones" [kpiCards]="kpiPayments.fees">
+    <app-chart-card
+      title="Comisiones por semestre"
+      type="line"
+      [data]="feesChartData"
+      [options]="lineOptions"
+    />
+    <app-chart-card
+      title="Pagos por semestre"
+      type="bar"
+      [data]="paymentsChartData"
+      [options]="barOptions"
+    />
+  </app-analysis-card>
+
+  <app-analysis-card title="Totales netos" [kpiCards]="kpiPayments.net">
+    <app-chart-card
+      title="Resumen financiero"
+      type="bar"
+      [data]="financialSummaryChartData"
+      [options]="stackedBarOptions"
+    />
+  </app-analysis-card>
+
+  <app-analysis-card title="Balance" [kpiCards]="kpiPayments.balance">
+    <app-chart-card
+      title="Disponible por fuente"
+      type="doughnut"
+      [data]="availableBySourceChartData"
+      [options]="horizontalBarOptions"
+    />
+
+    <app-chart-card
+      title="Pendiente por fuente"
+      type="doughnut"
+      [data]="pendingBySourceChartData"
+      [options]="horizontalBarOptions"
+    />
+    <app-chart-card
+      title="Balance actual"
+      type="doughnut"
+      [data]="distributionChartData"
+      [options]="doughnutOptions"
+    />
+  </app-analysis-card>
+</div>

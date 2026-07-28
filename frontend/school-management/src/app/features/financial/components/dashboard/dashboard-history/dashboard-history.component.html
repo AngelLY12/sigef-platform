@@ -1,0 +1,7 @@
+<app-section-divider title="Historial de conceptos" />
+
+  <app-table
+    [columns]="historyColumns"
+    [data]="conceptsHistory?.data?.items || []"
+    noDataMessage="Sin historial disponible"
+  />
