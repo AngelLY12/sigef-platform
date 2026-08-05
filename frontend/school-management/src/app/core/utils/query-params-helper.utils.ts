@@ -28,6 +28,15 @@ export class QueryParamsHelper {
     };
   }
 
+  static onlyThisYear<T extends { only_this_year?: boolean }>(
+    params: T,
+  ): T {
+    return {
+      ...params,
+      only_this_year: true,
+    };
+  }
+
   static refreshData<T extends { forceRefresh?: boolean }>(params: T): T {
     return {
       ...params,
