@@ -82,6 +82,10 @@ class StripeGatewayQuery implements StripeGatewayQueryInterface
         $params = [
             'limit' => 100,
             'customer' => $user->stripe_customer_id,
+            'expand' => [
+                'data.payment_intent',
+                'data.payment_intent.latest_charge'
+            ],
         ];
 
         if ($year) {
@@ -90,9 +94,11 @@ class StripeGatewayQuery implements StripeGatewayQueryInterface
                 'lte' => strtotime("{$year}-12-31 23:59:59"),
             ];
         }
+
         try {
             $allSessions = [];
             $lastId = null;
+
             do {
                 if ($lastId) {
                     $params['starting_after'] = $lastId;
@@ -100,68 +106,69 @@ class StripeGatewayQuery implements StripeGatewayQueryInterface
 
                 $sessions = Session::all($params);
 
-                $allSessions = [... $allSessions, ...$sessions->data];
+                $allSessions = array_merge($allSessions, $sessions->data);
 
                 $lastId = end($sessions->data)->id ?? null;
 
             } while ($lastId && count($sessions->data) === $params['limit']);
-            $paymentIntentIds = [];
-            foreach ($allSessions as $session) {
-                if ($session->payment_status === 'paid' && $session->payment_intent) {
-                    $paymentIntentIds[] = $session->payment_intent;
-                }
-            }
-            $paymentIntents = [];
-            if (!empty($paymentIntentIds)) {
-                $uniqueIds = array_unique($paymentIntentIds);
-
-                foreach (array_chunk($uniqueIds, 100) as $chunk) {
-                    $batch = PaymentIntent::all([
-                        'ids' => $chunk,
-                        'expand' => ['data.charges'],
-                        'limit' => 100,
-                    ]);
-
-                    foreach ($batch->data as $pi) {
-                        $paymentIntents[$pi->id] = $pi;
-                    }
-                }
-            }
 
             $paymentsWithDetails = [];
+
             foreach ($allSessions as $session) {
-                if ($session->payment_status !== 'paid' || !$session->payment_intent) {
+
+                if ($session->payment_status !== 'paid') {
                     continue;
                 }
-                $amountReceived = 0;
-                $paymentStatus = $session->payment_status;
+
+                $metadata = $session->metadata
+                    ? $session->metadata->toArray()
+                    : [];
+
+                $pi = $session->payment_intent;
+
+                $piId = is_object($pi) ? $pi->id : $pi;
+
+                $amountReceived = is_object($pi)
+                    ? ($pi->amount_received ?? 0)
+                    : ($session->amount_total ?? 0);
+
                 $receiptUrl = null;
 
-                if ($session->payment_intent && $session->payment_status === 'paid') {
-                    $pi = $paymentIntents[$session->payment_intent] ?? null;
-                    if ($pi) {
-                        $amountReceived = $pi->amount_received ?? 0;
-                        $paymentStatus = $pi->status;
+                if (is_object($pi) && isset($pi->latest_charge)) {
+                    $charge = $pi->latest_charge;
 
-                        if (!empty($pi->charges->data[0])) {
-                            $receiptUrl = $pi->charges->data[0]->receipt_url ?? null;
-                        }
+                    if (is_object($charge)) {
+                        $receiptUrl = $charge->receipt_url ?? null;
                     }
                 }
 
-                $session->amount_received = $amountReceived;
-                $session->payment_status_detailed = $paymentStatus;
-                $session->receipt_url = $receiptUrl;
-                $paymentsWithDetails[] = $session;
+                $paymentsWithDetails[] = (object)[
+                    'id' => $session->id,
+                    'payment_intent_id' => $piId,
+                    'concept_name' => $metadata['concept_name'] ?? null,
+                    'status' => $session->payment_status,
+                    'amount_total' => $session->amount_total,
+                    'amount_received' => $amountReceived,
+                    'created' => $session->created,
+                    'receipt_url' => $receiptUrl,
+                    'metadata_array' => $metadata,
+                ];
             }
 
             return $paymentsWithDetails;
-        } catch (ApiErrorException $e) {
-            logger()->error("Stripe error fetching sessions: " . $e->getMessage());
-            throw new StripeGatewayException("Error obteniendo los pagos del estudiante", 500);
+
+        } catch (\Stripe\Exception\ApiErrorException $e) {
+
+            logger()->error('Stripe error fetching sessions', [
+                'message' => $e->getMessage(),
+            ]);
+
+            throw new StripeGatewayException(
+                "Error obteniendo los pagos del estudiante",
+                500
+            );
         }
     }
-
     public function getPaymentIntentFromSession(string $sessionId): PaymentIntent
     {
         StripeValidator::validateStripeId($sessionId,'cs','ID de la sesión');
@@ -217,7 +224,6 @@ class StripeGatewayQuery implements StripeGatewayQueryInterface
         }
 
         $totalPayouts = Money::from('0');
-        $totalFees = Money::from('0');
         $byMonth = [];
         $hasMore = true;
         $lastId = null;
