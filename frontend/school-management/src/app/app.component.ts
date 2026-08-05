@@ -1,13 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
-import { NotificationModalComponent } from './shared/components/feedback/notification-modal/notification-modal.component';
+import { NotificationModalComponent } from './shared/components/overlays/modal/notification-modal/notification-modal.component';
 import { AlertComponent } from './shared/components/feedback/alert/alert.component';
 import { CommonModule } from '@angular/common';
-import { ActionsModalComponent } from './shared/components/modal/actions-modal/actions-modal.component';
-import { CustomModalComponent } from './shared/components/modal/custom-modal/custom-modal.component';
+import { ActionsModalComponent } from './shared/components/overlays/modal/actions-modal/actions-modal.component';
+import { CustomModalComponent } from './shared/components/overlays/modal/custom-modal/custom-modal.component';
 import { Title } from '@angular/platform-browser';
 import { filter } from 'rxjs';
-import { ConfirmModalComponent } from './shared/components/modal/confirm-modal/confirm-modal.component';
+import { ConfirmModalComponent } from './shared/components/overlays/modal/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-root',
