@@ -22,12 +22,8 @@ class GetStudentParentsUseCase
         {
             throw new UserInvalidRoleException();
         }
-        $parents= $this->psqRepo->getParentsOfStudent($student->id);
-        if($parents==null)
-        {
-            throw new StudentParentsNotFoundException();
-        }
-        return $parents;
+
+        return $this->psqRepo->getParentsOfStudent($student);
     }
 
 }

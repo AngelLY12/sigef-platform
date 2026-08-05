@@ -19,12 +19,6 @@ class GetParentChildrenUseCase
         if (!$parent->isParent()) {
             throw new UserInvalidRoleException();
         }
-        $response=$this->relationQRepo->getStudentsOfParent($parent->id);
-        if(!$response)
-        {
-            throw new ParentChildrenNotFoundException();
-        }
-
-        return $response;
+        return $this->relationQRepo->getStudentsOfParent($parent);
     }
 }
