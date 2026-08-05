@@ -7,7 +7,7 @@ import { ButtonConfig } from '../../core/models/types/button/btn-config.type';
 import { LogoutService } from '../../core/services/logout.service';
 import { NAVIGATION } from '../../core/navigation/navigation.config';
 import { NavigationService } from '../../core/services/navigation.service';
-import { AuthService } from '../../core/api/auth.api.service';
+import { AuthService } from '../../core/api/auth/auth.api.service';
 
 @Component({
   selector: 'app-public-layout',
