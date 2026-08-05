@@ -59,35 +59,9 @@ use App\Core\Infraestructure\Repositories\Query\User\EloquentParentStudentQueryR
 use App\Core\Infraestructure\Repositories\Query\User\EloquentUserQueryRepository;
 use App\Core\Infraestructure\Repositories\Stripe\StripeGateway;
 use App\Core\Infraestructure\Repositories\Stripe\StripeGatewayQuery;
-use App\Events\AdministrationEvent;
-use App\Events\ParentInvitationAccepted;
-use App\Events\ParentInvitationFailed;
-use App\Events\ParentStudentRelationDelete;
-use App\Events\PaymentConceptCreated;
-use App\Events\PaymentConceptStatusChanged;
-use App\Events\PaymentConceptUpdatedFields;
-use App\Events\PaymentConceptUpdatedRelations;
-use App\Events\PaymentReconciledBatchEvent;
-use App\Events\PaymentReconciledEvent;
-use App\Events\StudentsPromotionCompleted;
-use App\Events\StudentsPromotionFailed;
-use App\Listeners\CreateReconciliationBatchEvent;
-use App\Listeners\CreateReconciliationEvent;
-use App\Listeners\NotifyUsersOfConceptStatusChange;
-use App\Listeners\ProcessRecipientsListener;
-use App\Listeners\ProcessRecipientsUpdateListener;
-use App\Listeners\SendAmoutExceededNotification;
-use App\Listeners\SendConceptUpdatedFieldsNotification;
-use App\Listeners\SendParentInvitationAcceptedNotification;
-use App\Listeners\SendParentInvitationFailedNotification;
-use App\Listeners\SendParentStudentDeleteNotification;
-use App\Listeners\SendPromotionNotification;
-use App\Listeners\SendStudentsPromotionFailedNotification;
 use Carbon\Carbon;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
@@ -152,6 +126,32 @@ class AppServiceProvider extends ServiceProvider
         ResetPassword::createUrlUsing(function (object $notifiable, string $token) {
             return config('app.frontend_url')."/password-reset/$token?email={$notifiable->getEmailForPasswordReset()}";
         });
+
+        Storage::disk('local')->buildTemporaryUrlsUsing(
+            function (string $path, \DateTime $expiration, array $options) {
+                return URL::temporarySignedRoute(
+                    'files.download',
+                    $expiration,
+                    [
+                        'disk' => 'local',
+                        'path' => $path
+                    ]
+                );
+            }
+        );
+
+        Storage::disk('public')->buildTemporaryUrlsUsing(
+            function (string $path, \DateTime $expiration, array $options) {
+                return URL::temporarySignedRoute(
+                    'files.download',
+                    $expiration,
+                    [
+                        'disk' => 'public',
+                        'path' => $path
+                    ]
+                );
+            }
+        );
 
         Response::macro('success', function ($data = null, $message = null, $status = 200) {
             $payload = ['success' => true];
