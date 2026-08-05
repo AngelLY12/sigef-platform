@@ -3,6 +3,8 @@ export const  CLIENT_NAVIGATION = {
   concepts: '/client/concepts',
   cards: '/client/cards',
   paymentHistory: '/client/payment/history',
-  paymentDetails: (id: number) => ['/client/payment', id]
+  paymentDetails: (id: number) => ['/client/payment', id],
+  parents: '/client/parents',
+  children: '/client/children'
 
 }
