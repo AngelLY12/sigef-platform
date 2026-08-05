@@ -53,19 +53,29 @@ class GeneralMapper{
         );
     }
 
-    public static function toStripePaymentResponse(Session $session): StripePaymentsResponse
+    public static function toStripePaymentResponse($session): StripePaymentsResponse
     {
-            $metadata = $session->metadata ? $session->metadata->toArray() : [];
-            return new StripePaymentsResponse(
-                id: $session->id ?? null,
-                payment_intent_id: $session->payment_intent ?? null,
-                concept_name: $metadata['concept_name'] ?? null,
-                status: $session->payment_status_detailed ?? $session->payment_status ?? null,
-                amount_total: $session->amount_total !== null ? Money::from((string) $session->amount_total)->divide('100')->finalize() : null,
-                amount_received: $session->amount_received !==null ? Money::from((string) $session->amount_received)->divide('100')->finalize() : '0.00',
-                created:$session->created ? date('Y-m-d H:i:s', $session->created) : null,
-                receipt_url: $session->receipt_url ?? null
-            );
+        $metadata = $session->metadata_array ?? [];
+
+        return new StripePaymentsResponse(
+            id: $session->id ?? null,
+            payment_intent_id: $session->payment_intent_id ?? null,
+            concept_name: $metadata['concept_name'] ?? null,
+            status: $session->status ?? null,
+            amount_total: $session->amount_total !== null
+                ? Money::from((string) $session->amount_total)->divide('100')->finalize()
+                : null,
+            amount_received: $session->amount_received !== null
+                ? Money::from((string) $session->amount_received)->divide('100')->finalize()
+                : '0.00',
+            created: $session->created
+                ? date('Y-m-d H:i:s', is_numeric($session->created)
+                    ? (int) $session->created
+                    : strtotime($session->created)
+                )
+                : null,
+            receipt_url: $session->receipt_url ?? null
+        );
     }
 
     public static function toPermissionsByUsers(array $roles, array $users, array $permissions): PermissionsByUsers
