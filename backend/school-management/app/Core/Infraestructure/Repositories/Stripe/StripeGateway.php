@@ -106,6 +106,13 @@ class StripeGateway implements StripeGatewayInterface
                 'concept_name' => $paymentConcept->concept_name,
                 'user_id' => $userId,
             ],
+            'payment_intent_data' => [
+                'metadata' => [
+                    'payment_concept_id' => $paymentConcept->id,
+                    'concept_name' => $paymentConcept->concept_name,
+                    'user_id' => $userId,
+                ],
+            ],
             'payment_method_options' => [
                 'card' => [
                     'request_three_d_secure' => 'automatic',
