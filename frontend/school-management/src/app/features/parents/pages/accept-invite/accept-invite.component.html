@@ -1,0 +1,14 @@
+<app-public-layout
+  icon="supervisor_account"
+  title="Aceptar invitación"
+  message="Has sido invitado para vincularte como padre o tutor de un estudiante."
+  [showErrorCode]="false"
+  [primaryButton]="{
+    text: 'Aceptar invitación',
+    icon: 'check',
+    variant: 'primary',
+    action: 'function',
+    handler: onAcceptInviteClick.bind(this)
+  }"
+  illustrationType="default">
+</app-public-layout>
