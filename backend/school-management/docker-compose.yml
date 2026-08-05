@@ -20,6 +20,17 @@ services:
         container_name: laravel-app
         restart: unless-stopped
         working_dir: /var/www
+        develop:
+            watch:
+                -   action: sync
+                    path: .
+                    target: /var/www
+                    ignore:
+                        - vendor/
+                        - storage/logs/
+                        - bootstrap/cache/
+                        - node_modules/
+                        - .git/
         environment:
             APP_ROLE: app
         env_file:
@@ -29,6 +40,17 @@ services:
         depends_on:
             - db
             - redis
+        networks:
+            - laravel
+    mailpit:
+        image: axllent/mailpit
+        env_file:
+            - .env
+        container_name: mailpit
+        restart: unless-stopped
+        ports:
+            - "1025:1025"
+            - "8025:8025"
         networks:
             - laravel
 
@@ -48,6 +70,17 @@ services:
         restart: unless-stopped
         env_file:
             - .env
+        develop:
+            watch:
+                -   action: sync
+                    path: .
+                    target: /var/www
+                    ignore:
+                        - vendor/
+                        - storage/logs/
+                        - bootstrap/cache/
+                        - node_modules/
+                        - .git/
         environment:
             APP_ROLE: worker
         depends_on:
@@ -64,6 +97,17 @@ services:
         restart: unless-stopped
         env_file:
             - .env
+        develop:
+            watch:
+                -   action: sync
+                    path: .
+                    target: /var/www
+                    ignore:
+                        - vendor/
+                        - storage/logs/
+                        - bootstrap/cache/
+                        - node_modules/
+                        - .git/
         environment:
             APP_ROLE: scheduler
         depends_on:
