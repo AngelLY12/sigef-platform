@@ -33,7 +33,7 @@
 
   <nav class="menu">
     <a
-      *ngFor="let item of menuItems"
+      *ngFor="let item of sideBarItems"
       class="menu-item"
       [routerLink]="item.route"
       routerLinkActive="active"
@@ -69,7 +69,9 @@
       [userName]="userName"
       (profileClick)="onProfileClick()"
       [showRoleSelector]="showRoleSelector"
+      [showChildrenSelector]="showChildrenSelector"
       (changeRole)="onChangeRole()"
+      (selectChild)="onSelectChild()"
 
       >
     </app-avatar>

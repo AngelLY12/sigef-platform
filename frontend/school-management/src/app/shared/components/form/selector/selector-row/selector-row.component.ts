@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CheckboxComponent } from '../../checkbox/checkbox.component';
+import { CheckboxComponent } from '../../controls/checkbox/checkbox.component';
 import { FormsModule } from '@angular/forms';
 import { SelectorActionState } from '../../../../../core/models/types/permissions-state.type';
 

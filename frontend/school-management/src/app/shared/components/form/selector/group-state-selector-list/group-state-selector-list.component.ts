@@ -2,10 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { SelectorRowComponent } from '../selector-row/selector-row.component';
 import { ButtonComponent } from '../../../ui/button/button.component';
-import { GroupedOption } from '../../../../../core/models/domain/action-field.modal';
 import { SelectorActionState } from '../../../../../core/models/types/permissions-state.type';
 import { SpinnerComponent } from '../../../ui/spinner/spinner.component';
 import { LoadingState } from '../../../../../core/models/types/loading-state.type';
+import { GroupedOption } from './grouped-option.config.model';
 
 @Component({
   selector: 'app-group-state-selector-list',

@@ -1,0 +1,12 @@
+<div class="info-card-item">
+  <span class="item-icon material-icons">{{ item.icon }}</span>
+  <div class="item-info">
+    <span class="item-label">{{ item.label }}</span>
+    @if(!customContent){
+      <span class="item-value">{{ item.value }}</span>
+    }@else {
+      <ng-content></ng-content>
+
+    }
+  </div>
+</div>

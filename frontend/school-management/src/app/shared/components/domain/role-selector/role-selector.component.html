@@ -1,0 +1,9 @@
+<app-base-selector
+  [show]="show"
+  icon="account_circle"
+  title="Selecciona tu rol"
+  [description]="'Hola ' + userName + ', tienes múltiples roles. ¿A qué dashboard quieres ingresar?'"
+  [items]="roleItems"
+  (selected)="onSelected($event)"
+  (close)="onClose()">
+</app-base-selector>

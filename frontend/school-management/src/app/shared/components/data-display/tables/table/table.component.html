@@ -1,0 +1,96 @@
+@if (data.length > 0) {
+  <div class="table-container">
+    <table class="table">
+      <thead>
+        <tr>
+          @for (col of columns; track col.key) {
+            <th>
+              {{ col.label }}
+            </th>
+          }
+          @if (actionsTemplate) {
+            <th>Acciones</th>
+          }
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (row of data; track $index) {
+          <tr>
+            @for (col of columns; track col.key) {
+              <td [ngClass]="col.class">
+                @if (col.format) {
+                  <ng-container>
+                    {{ col.format(getValue(row, col.key), row) }}
+                  </ng-container>
+                } @else {
+                  @if (col.type === "badge") {
+                    <span class="badge" [ngClass]="resolveBadgeType(col, row)">
+                      {{ getValue(row, col.key) }}
+                    </span>
+                  } @else {
+                    <span>
+                      {{ getValue(row, col.key) }}
+                    </span>
+                  }
+                }
+              </td>
+              @if (actionsTemplate) {
+                <td>
+                  <ng-container
+                    *ngTemplateOutlet="
+                      actionsTemplate;
+                      context: { $implicit: row }
+                    "
+                  >
+                  </ng-container>
+                </td>
+              }
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mobile-list">
+    @for (row of data; track $index) {
+      <div class="mobile-card">
+        @for (col of columns; track col.key) {
+          <div class="mobile-card-row">
+            <span class="mobile-card-label">{{ col.label }}</span>
+
+            <span class="mobile-card-value">
+              @if (col.format) {
+                <ng-container>
+                  {{ col.format(getValue(row, col.key), row) }}
+                </ng-container>
+              } @else {
+                @if (col.type === "badge") {
+                  <span class="badge" [ngClass]="resolveBadgeType(col, row)">
+                    {{ getValue(row, col.key) }}
+                  </span>
+                } @else {
+                  <span>
+                    {{ getValue(row, col.key) }}
+                  </span>
+                }
+              }
+            </span>
+          </div>
+        }
+        @if (actionsTemplate) {
+          <div class="mobile-card-actions">
+            <ng-container
+              *ngTemplateOutlet="actionsTemplate; context: { $implicit: row }"
+            >
+            </ng-container>
+          </div>
+        }
+      </div>
+    }
+  </div>
+} @else {
+  <app-empty-state icon="table_rows" [message]="noDataMessage">
+  </app-empty-state>
+}

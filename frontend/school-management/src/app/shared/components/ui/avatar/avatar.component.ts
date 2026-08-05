@@ -7,7 +7,7 @@ import { LogoutService } from '../../../../core/services/logout.service';
 import { MenuComponent } from '../../navigation/menu/menu.component';
 import { MenuItemComponent } from '../../navigation/menu-item/menu-item.component';
 import { RolesHelper } from '../../../../core/utils/roles-helper';
-import { DropdownComponent } from '../../layout/dropdown/dropdown.component';
+import { DropdownComponent } from '../../overlays/dropdown/dropdown.component';
 
 @Component({
   selector: 'app-avatar',
@@ -30,9 +30,11 @@ export class AvatarComponent {
   @Input() collapsed: boolean = false;
   @Input() showUserInfo: boolean = true;
   @Input() showRoleSelector: boolean = false;
+  @Input() showChildrenSelector: boolean = false;
 
   @Output() profileClick = new EventEmitter<void>();
   @Output() changeRole = new EventEmitter<void>();
+  @Output() selectChild = new EventEmitter<void>();
 
   onProfileClick(menu: DropdownComponent) {
     menu.closeDropdown();
@@ -41,6 +43,11 @@ export class AvatarComponent {
   onChangeRole(menu: DropdownComponent) {
     menu.closeDropdown();
     this.changeRole.emit();
+  }
+
+  onSelectChild(menu: DropdownComponent){
+    menu.closeDropdown();
+    this.selectChild.emit();
   }
 
   logout(): void {

@@ -1,0 +1,58 @@
+<div class="info-card" [class]="item.type" [class.loading]="item.loading">
+  @if (item.loading) {
+    <div class="card-loading-overlay">
+      <app-spinner [loading]="item.loading" size="lg"></app-spinner>
+    </div>
+  }
+
+  <div
+    class="card-header clickable"
+    [class.header-only]="!expanded"
+    (click)="toggleExpand()"
+  >
+    <span class="material-icons">{{ item.icon }}</span>
+    <h3>{{ item.title }}</h3>
+    <span class="spacer"></span>
+
+    <span
+      class="material-icons expand-icon"
+      [style.transform]="expanded ? 'rotate(0deg)' : 'rotate(-180deg)'"
+    >
+      expand_more
+    </span>
+
+    @let btn = actionConfig?.singleButton;
+    @if (btn) {
+      <app-button
+        size="sm"
+        variant="ghost"
+        [iconOnly]="isMobile"
+        [iconLeft]="btn.icon"
+        [loading]="btn.loading ?? false"
+        [disabled]="btn.disabled ?? false"
+        (click)="
+          $event.stopPropagation();
+          btn.onClick?.() ?? action.emit()
+        "
+      >
+        {{ btn.label }}
+      </app-button>
+    }
+    @let actionsTemplate = actionConfig?.listActionsTemplate;
+    @if (actionsTemplate) {
+      <ng-container
+        *ngTemplateOutlet="actionsTemplate"
+      ></ng-container>
+    }
+  </div>
+  <div
+    #contentRef
+    class="card-content"
+    [class.collapsed]="!expanded"
+    [style.maxHeight]="contentHeight !== null ? contentHeight + 'px' : null"
+  >
+    <div class="card-content-inner">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

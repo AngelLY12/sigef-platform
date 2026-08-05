@@ -1,9 +1,10 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ButtonComponent } from '../../ui/button/button.component';
 
 @Component({
   selector: 'app-error-state',
-  imports: [ButtonComponent],
+  imports: [CommonModule,ButtonComponent],
   templateUrl: './error-state.component.html',
   styleUrl: './error-state.component.scss',
 })

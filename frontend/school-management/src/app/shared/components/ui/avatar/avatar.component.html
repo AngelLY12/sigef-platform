@@ -52,6 +52,14 @@
     </app-menu-item>
 
     <app-menu-item
+    *ngIf="showChildrenSelector"
+    icon="family_restroom"
+    (itemClick)="onSelectChild(menu)"
+    >
+      Seleccionar hijo
+    </app-menu-item>
+
+    <app-menu-item
       *ngIf="showRoleSelector"
       icon="swap_horiz"
       (itemClick)="onChangeRole(menu)"

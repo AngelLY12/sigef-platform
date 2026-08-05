@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
-import { FolderTab } from '../../../../core/models/domain/folder-tabs-config.model';
+import { FolderTab } from './folder-tabs-config.model';
 import { NgTemplateOutlet } from '@angular/common';
 
 @Component({

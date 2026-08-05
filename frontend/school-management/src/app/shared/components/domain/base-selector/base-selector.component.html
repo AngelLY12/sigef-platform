@@ -1,0 +1,42 @@
+<div class="selector-overlay" *ngIf="show" (click)="onClose()">
+  <div class="selector-card" (click)="$event.stopPropagation()">
+    <div class="selector-header">
+      <app-button
+        class="close-btn"
+        iconLeft="close"
+        (click)="onClose()"
+        variant="ghost"
+        [iconOnly]="true"
+      >
+      </app-button>
+      <span class="material-icons">{{ icon }}</span>
+      <h2>{{ title }}</h2>
+      <p>{{ description }}</p>
+    </div>
+
+    <div class="list">
+      <button
+        *ngFor="let item of items"
+        class="selector-option"
+        [ngClass]="item.colorClass"
+        (click)="selected.emit(item)"
+      >
+        <span class="material-icons">
+          {{ item.icon }}
+        </span>
+
+        <div class="selector-info">
+          <span class="selector-title">
+            {{ item.title }}
+          </span>
+
+          <span class="selector-description">
+            {{ item.description }}
+          </span>
+        </div>
+
+        <span class="material-icons arrow"> chevron_right </span>
+      </button>
+    </div>
+  </div>
+</div>

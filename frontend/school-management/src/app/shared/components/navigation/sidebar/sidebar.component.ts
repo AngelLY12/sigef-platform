@@ -1,4 +1,3 @@
-import { MenuItem } from '../../../../core/models/menu-item.model';
 import { CommonModule } from '@angular/common';
 import {
   Component,
@@ -14,6 +13,7 @@ import { ButtonComponent } from '../../ui/button/button.component';
 import { AvatarComponent } from '../../ui/avatar/avatar.component';
 import { NAVIGATION } from '../../../../core/navigation/navigation.config';
 import { Role } from '../../../../core/models/enums/role.enum';
+import { SideBarItem } from './sidebar-item.model';
 
 @Component({
   selector: 'app-sidebar',
@@ -24,7 +24,7 @@ import { Role } from '../../../../core/models/enums/role.enum';
 })
 export class SidebarComponent implements OnInit {
   private router = inject(Router);
-  @Input() menuItems: MenuItem[] = [];
+  @Input() sideBarItems: SideBarItem[] = [];
   @Input() collapsed: boolean = false;
   @Input() logoText: string = 'SIGEF';
   @Input() logoIcon: string = 'payments';
@@ -34,9 +34,12 @@ export class SidebarComponent implements OnInit {
   @Input() userAvatar: string = '';
   @Input() showUserInfo: boolean = true;
   @Input() showRoleSelector: boolean = false;
+  @Input() showChildrenSelector = false;
 
   @Output() collapsedChange = new EventEmitter<boolean>();
   @Output() changeRole = new EventEmitter<void>();
+  @Output() selectChild = new EventEmitter<void>();
+
 
   activeItem: string = '';
   expandedMenus: Set<string> = new Set();
@@ -111,6 +114,12 @@ export class SidebarComponent implements OnInit {
   onChangeRole() {
     if (this.showRoleSelector) {
       this.changeRole.emit();
+    }
+  }
+
+  onSelectChild(){
+    if(this.showChildrenSelector){
+      this.selectChild.emit();
     }
   }
 }

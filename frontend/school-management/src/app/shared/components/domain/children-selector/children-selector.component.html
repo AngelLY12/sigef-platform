@@ -1,0 +1,9 @@
+<app-base-selector
+  [show]="show"
+  icon="family_restroom"
+  title="Selecciona un hijo"
+  description="Elige el estudiante cuya información deseas consultar."
+  [items]="items"
+  (selected)="onSelected($event)"
+  (close)="onClose()">
+</app-base-selector>

@@ -122,12 +122,14 @@
   &__actions {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    gap: 0.5rem;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 42px;
 
+    padding-bottom: 1rem;
     margin-bottom: 1rem;
 
-    min-width: 0;
+    border-bottom: 1px solid var(--card-border-default);
   }
 
   &__body {
