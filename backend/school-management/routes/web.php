@@ -10,4 +10,9 @@ Route::get('/', function () {
 Route::get('/verificar/{token}', [\App\Http\Controllers\ReceiptController::class, 'verify'])
     ->name('receipts.verify')->middleware('throttle:60,1');
 
+Route::get('/files/{disk}/{path}', [\App\Http\Controllers\FileController::class, 'download'])
+    ->middleware('signed')
+    ->where('path', '.*')
+    ->name('files.download');
+
 require __DIR__.'/auth.php';
