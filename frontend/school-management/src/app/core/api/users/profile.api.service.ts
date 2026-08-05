@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { inject, Injectable, TemplateRef } from "@angular/core";
 import { ApiSuccessResponse } from "../../models/api/api-success-response.model";
 import { PROFILE_URL } from "../../constants/api.constants";
-import { UserProfileResponse } from "../../models/domain/users/profile-response.model";
+import { UserProfileResponse } from "../../../features/profile/models/profile-response.model";
 import { BehaviorSubject, map, Observable } from "rxjs";
 import { EditPassword, EditProfileParams } from "../../../features/profile/models/edit-profile-params.model";
 import { cleanObjectWithOptions } from "../../helpers";

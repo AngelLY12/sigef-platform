@@ -5,8 +5,8 @@ import { map, Observable } from 'rxjs';
 import { Paginated } from '../../utils/paginated-helper.utils';
 import { NOTIFICATIONS_URL } from '../../constants/api.constants';
 import { ApiSuccessResponse } from '../../models/api/api-success-response.model';
-import { Notification } from '../../models/domain/notifications/notification.model';
-import { ReadNotificationsPaginatedResponse } from '../../models/domain/notifications/notifications-response.model';
+import { Notification } from '../../../features/notifications/models/notification.model';
+import { ReadNotificationsPaginatedResponse } from '../../../features/notifications/models/notifications-response.model';
 import { PaginatedResponse } from '../../models/domain/paginated-response.model';
 
 @Injectable({ providedIn: 'root' })
