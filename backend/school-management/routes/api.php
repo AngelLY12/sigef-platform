@@ -37,6 +37,8 @@ Route::prefix('v1')->middleware(['throttle:5,1'])->group(function () {
         ->name('password.email');
     Route::post('/reset-password', [\App\Http\Controllers\Auth\NewPasswordController::class, 'store'])
         ->name('password.store');
+    Route::post('/parents/invite/accept', [ParentsController::class, 'acceptInvitation'])
+        ->middleware(['throttle:5,1']);
     Route::get('/verify-email/{id}/{hash}', \App\Http\Controllers\Auth\VerifyEmailController::class)
         ->middleware(['signed','throttle:6,1'])
         ->name('verification.verify');
@@ -58,35 +60,33 @@ Route::prefix('v1')->middleware(['auth:sanctum'])->group(function (){
 
     Route::prefix('parents')->middleware(['throttle:5,1'])->group(function(){
         Route::middleware(['role:student',])->post('/invite',[ParentsController::class, 'sendInvitation']);
-        Route::middleware(['role:parent'])->post('/invite/accept',[ParentsController::class, 'acceptInvitation']);
         Route::middleware(['role:parent'])->get('/get-children',[ParentsController::class,'getParetChildren']);
         Route::middleware(['role:student'])->get('/get-parents',[ParentsController::class,'getStudentParents']);
         Route::middleware(['role:student'])->delete('/delete-parent/{parentId}',[ParentsController::class,'delete']);
     });
 
-    Route::prefix('dashboard')->middleware(['role:student|parent|applicant', 'throttle:global'])->group(function (){
-        Route::middleware('permission:view.own.pending.concepts.summary')->get('/pending/{studentId?}',[DashboardController::class,'pending']);
-        Route::middleware('permission:view.own.paid.concepts.summary')->get('/paid/{studentId?}',[DashboardController::class,'paid']);
-        Route::middleware('permission:view.own.overdue.concepts.summary')->get('/overdue/{studentId?}',[DashboardController::class,'overdue']);
-        Route::middleware('permission:view.payments.summary')->get('/history/{studentId?}',[DashboardController::class,'history']);
-        Route::middleware('permission:refresh.all.dashboard')->post('/refresh/{studentId?}',[DashboardController::class,'refreshDashboard']);
+    Route::prefix('dashboard')->middleware(['role:student|parent|applicant', 'throttle:global', 'resolve.target.user'])->group(function (){
+        Route::middleware('permission:view.own.pending.concepts.summary')->get('/pending',[DashboardController::class,'pending']);
+        Route::middleware('permission:view.own.paid.concepts.summary')->get('/paid',[DashboardController::class,'paid']);
+        Route::middleware('permission:view.own.overdue.concepts.summary')->get('/overdue',[DashboardController::class,'overdue']);
+        Route::middleware('permission:view.payments.summary')->get('/history',[DashboardController::class,'history']);
+        Route::middleware('permission:refresh.all.dashboard')->post('/refresh',[DashboardController::class,'refreshDashboard']);
     });
     Route::prefix('cards')->middleware(['role:student|parent|applicant'])->group(function(){
-        Route::middleware(['permission:view.cards','throttle:global'])->get('/',[CardsController::class,'index']);
-        Route::middleware(['permission:view.cards','throttle:global'])->get('/{studentId?}',[CardsController::class,'index']);
+        Route::middleware(['permission:view.cards','throttle:global', 'resolve.target.user'])->get('/',[CardsController::class,'index']);
         Route::middleware(['permission:create.setup', 'throttle:20,60,user_id'])->post('/',[CardsController::class,'store']);
         Route::middleware(['permission:delete.card', 'throttle:10,1'])->delete('/{paymentMethodId}',[CardsController::class,'destroy']);
     });
     Route::prefix('payments/history')->middleware(['role:student|parent|applicant','throttle:global'])->group(function(){
-        Route::middleware('permission:view.payments.history')->get('/payment/{id}',[PaymentHistoryController::class,'findPayment']);
+        Route::middleware(['permission:view.payments.history', 'resolve.target.user'])->get('/payment/{id}',[PaymentHistoryController::class,'findPayment']);
         Route::middleware('permission:view.receipt')->get('/receipt/{paymentId}',[PaymentHistoryController::class,'receiptPDF']);
-        Route::middleware('permission:view.payments.history')->get('/{studentId?}',[PaymentHistoryController::class,'index']);
+        Route::middleware(['permission:view.payments.history', 'resolve.target.user'])->get('/',[PaymentHistoryController::class,'index']);
 
     });
     Route::prefix('pending-payments')->middleware(['role:student|parent|applicant'])->group(function(){
-        Route::middleware(['permission:view.overdue.concepts','throttle:global'])->get('/overdue/{studentId?}',[PendingPaymentController::class,'overdue']);
+        Route::middleware(['permission:view.overdue.concepts','throttle:global', 'resolve.target.user'])->get('/overdue',[PendingPaymentController::class,'overdue']);
         Route::middleware(['permission:create.payment','throttle:20,60,user_id'])->post('/',[PendingPaymentController::class,'store']);
-        Route::middleware(['permission:view.pending.concepts','throttle:global'])->get('/{studentId?}',[PendingPaymentController::class,'index']);
+        Route::middleware(['permission:view.pending.concepts','throttle:global', 'resolve.target.user'])->get('/',[PendingPaymentController::class,'index']);
 
     });
 

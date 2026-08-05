@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Students;
 
 use App\Core\Application\Services\Payments\Student\PaymentHistoryService;
 use App\Core\Infraestructure\Mappers\UserMapper;
+use App\Http\Controllers\Concerns\ResolvesRequestUser;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\General\ForceRefreshRequest;
 use App\Http\Requests\General\PaginationRequest;
 use App\Models\Payment;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
@@ -21,6 +23,7 @@ use Illuminate\Support\Facades\Storage;
  */
 class PaymentHistoryController extends Controller
 {
+    use ResolvesRequestUser;
     protected PaymentHistoryService $paymentHistoryService;
     public function __construct(PaymentHistoryService $paymentHistoryService){
         $this->paymentHistoryService= $paymentHistoryService;
@@ -28,19 +31,14 @@ class PaymentHistoryController extends Controller
     }
 
 
-    public function index(PaginationRequest $request, ?int $studentId=null)
+    public function index(PaginationRequest $request)
     {
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
+        $user = $this->targetUser($request);
         $forceRefresh = $request->validated()['forceRefresh'] ?? false;
-        $targetUser = $user->resolveTargetUser($studentId);
 
-        if (!$targetUser) {
-            return Response::error('Acceso no permitido', 403);
-        }
         $perPage = $request->integer('perPage', 15);
         $page = $request->integer('page', 1);
-        $history=$this->paymentHistoryService->paymentHistory(UserMapper::toDomain($targetUser), $perPage, $page, $forceRefresh);
+        $history=$this->paymentHistoryService->paymentHistory(UserMapper::toDomain($user), $perPage, $page, $forceRefresh);
         return Response::success(
             ['payment_history' => $history],
             empty($history->items) ? 'No hay historial de pagos para este usuario.' : null
@@ -59,7 +57,7 @@ class PaymentHistoryController extends Controller
     public function receiptPDF(int $paymentId)
     {
         $path = $this->paymentHistoryService->receiptFromPayment($paymentId);
-        $url = Storage::disk('gcs')->temporaryUrl(
+        $url = Storage::temporaryUrl(
             $path,
             now()->addMinutes(5),
             [

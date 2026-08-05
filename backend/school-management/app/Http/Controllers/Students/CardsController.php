@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Students;
 
 use App\Core\Application\Services\Payments\Student\CardsServiceFacades;
 use App\Core\Infraestructure\Mappers\UserMapper;
+use App\Http\Controllers\Concerns\ResolvesRequestUser;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\General\ForceRefreshRequest;
 use Illuminate\Http\Request;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Response;
  */
 class CardsController extends Controller
 {
+    use ResolvesRequestUser;
     protected CardsServiceFacades $cardsService;
 
     public function __construct(CardsServiceFacades $cardsService)
@@ -26,17 +28,12 @@ class CardsController extends Controller
     }
 
 
-    public function index(ForceRefreshRequest $request, ?int $studentId=null)
+    public function index(ForceRefreshRequest $request)
     {
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
+        $user = $this->targetUser($request);
         $forceRefresh = $request->validated()['forceRefresh'] ?? false;
-        $targetUser = $user->resolveTargetUser($studentId);
 
-        if (!$targetUser) {
-            return Response::error('Acceso no permitido', 403);
-        }
-        $cards = $this->cardsService->getUserPaymentMethods($targetUser->id, $forceRefresh);
+        $cards = $this->cardsService->getUserPaymentMethods($user->id, $forceRefresh);
 
         return Response::success(
             ['cards' => $cards],
