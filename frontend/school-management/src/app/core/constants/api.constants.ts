@@ -19,4 +19,10 @@ export const FINANCIAL_STAFF_URLS = {
   debts: `${API_URL}/debts`,
   payments: `${API_URL}/payments`
 };
-
+export const PARENTS_URL = {
+  invite: `${API_URL}/parents/invite`,
+  acceptInvitation: `${API_URL}/parents/invite/accept`,
+  children: `${API_URL}/parents/get-children`,
+  parents: `${API_URL}/parents/get-parents`,
+  removeParent: `${API_URL}/parents/delete-parent`,
+};
