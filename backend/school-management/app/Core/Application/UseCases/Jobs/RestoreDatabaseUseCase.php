@@ -30,7 +30,7 @@ class RestoreDatabaseUseCase
 
         Log::channel('stderr')->warning('Restaurando la última copia de seguridad...');
 
-        $files = collect(Storage::disk('gcs')->allFiles())
+        $files = collect(Storage::allFiles())
         ->filter(fn($f) => str_ends_with(strtolower($f), '.zip'))
         ->sortDesc()
         ->values();
@@ -45,7 +45,7 @@ class RestoreDatabaseUseCase
 
         $localPath = storage_path('app/restore.zip');
         try {
-            $content = Storage::disk('gcs')->get($latestBackup);
+            $content = Storage::get($latestBackup);
             file_put_contents($localPath, $content);
         } catch (\Exception $e) {
             Log::channel('stderr')->error('Error al descargar el respaldo: ' . $e->getMessage());

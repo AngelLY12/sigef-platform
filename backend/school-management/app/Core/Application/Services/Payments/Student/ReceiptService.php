@@ -10,7 +10,7 @@ class ReceiptService
 {
     public function generate(Receipt $receipt): string
     {
-        $disk = Storage::disk('gcs');
+        $disk = Storage::getFacadeRoot();
         if ($receipt->file_path && $disk->exists($receipt->file_path)) {
             return $receipt->file_path;
         }
