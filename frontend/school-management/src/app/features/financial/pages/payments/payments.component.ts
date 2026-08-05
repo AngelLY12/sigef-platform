@@ -1,18 +1,17 @@
 import { Paginated } from './../../../../core/utils/paginated-helper.utils';
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { PageLayoutComponent } from '../../../../shared/components/navigation/page-layout/page-layout.component';
-import { SelectComponent } from '../../../../shared/components/form/select/select.component';
+import { PageLayoutComponent } from '../../../../shared/components/layout/page-layout/page-layout.component';
 import { PaymentsView } from '../../models/payments/payments-view.enum';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PaymentsTableComponent } from '../../components/payments/payments-table/payments-table.component';
 import { PaymentsResponse } from '../../models/payments/payments-response.model';
 import { PaymentsByConceptResponse } from '../../models/payments/payments-by-concept-response.model';
 import { PaymentsByStudentResponse } from '../../models/payments/payments-by-student-response.model';
-import { PaginatorComponent } from '../../../../shared/components/data-display/paginator/paginator.component';
+import { PaginatorComponent } from '../../../../shared/components/data-controls/paginator/paginator.component';
 import { PaymentsByConceptTableComponent } from '../../components/payments/payments-by-concept-table/payments-by-concept-table.component';
 import { PaymentsByStudentTableComponent } from '../../components/payments/payments-by-student-table/payments-by-student-table.component';
-import { PaymentsApiService } from '../../../../core/api/financial-staff/payments.api.service';
+import { PaymentsApiService } from '../../../../core/api/payments/financial-staff/payments.api.service';
 import { ModalService } from '../../../../core/services/modal.service';
 import { Router } from '@angular/router';
 import { ListController } from '../../../../core/utils/list-controller.utils';
@@ -22,11 +21,10 @@ import {
 } from '../../models/payments/payments-params.model';
 import { LoadingState } from '../../../../core/models/types/loading-state.type';
 import { Observable } from 'rxjs';
-import { FilterBarComponent } from '../../../../shared/components/features/filter-bar/filter-bar.component';
+import { FilterBarComponent } from '../../../../shared/components/data-controls/filter-bar/filter-bar.component';
 import { QueryParamsHelper } from '../../../../core/utils/query-params-helper.utils';
-import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
-import { InputComponent } from '../../../../shared/components/form/input/input.component';
-import { FolderTab } from '../../../../core/models/domain/folder-tabs-config.model';
+import { InputComponent } from '../../../../shared/components/form/controls/input/input.component';
+import { FolderTab } from '../../../../shared/components/navigation/folder-tabs/folder-tabs-config.model';
 import { FolderTabsComponent } from '../../../../shared/components/navigation/folder-tabs/folder-tabs.component';
 
 @Component({

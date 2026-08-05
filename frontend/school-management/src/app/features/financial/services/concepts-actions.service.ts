@@ -3,7 +3,7 @@ import { EMPTY, Observable } from 'rxjs';
 import { ConceptsListResponse } from '../models/concepts/concepts-list.response.model';
 import { PaymentConceptStatus } from '../../../core/models/enums/payment-concepts-status.enum';
 import { ModalService } from '../../../core/services/modal.service';
-import { PaymentConceptApiService } from '../../../core/api/financial-staff/payment-concepts.api.service';
+import { PaymentConceptApiService } from '../../../core/api/payments/financial-staff/payment-concepts.api.service';
 
 @Injectable({ providedIn: 'root' })
 export class ConceptsActionsService {

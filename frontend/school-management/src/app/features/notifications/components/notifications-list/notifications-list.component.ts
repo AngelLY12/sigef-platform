@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PaginatorComponent } from '../../../../shared/components/data-display/paginator/paginator.component';
-import { RecordListComponent } from '../../../../shared/components/data-display/record-list/record-list.component';
+import { PaginatorComponent } from '../../../../shared/components/data-controls/paginator/paginator.component';
+import { RecordListComponent } from '../../../../shared/components/data-display/lists/record-list/record-list.component';
 import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
 import { Paginated } from '../../../../core/utils/paginated-helper.utils';
-import { Notification } from '../../../../core/models/domain/notification.model';
+import { Notification } from '../../models/notification.model';
 import { NotificationSeverity } from '../../../../core/models/enums/notification-severity.enum';
 import { NotificationType } from '../../../../core/models/enums/notification-type.enum';
 import { NotificationDetailsComponent } from '../notification-details/notification-details.component';

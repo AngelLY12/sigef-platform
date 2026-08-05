@@ -3,71 +3,87 @@
 <div class="individual-cards-grid">
   <app-kpi-card
     *ngIf="summary.usersByRoleSummary.admin > 0"
-    icon="admin_panel_settings"
-    iconType="roles"
-    label="Administradores"
-    [value]="summary.usersByRoleSummary.admin"
-    size="small"
+    [item]="{
+    icon: 'admin_panel_settings',
+    iconType: 'roles',
+    label: 'Administradores',
+    value: summary.usersByRoleSummary.admin,
+    size: 'small'
+    }"
+
   >
   </app-kpi-card>
 
   <app-kpi-card
     *ngIf="summary.usersByRoleSummary.student > 0"
-    icon="school"
-    iconType="roles"
-    label="Estudiantes"
-    [value]="summary.usersByRoleSummary.student"
-    size="small"
+    [item]="{
+      icon: 'school',
+      iconType: 'roles',
+      label: 'Estudiantes',
+      value: summary.usersByRoleSummary.student,
+      size: 'small'
+    }"
   >
   </app-kpi-card>
 
   <app-kpi-card
     *ngIf="summary.usersByRoleSummary.applicant > 0"
-    icon="assignment"
-    iconType="roles"
-    label="Aspirantes"
-    [value]="summary.usersByRoleSummary.applicant"
-    size="small"
+    [item]="{
+      icon: 'assignment',
+      iconType: 'roles',
+      label: 'Aspirantes',
+      value: summary.usersByRoleSummary.applicant,
+      size: 'small'
+    }"
   >
   </app-kpi-card>
 
   <app-kpi-card
     *ngIf="summary.usersByRoleSummary['financial-staff'] > 0"
-    icon="account_balance"
-    iconType="roles"
-    label="Personal Financiero"
-    [value]="summary.usersByRoleSummary['financial-staff']"
-    size="small"
+    [item]="{
+      icon: 'account_balance',
+      iconType: 'roles',
+      label: 'Personal Financiero',
+      value: summary.usersByRoleSummary['financial-staff'],
+      size: 'small'
+    }"
   >
   </app-kpi-card>
 
   <app-kpi-card
     *ngIf="summary.usersByRoleSummary.parent > 0"
-    icon="family_history"
-    iconType="roles"
-    label="Padres"
-    [value]="summary.usersByRoleSummary.parent"
-    size="small"
+    [item]="{
+      icon: 'family_history',
+      iconType: 'roles',
+      label: 'Padres',
+      value: summary.usersByRoleSummary.parent,
+      size: 'small'
+    }"
   >
   </app-kpi-card>
 
   <app-kpi-card
     *ngIf="summary.usersByRoleSummary.supervisor > 0"
-    icon="supervisor_account"
-    iconType="roles"
-    label="Supervisores"
-    [value]="summary.usersByRoleSummary.supervisor"
-    size="small"
+    [item]="{
+      icon: 'supervisor_account',
+      iconType: 'roles',
+      label: 'Supervisores',
+      value: summary.usersByRoleSummary.supervisor,
+      size: 'small'
+    }"
+
   >
   </app-kpi-card>
 
   <app-kpi-card
     *ngIf="summary.usersByRoleSummary.unverified > 0"
-    icon="verified"
-    iconType="roles"
-    label="Sin Verificar"
-    [value]="summary.usersByRoleSummary.unverified"
-    size="small"
+    [item]="{
+      icon: 'verified',
+      iconType: 'roles',
+      label: 'Sin Verificar',
+      value: summary.usersByRoleSummary.unverified,
+      size: 'small'
+    }"
   >
   </app-kpi-card>
 </div>
@@ -78,32 +94,40 @@
 >
   <app-kpi-card
     *ngIf="summary.academicSummary.students_without_career > 0"
-    icon="warning"
-    iconType="alerts"
-    label="Sin carrera"
-    [value]="summary.academicSummary.students_without_career"
-    size="small"
-    subtext="estudiantes"
+    [item]="{
+      icon: 'warning',
+      iconType: 'alerts',
+      label: 'Sin carrera',
+      value: summary.academicSummary.students_without_career,
+      size: 'small',
+      subtext: 'estudiantes'
+    }"
   >
   </app-kpi-card>
 
   <app-kpi-card
     *ngIf="summary.academicSummary.students_without_semester > 0"
-    icon="error"
-    iconType="alerts"
-    label="Sin semestre"
-    [value]="summary.academicSummary.students_without_semester"
-    size="small"
+    [item]="{
+      icon: 'error',
+      iconType: 'alerts',
+      label: 'Sin semestre',
+      value: summary.academicSummary.students_without_semester,
+      size: 'small'
+    }"
+  >
     subtext="estudiantes"
   >
   </app-kpi-card>
 
   <app-kpi-card
     *ngIf="summary.academicSummary.students_without_group > 0"
-    icon="group_off"
-    iconType="alerts"
-    label="Sin grupo"
-    [value]="summary.academicSummary.students_without_group"
+    [item]="{
+      icon: 'group_off',
+      iconType: 'alerts',
+      label: 'Sin grupo',
+      value: summary.academicSummary.students_without_group,
+      size: 'small'
+    }"
     size="small"
     subtext="estudiantes"
   >
@@ -112,31 +136,39 @@
 
 <div class="secondary-kpi-grid">
   <app-kpi-card
-    icon="pause_circle"
-    iconType="inactive"
-    label="Usuarios Inactivos"
-    [value]="summary.populationSummary.inactive_users"
-    size="small"
+    [item]="{
+      icon: 'pause_circle',
+      iconType: 'inactive',
+      label: 'Usuarios Inactivos',
+      value: summary.populationSummary.inactive_users,
+      size: 'small'
+    }"
   >
     <app-kpi-breakdown extra-content [items]="inactiveBreakdown" />
   </app-kpi-card>
 
   <app-kpi-card
-    icon="trending_up"
-    iconType="growth"
-    label="Nuevos Usuarios"
-    [value]="summary.recentActivity.new_users_today"
-    size="small"
+    [item]="{
+      icon: 'trending_up',
+      iconType: 'growth',
+      label: 'Nuevos Usuarios',
+      value: summary.recentActivity.new_users_today,
+      size: 'small'
+    }"
+
   >
     <app-kpi-breakdown extra-content [items]="newUsersBreakdown" />
   </app-kpi-card>
 
   <app-kpi-card
-    icon="assignment"
-    iconType="academic"
-    label="Situación Académica"
-    value=""
-    size="small"
+    [item]="{
+        icon: 'assignment',
+      iconType: 'academic',
+      label: 'Situación Académica',
+      value: summary.academicSummary.students_total,
+      size: 'small'
+    }"
+
   >
     <app-mini-stats extra-content [items]="academicMiniStats" />
   </app-kpi-card>

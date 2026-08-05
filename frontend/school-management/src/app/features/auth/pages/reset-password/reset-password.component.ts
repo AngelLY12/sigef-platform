@@ -5,9 +5,9 @@ import { AuthLayoutComponent } from '../../../../layouts/auth-layout/auth-layout
 import { AbstractControl, FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalService } from '../../../../core/services/modal.service';
-import { InputComponent } from '../../../../shared/components/form/input/input.component';
-import { AuthService } from '../../../../core/api/auth.api.service';
-import { PasswordInputComponent } from '../../../../shared/components/form/password-input/password-input.component';
+import { InputComponent } from '../../../../shared/components/form/controls/input/input.component';
+import { AuthService } from '../../../../core/api/auth/auth.api.service';
+import { PasswordInputComponent } from '../../../../shared/components/form/controls/password-input/password-input.component';
 
 @Component({
   selector: 'app-reset-password',

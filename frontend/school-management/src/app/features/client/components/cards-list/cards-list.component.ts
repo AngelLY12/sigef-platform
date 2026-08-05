@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CardsListResponse } from '../../models/cards/cards-list-response.model';
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
-import { ConfirmModalComponent } from '../../../../shared/components/modal/confirm-modal/confirm-modal.component';
+import { ConfirmModalComponent } from '../../../../shared/components/overlays/modal/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-cards-list',

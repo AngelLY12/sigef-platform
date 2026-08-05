@@ -1,36 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  ValidationErrors,
-  Validators,
-} from '@angular/forms';
-import { InputComponent } from '../../../../shared/components/form/input/input.component';
+import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RegisterUser } from '../../models/register.model';
-import { Gender } from '../../../../core/models/types/gender.type';
-import { BloodType } from '../../../../core/models/types/blood-type.type';
 import { AuthLayoutComponent } from '../../../../layouts/auth-layout/auth-layout.component';
-import { BloodType as BloodTypeEnum } from '../../../../core/models/enums/blood-type.enum';
-import { SelectComponent } from '../../../../shared/components/form/select/select.component';
-import { Gender as GenderEnum } from '../../../../core/models/enums/gender.enum';
 import { ModalService } from '../../../../core/services/modal.service';
-import { AddressComponent } from '../../../../shared/components/features/address/address.component';
 import { cleanObject } from '../../../../core/helpers';
 import { AuthNavigationHelper } from '../../../../core/helpers/navigation/auth-navigation.helper';
-import { AuthService } from '../../../../core/api/auth.api.service';
-import { PasswordInputComponent } from '../../../../shared/components/form/password-input/password-input.component';
-import { StepperComponent } from '../../../../shared/components/features/stepper/stepper.component';
-import {
-  ageRangeValidator,
-  passwordsMatchValidator,
-} from '../../utils/auth-validators.utils';
+import { AuthService } from '../../../../core/api/auth/auth.api.service';
 import { createRegisterForm } from '../../utils/register-form.utils';
-import { enumToOptions } from '../../../../core/utils/enum-helper.utils';
 import {
   ADDRESS_CUSTOM_ERRORS,
   REGISTER_STEPS,
@@ -38,6 +16,8 @@ import {
 import { PersonalStepComponent } from '../../components/register/personal-step/personal-step.component';
 import { ContactStepComponent } from '../../components/register/contact-step/contact-step.component';
 import { SecurityStepComponent } from '../../components/register/security-step/security-step.component';
+import { AddressComponent } from '../../../../shared/components/form/sections/address/address.component';
+import { StepperComponent } from '../../../../shared/components/form/layouts/stepper/stepper.component';
 
 @Component({
   selector: 'app-register',
@@ -50,7 +30,7 @@ import { SecurityStepComponent } from '../../components/register/security-step/s
     StepperComponent,
     PersonalStepComponent,
     ContactStepComponent,
-    SecurityStepComponent
+    SecurityStepComponent,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',

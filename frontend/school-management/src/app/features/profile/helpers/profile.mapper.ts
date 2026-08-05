@@ -1,4 +1,4 @@
-import { InfoCardItemConfig } from '../../../core/models/domain/cards/info-card-item-config.model';
+import { InfoCardItemConfig } from '../../../shared/components/data-display/cards/info-card-item/info-card-item-config.model';
 import { Status } from '../../../core/models/enums/status.enum';
 import { AlertItem } from '../../../shared/components/feedback/alerts-list/alerts-list.component';
 import { UserProfile } from '../models/user-profile.model';

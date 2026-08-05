@@ -1,11 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { PendingConcepts } from '../../../../core/api/students/pending-concepts.api.service';
+import { PendingConcepts } from '../../../../core/api/payments/students/pending-concepts.api.service';
 import { LoadingState } from '../../../../core/models/types/loading-state.type';
 import { PendingConceptsResponse } from '../../models/pending-concepts/pending-concepts-response.model';
-import { PageLayoutComponent } from '../../../../shared/components/navigation/page-layout/page-layout.component';
+import { PageLayoutComponent } from '../../../../shared/components/layout/page-layout/page-layout.component';
 import { forkJoin } from 'rxjs';
-import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
 import { PendingConceptsListComponent } from '../../components/pending-concepts-list/pending-concepts-list.component';
 import { ListController } from '../../../../core/utils/list-controller.utils';
 import {
@@ -14,7 +13,7 @@ import {
 } from '../../models/pending-concepts/pending-concepts-params.model';
 import { QueryParamsHelper } from '../../../../core/utils/query-params-helper.utils';
 import { FolderTabsComponent } from '../../../../shared/components/navigation/folder-tabs/folder-tabs.component';
-import { FolderTab } from '../../../../core/models/domain/folder-tabs-config.model';
+import { FolderTab } from '../../../../shared/components/navigation/folder-tabs/folder-tabs-config.model';
 import { PENDING_CONCEPTS_TABS } from '../../config/client.config';
 
 @Component({

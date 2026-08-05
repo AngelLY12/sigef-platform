@@ -1,4 +1,4 @@
-import { FolderTab } from "../../../core/models/domain/folder-tabs-config.model";
+import { FolderTab } from "../../../shared/components/navigation/folder-tabs/folder-tabs-config.model";
 
 export const PROFILE_TABS: FolderTab[] = [
     {

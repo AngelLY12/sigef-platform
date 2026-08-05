@@ -3,32 +3,24 @@ import {
   Component,
   inject,
   OnInit,
-  TemplateRef,
-  ViewChild,
 } from '@angular/core';
 import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
-import { ProfileService } from '../../../../core/api/profile.api.service';
+import { ProfileService } from '../../../../core/api/users/profile.api.service';
 import { UserProfile } from '../../models/user-profile.model';
-import { InfoCardItemComponent } from '../../../../shared/components/data-display/info-card-item/info-card-item.component';
-import { PageLayoutComponent } from '../../../../shared/components/navigation/page-layout/page-layout.component';
+import { InfoCardItemComponent } from '../../../../shared/components/data-display/cards/info-card-item/info-card-item.component';
+import { PageLayoutComponent } from '../../../../shared/components/layout/page-layout/page-layout.component';
 import { LoadingState } from '../../../../core/models/types/loading-state.type';
 import {
   AlertItem,
   AlertsListComponent,
 } from '../../../../shared/components/feedback/alerts-list/alerts-list.component';
-import { Status } from '../../../../core/models/enums/status.enum';
 import { ModalService } from '../../../../core/services/modal.service';
-import { AuthService } from '../../../../core/api/auth.api.service';
-import { EditProfileParams } from '../../models/edit-profile-params.model';
-import { buildDiffPayload } from '../../../../core/utils/normalize-helper.utils';
-import { BloodType } from '../../../../core/models/enums/blood-type.enum';
-import { enumToOptions } from '../../../../core/utils/enum-helper.utils';
-import { Gender } from '../../../../core/models/enums/gender.enum';
+import { AuthService } from '../../../../core/api/auth/auth.api.service';
 import { EditAddressComponent } from '../../components/edit-address/edit-address.component';
-import { FolderTab } from '../../../../core/models/domain/folder-tabs-config.model';
+import { FolderTab } from '../../../../shared/components/navigation/folder-tabs/folder-tabs-config.model';
 import { FolderTabsComponent } from '../../../../shared/components/navigation/folder-tabs/folder-tabs.component';
 import { ListController } from '../../../../core/utils/list-controller.utils';
-import { InfoCardItemConfig } from '../../../../core/models/domain/cards/info-card-item-config.model';
+import { InfoCardItemConfig } from '../../../../shared/components/data-display/cards/info-card-item/info-card-item-config.model';
 import { PROFILE_TABS } from '../../config/profile.config';
 import { ProfileActionsService } from '../../services/profile-actions.service';
 import {

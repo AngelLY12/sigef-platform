@@ -1,7 +1,7 @@
 import { UserProfile } from './../models/user-profile.model';
 import { inject, Injectable } from '@angular/core';
 import { ModalService } from '../../../core/services/modal.service';
-import { ProfileService } from '../../../core/api/profile.api.service';
+import { ProfileService } from '../../../core/api/users/profile.api.service';
 import { EditProfileParams } from '../models/edit-profile-params.model';
 import { buildDiffPayload } from '../../../core/utils/normalize-helper.utils';
 import { enumToOptions } from '../../../core/utils/enum-helper.utils';

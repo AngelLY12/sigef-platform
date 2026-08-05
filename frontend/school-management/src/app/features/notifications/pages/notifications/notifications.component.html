@@ -3,42 +3,61 @@
   welcomeMessage="Aquí verás todas las actualizaciones del sistema"
   loadingMessage="Cargando notificaciones..."
   [state]="notificationsState"
+  [refreshable]="true"
+  [refreshing]="notificationsState === 'loading'"
+  (refresh)="onRefresh()"
   icon="notifications"
   (retry)="loadAllNotifications()"
 >
-  <div
-    *ngIf="
-      (notificationsState === 'success' && readPaginatedNotifications) ||
-      unreadPaginatedNotifications
-    "
-  >
-
-    <app-notifications-header
-      [onlyUnread]="onlyUnread"
-      [unreadCount]="unreadCount"
-      [readCount]="readCount"
-      (refresh)="onRefresh()"
-      (viewChange)="onlyUnread = $event"
-      (markAllAsRead)="markAllAsRead()"
-    ></app-notifications-header>
-    <app-notifications-list
-      *ngIf="!onlyUnread && readPaginatedNotifications"
-      [paginatedNotifications]="readPaginatedNotifications"
-      (markAsRead)="markAsRead($event)"
-      (deleteNotification)="deleteNotification($event)"
-      (pageChange)="onReadPageChange($event)"
-      (pageSizeChange)="onReadPageSizeChange($event)"
+  @if (
+    (notificationsState === "success" && readPaginatedNotifications) ||
+    unreadPaginatedNotifications
+  ) {
+    <app-folder-tabs
+      [tabs]="notificationTabs"
+      [(activeTab)]="activeNotificationTab"
+      [actionsTemplate]="
+        unreadCount > 0 && activeNotificationTab === 'unread'
+          ? notificationActions
+          : undefined
+      "
     >
-    </app-notifications-list>
+      @switch (activeNotificationTab) {
+        @case ("read") {
+          @if (readPaginatedNotifications) {
+            <app-notifications-list
+              [paginatedNotifications]="readPaginatedNotifications"
+              (markAsRead)="markAsRead($event)"
+              (deleteNotification)="deleteNotification($event)"
+              (pageChange)="onReadPageChange($event)"
+              (pageSizeChange)="onReadPageSizeChange($event)"
+            />
+          }
+        }
 
-    <app-notifications-list
-      *ngIf="onlyUnread && unreadPaginatedNotifications"
-      [paginatedNotifications]="unreadPaginatedNotifications"
-      (markAsRead)="markAsRead($event)"
-      (deleteNotification)="deleteNotification($event)"
-      (pageChange)="onUnreadPageChange($event)"
-      (pageSizeChange)="onUnreadPageSizeChange($event)"
-    >
-    </app-notifications-list>
-  </div>
+        @case ("unread") {
+          @if (unreadPaginatedNotifications) {
+            <app-notifications-list
+              [paginatedNotifications]="unreadPaginatedNotifications"
+              (markAsRead)="markAsRead($event)"
+              (deleteNotification)="deleteNotification($event)"
+              (pageChange)="onUnreadPageChange($event)"
+              (pageSizeChange)="onUnreadPageSizeChange($event)"
+            />
+          }
+        }
+      }
+    </app-folder-tabs>
+  }
 </app-page-layout>
+
+<ng-template #notificationActions>
+  <app-button
+    size="sm"
+    variant="outline"
+    iconLeft="mark_email_read"
+    (click)="markAllAsRead()"
+  >
+    Marcar todas como leídas
+  </app-button>
+</ng-template>

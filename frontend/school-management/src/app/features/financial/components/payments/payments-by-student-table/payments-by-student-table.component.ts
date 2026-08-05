@@ -2,8 +2,8 @@ import { Component, Input } from '@angular/core';
 import { Paginated } from '../../../../../core/utils/paginated-helper.utils';
 import { CommonModule } from '@angular/common';
 import { PaymentsByStudentResponse } from '../../../models/payments/payments-by-student-response.model';
-import { TableComponent } from '../../../../../shared/components/data-display/table/table.component';
-import { TableColumn } from '../../../../../core/models/domain/table-column.model';
+import { TableComponent } from '../../../../../shared/components/data-display/tables/table/table.component';
+import { TableColumn } from '../../../../../shared/components/data-display/tables/table/table-column.model';
 import { CurrencyMXNPipe } from '../../../../../shared/pipes/currency-mxn.pipe';
 
 @Component({

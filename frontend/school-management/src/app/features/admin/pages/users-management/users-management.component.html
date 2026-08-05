@@ -14,6 +14,7 @@
       [tabs]="userTabs"
       [activeTab]="activeUserTab"
       (activeTabChange)="onStatusTabChange($event)"
+      [actionsTemplate]="actionsTemplate"
     >
       <app-record-list
         [items]="paginatedUsers.data.items"
@@ -68,4 +69,9 @@
     (updatePermissions)="onUpdatePermissionsSelected()"
     (promoteStudents)="onPromoteStudents()"
   />
+</ng-template>
+<ng-template #actionsTemplate>
+  <app-button iconLeft="add" variant="primary" (click)="onCreateUser()">
+    Crear usuario
+  </app-button>
 </ng-template>

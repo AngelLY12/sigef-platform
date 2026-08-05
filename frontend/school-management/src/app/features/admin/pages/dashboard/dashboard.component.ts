@@ -1,9 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { AdminService } from '../../../../core/api/admin.api.service';
+import { AdminService } from '../../../../core/api/admin/admin.api.service';
 import { DashboardSummary } from '../../models/response/dashboard-summary.model';
 import { CommonModule } from '@angular/common';
 import { LoadingState } from '../../../../core/models/types/loading-state.type';
-import { PageLayoutComponent } from '../../../../shared/components/navigation/page-layout/page-layout.component';
+import { PageLayoutComponent } from '../../../../shared/components/layout/page-layout/page-layout.component';
 import { QueryParamsHelper } from '../../../../core/utils/query-params-helper.utils';
 import { ListController } from '../../../../core/utils/list-controller.utils';
 import { BASE_DASHBOARD_LIST_PARAMS, DashboardRequest } from '../../models/request/dashboard-request.model';

@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { PageLayoutComponent } from '../../../../shared/components/navigation/page-layout/page-layout.component';
-import { AdminService } from '../../../../core/api/admin.api.service';
+import { PageLayoutComponent } from '../../../../shared/components/layout/page-layout/page-layout.component';
+import { AdminService } from '../../../../core/api/admin/admin.api.service';
 import { LoadingState } from '../../../../core/models/types/loading-state.type';
 import { ModalService } from '../../../../core/services/modal.service';
 import { ImportPanelComponent } from '../../components/import/import-panel/import-panel.component';

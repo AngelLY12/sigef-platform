@@ -5,10 +5,10 @@ import {
   PaymentMethodDetails,
   SpeiPaymentMethod,
   UnknownPaymentMethod,
-} from '../../../../../core/models/domain/payment-method-details-type.model';
-import { InfoCardItemComponent } from '../../../../../shared/components/data-display/info-card-item/info-card-item.component';
-import { InfoCardActionConfig } from '../../../../../core/models/domain/info-card-config.model';
-import { InfoCardItemConfig } from '../../../../../core/models/domain/cards/info-card-item-config.model';
+} from '../../../models/payment-history/payment-method-details-type.model';
+import { InfoCardItemComponent } from '../../../../../shared/components/data-display/cards/info-card-item/info-card-item.component';
+import { InfoCardActionConfig } from '../../../../../shared/components/data-display/cards/info-card/info-card-config.model';
+import { InfoCardItemConfig } from '../../../../../shared/components/data-display/cards/info-card-item/info-card-item-config.model';
 
 @Component({
   selector: 'app-payment-method',

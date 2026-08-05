@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
-import { RoleSelectorComponent } from '../../../../shared/components/features/role-selector/role-selector.component';
+import { RoleSelectorComponent } from '../../../../shared/components/domain/role-selector/role-selector.component';
 import { NavigationService } from '../../../../core/services/navigation.service';
-import { AuthService } from '../../../../core/api/auth.api.service';
+import { AuthService } from '../../../../core/api/auth/auth.api.service';
 import { Role } from '../../../../core/models/enums/role.enum';
 import { PublicLayoutComponent } from '../../../../layouts/public-layout/public-layout.component';
 import { LogoutService } from '../../../../core/services/logout.service';

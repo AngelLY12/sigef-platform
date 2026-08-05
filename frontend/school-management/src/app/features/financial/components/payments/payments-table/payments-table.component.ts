@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { TableComponent } from '../../../../../shared/components/data-display/table/table.component';
-import { TableColumn } from '../../../../../core/models/domain/table-column.model';
+import { TableComponent } from '../../../../../shared/components/data-display/tables/table/table.component';
+import { TableColumn } from '../../../../../shared/components/data-display/tables/table/table-column.model';
 import { CurrencyMXNPipe } from '../../../../../shared/pipes/currency-mxn.pipe';
 import { PaymentsResponse } from '../../../models/payments/payments-response.model';
 

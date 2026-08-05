@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PublicLayoutComponent } from '../../../../layouts/public-layout/public-layout.component';
 import { NAVIGATION } from '../../../../core/navigation/navigation.config';
 import { NavigationService } from '../../../../core/services/navigation.service';
-import { AuthService } from '../../../../core/api/auth.api.service';
+import { AuthService } from '../../../../core/api/auth/auth.api.service';
 
 @Component({
   selector: 'app-email-verification',

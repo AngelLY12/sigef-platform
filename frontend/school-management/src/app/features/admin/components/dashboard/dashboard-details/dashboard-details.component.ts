@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { AlertItem, AlertsListComponent } from '../../../../../shared/components/feedback/alerts-list/alerts-list.component';
-import { ProgressItem, ProgressListComponent } from '../../../../../shared/components/data-display/progress-list/progress-list.component';
-import { DemographicItem, DemographicsGridComponent } from '../../../../../shared/components/data-display/demographics-grid/demographics-grid.component';
-import { InfoCardComponent } from '../../../../../shared/components/data-display/info-card/info-card.component';
+import { ProgressItem, ProgressListComponent } from '../../../../../shared/components/data-display/lists/progress-list/progress-list.component';
+import { DemographicItem, DemographicsGridComponent } from '../../../../../shared/components/data-display/metrics/demographics-grid/demographics-grid.component';
 import { SectionDividerComponent } from '../../../../../shared/components/layout/section-divider/section-divider.component';
 import { DashboardSummary } from '../../../models/response/dashboard-summary.model';
 import { getPercentage } from '../../../../../core/helpers';
+import { InfoCardComponent } from '../../../../../shared/components/data-display/cards/info-card/info-card.component';
 
 @Component({
   selector: 'app-dashboard-details',

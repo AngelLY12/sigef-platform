@@ -8,12 +8,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
-import { InputComponent } from '../../../../shared/components/form/input/input.component';
+import { InputComponent } from '../../../../shared/components/form/controls/input/input.component';
 import { AuthLayoutComponent } from '../../../../layouts/auth-layout/auth-layout.component';
 import { AuthNavigationHelper } from '../../../../core/helpers/navigation/auth-navigation.helper';
 import { NavigationService } from '../../../../core/services/navigation.service';
-import { AuthService } from '../../../../core/api/auth.api.service';
-import { PasswordInputComponent } from '../../../../shared/components/form/password-input/password-input.component';
+import { AuthService } from '../../../../core/api/auth/auth.api.service';
+import { PasswordInputComponent } from '../../../../shared/components/form/controls/password-input/password-input.component';
 
 @Component({
   selector: 'app-login',

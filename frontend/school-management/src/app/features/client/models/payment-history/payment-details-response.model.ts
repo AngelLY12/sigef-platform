@@ -1,4 +1,4 @@
-import { PaymentMethodDetails } from "../../../../core/models/domain/payment-method-details-type.model";
+import { PaymentMethodDetails } from "./payment-method-details-type.model";
 
 export interface PaymentDetailsResponse {
   id: number;

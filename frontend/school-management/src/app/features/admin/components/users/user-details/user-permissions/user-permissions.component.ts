@@ -1,6 +1,6 @@
 import { Permission } from './../../../../../../core/models/types/permissions.type';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { InfoCardItemComponent } from '../../../../../../shared/components/data-display/info-card-item/info-card-item.component';
+import { InfoCardItemComponent } from '../../../../../../shared/components/data-display/cards/info-card-item/info-card-item.component';
 import { ExpandableSectionComponent } from '../../../../../../shared/components/layout/expandable-section/expandable-section.component';
 import { PermissionsHelper } from '../../../../../../core/utils/permissions-helper.utils';
 import { ButtonComponent } from '../../../../../../shared/components/ui/button/button.component';

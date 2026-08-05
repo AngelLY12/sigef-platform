@@ -5,11 +5,7 @@
   <div class="analysis-kpis">
     @for (kpi of kpiCards; track kpi.label) {
       <app-kpi-card
-      [icon]="kpi.icon"
-      [iconType]="kpi.iconType"
-      [label]="kpi.label"
-      [value]="kpi.value"
-      [subtext]="kpi.subtext"/>
+      [item]="kpi"/>
     }
   </div>
   <div class="analysis-content">

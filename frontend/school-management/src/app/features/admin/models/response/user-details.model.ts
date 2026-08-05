@@ -1,4 +1,4 @@
-import { Address } from '../../../../core/models/domain/address.model';
+import { Address } from '../../../../core/models/domain/address/address.model';
 import { Role } from '../../../../core/models/enums/role.enum';
 import { Permission } from '../../../../core/models/types/permissions.type';
 

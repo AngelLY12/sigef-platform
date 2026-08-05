@@ -1,4 +1,4 @@
-import { Address } from "../../../core/models/domain/address.model";
+import { Address } from "../../../core/models/domain/address/address.model";
 
 export interface UserProfile {
   id: number,

@@ -1,0 +1,37 @@
+<app-page-layout
+  title="Padres o tutores"
+  welcomeMessage="Gestión de los padres o tutores de los estudiantes."
+  loadingMessage="Cargando tutores..."
+  icon="supervisor_account"
+  [iconClickeable]="true"
+  [state]="loading"
+  [refreshable]="true"
+  [refreshing]="loading === 'loading'"
+  (refresh)="onRefreshData()"
+>
+  <app-folder-tabs [actionsTemplate]="actions">
+    <app-record-list
+      [items]="parentsList"
+      [itemTemplate]="userTemplate"
+      [imageTemplate]="avatarTemplate"
+      [trackByKey]="'id'"
+    />
+  </app-folder-tabs>
+</app-page-layout>
+
+<ng-template #actions>
+  <app-button
+    variant="primary"
+    iconLeft="person_add"
+    (click)="onInviteParentClick()"
+  >
+    Invitar padre
+  </app-button>
+</ng-template>
+
+<ng-template #userTemplate let-item >
+  <app-relation-item [item]="item" [showRemoveBtn]="true" (remove)="onDeleteRelation($event)"></app-relation-item>
+</ng-template>
+<ng-template #avatarTemplate let-item >
+  <app-relation-avatar [fullName]="item.fullName"></app-relation-avatar>
+</ng-template>

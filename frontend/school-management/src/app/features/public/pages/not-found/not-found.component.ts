@@ -4,7 +4,7 @@ import { PublicLayoutComponent } from '../../../../layouts/public-layout/public-
 import { Router } from '@angular/router';
 import { NavigationService } from '../../../../core/services/navigation.service';
 import { NAVIGATION } from '../../../../core/navigation/navigation.config';
-import { AuthService } from '../../../../core/api/auth.api.service';
+import { AuthService } from '../../../../core/api/auth/auth.api.service';
 
 @Component({
   selector: 'app-not-found',

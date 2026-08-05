@@ -5,6 +5,8 @@ import { PendingConceptsComponent } from './pages/pending-concepts/pending-conce
 import { CardsComponent } from './pages/cards/cards.component';
 import { PaymentHistoryComponent } from './pages/payment-history/payment-history.component';
 import { PaymentDetailsComponent } from './pages/payment-details/payment-details.component';
+import { ParentsComponent } from './pages/parents/parents.component';
+import { ChildrenComponent } from './pages/children/children.component';
 
 export const CLIENT_ROUTES: Routes = [
   {
@@ -36,7 +38,16 @@ export const CLIENT_ROUTES: Routes = [
       {
         path: 'payment/:id',
         component: PaymentDetailsComponent
-      }
+      },
+      {
+        path: 'parents',
+        component: ParentsComponent
+      },
+      {
+        path: 'children',
+        component: ChildrenComponent,
+
+      },
     ],
   },
 ];

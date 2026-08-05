@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { PageLayoutComponent } from '../../../../shared/components/navigation/page-layout/page-layout.component';
+import { PageLayoutComponent } from '../../../../shared/components/layout/page-layout/page-layout.component';
 import { LoadingState } from '../../../../core/models/types/loading-state.type';
 import { CardsListResponse } from '../../models/cards/cards-list-response.model';
-import { CardsApiService } from '../../../../core/api/students/cards.api.service';
+import { CardsApiService } from '../../../../core/api/payments/students/cards.api.service';
 import { CardsListComponent } from '../../components/cards-list/cards-list.component';
 import { ModalService } from '../../../../core/services/modal.service';
 

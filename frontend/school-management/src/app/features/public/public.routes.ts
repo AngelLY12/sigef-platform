@@ -5,9 +5,9 @@ import { MaintenanceComponent } from "./pages/maintenance/maintenance.component"
 import { UnauthorizedComponent } from "./pages/unauthorized/unauthorized.component";
 import { RoleSelectorPageComponent } from "./pages/role-selector-page/role-selector-page.component";
 import { protectedGuard } from "../../core/guards/protected.guard";
-import { roleGuard } from "../../core/guards/role.guard";
 import { CheckoutSuccessComponent } from "./pages/checkout-success/checkout-success.component";
 import { CheckoutCancelComponent } from "./pages/checkout-cancel/checkout-cancel.component";
+import { EmailVerificationComponent } from "./pages/email-verification/email-verification.component";
 
 export const PUBLIC_ROUTES: Routes = [
   {
@@ -40,6 +40,10 @@ export const PUBLIC_ROUTES: Routes = [
   {
     path: 'checkout/cancel',
     component: CheckoutCancelComponent
+  },
+  {
+    path:'email-verification',
+    component: EmailVerificationComponent
   },
   {path: '**', redirectTo: '/common/404'}
 

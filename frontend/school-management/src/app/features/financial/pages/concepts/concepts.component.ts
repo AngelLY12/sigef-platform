@@ -1,10 +1,9 @@
 import { Paginated } from './../../../../core/utils/paginated-helper.utils';
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { InfoCardComponent } from '../../../../shared/components/data-display/info-card/info-card.component';
-import { PageLayoutComponent } from '../../../../shared/components/navigation/page-layout/page-layout.component';
-import { PaginatorComponent } from '../../../../shared/components/data-display/paginator/paginator.component';
-import { PaymentConceptApiService } from '../../../../core/api/financial-staff/payment-concepts.api.service';
+import { PageLayoutComponent } from '../../../../shared/components/layout/page-layout/page-layout.component';
+import { PaginatorComponent } from '../../../../shared/components/data-controls/paginator/paginator.component';
+import { PaymentConceptApiService } from '../../../../core/api/payments/financial-staff/payment-concepts.api.service';
 import { ConceptsListResponse } from '../../models/concepts/concepts-list.response.model';
 import {
   ConceptsParams,
@@ -15,24 +14,22 @@ import { Router } from '@angular/router';
 import { ModalService } from '../../../../core/services/modal.service';
 import { LoadingState } from '../../../../core/models/types/loading-state.type';
 import { QueryParamsHelper } from '../../../../core/utils/query-params-helper.utils';
-import { FilterBarComponent } from '../../../../shared/components/features/filter-bar/filter-bar.component';
+import { FilterBarComponent } from '../../../../shared/components/data-controls/filter-bar/filter-bar.component';
 import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
-import { CurrencyMXNPipe } from '../../../../shared/pipes/currency-mxn.pipe';
 import { ConceptCreatedFormComponent } from '../../components/concepts/concept-created-form/concept-created-form.component';
-import { DropdownComponent } from '../../../../shared/components/layout/dropdown/dropdown.component';
-import { MenuItemComponent } from '../../../../shared/components/navigation/menu-item/menu-item.component';
 import { PaymentConceptStatus } from '../../../../core/models/enums/payment-concepts-status.enum';
-import { EMPTY, Observable } from 'rxjs';
 import { enumToOptions } from '../../../../core/utils/enum-helper.utils';
 import { FormsModule } from '@angular/forms';
 import { FINANCIAL_NAVIGATION } from '../../../../core/navigation/financial-staff-navigation.config';
-import { FolderTab } from '../../../../core/models/domain/folder-tabs-config.model';
+import { FolderTab } from '../../../../shared/components/navigation/folder-tabs/folder-tabs-config.model';
 import { FolderTabsComponent } from '../../../../shared/components/navigation/folder-tabs/folder-tabs.component';
 import { EmptyStateComponent } from '../../../../shared/components/feedback/empty-state/empty-state.component';
 import { ConceptActionsComponent } from '../../components/concepts/concept-actions/concept-actions.component';
 import { ConceptCardComponent } from '../../components/concepts/concept-card/concept-card.component';
 import { CONCEPT_LIST_TABS } from '../../config/financial.config';
 import { ConceptsActionsService } from '../../services/concepts-actions.service';
+import { InfoCardComponent } from '../../../../shared/components/data-display/cards/info-card/info-card.component';
+import { InfoCardConfig } from '../../../../shared/components/data-display/cards/info-card/info-card-config.model';
 
 @Component({
   selector: 'app-concepts',

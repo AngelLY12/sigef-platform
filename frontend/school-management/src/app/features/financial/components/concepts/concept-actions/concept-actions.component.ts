@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { DropdownComponent } from '../../../../../shared/components/layout/dropdown/dropdown.component';
+import { DropdownComponent } from '../../../../../shared/components/overlays/dropdown/dropdown.component';
 import { MenuItemComponent } from '../../../../../shared/components/navigation/menu-item/menu-item.component';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button.component';
 import { ConceptsListResponse } from '../../../models/concepts/concepts-list.response.model';

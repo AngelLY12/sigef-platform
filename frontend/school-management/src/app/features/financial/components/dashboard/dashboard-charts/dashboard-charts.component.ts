@@ -1,12 +1,12 @@
 import { PaymentsData } from './../../../models/dashboard/payments.response.model';
 import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { ChartCardComponent } from '../../../../../shared/components/data-display/chart-card/chart-card.component';
+import { ChartCardComponent } from '../../../../../shared/components/data-display/charts/chart-card/chart-card.component';
 import { AnalysisCardComponent } from '../analysis-card/analysis-card.component';
 import { SectionDividerComponent } from '../../../../../shared/components/layout/section-divider/section-divider.component';
 import { ChartService } from '../../../../../core/services/chart.service';
 import { ChartConfiguration, ChartData } from 'chart.js';
 import { PaymentKpiGroup } from '../../../models/payments/payments-kpi-group.type';
-import { KpiCardConfig } from '../../../../../core/models/domain/kpi-card-config.model';
+import { KpiCardConfig } from '../../../../../shared/components/data-display/cards/kpi-card/kpi-card-config.model';
 
 @Component({
   selector: 'app-dashboard-charts',

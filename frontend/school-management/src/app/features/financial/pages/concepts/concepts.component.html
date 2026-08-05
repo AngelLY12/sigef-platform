@@ -31,10 +31,12 @@
       <div class="concepts-grid">
         @for (concept of paginatedConcepts.data.items; track concept.id) {
           <app-info-card
-            [title]="concept.concept_name"
-            [loading]="isLoading(concept.id)"
-            icon="receipt_long"
-            [defaultExpanded]="true"
+            [item]="{
+              title: concept.concept_name,
+              icon: 'receipt_long',
+              loading: isLoading(concept.id),
+              defaultExpanded: true,
+            }"
             [actionConfig]="{
               listActionsTemplate: actionsTpl,
             }"

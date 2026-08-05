@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { InfoCardItemConfig } from '../../../../../../core/models/domain/cards/info-card-item-config.model';
-import { InfoCardItemComponent } from '../../../../../../shared/components/data-display/info-card-item/info-card-item.component';
+import { InfoCardItemConfig } from '../../../../../../shared/components/data-display/cards/info-card-item/info-card-item-config.model';
+import { InfoCardItemComponent } from '../../../../../../shared/components/data-display/cards/info-card-item/info-card-item.component';
 import { UserStudentDetail } from '../../../../models/response/user-details.model';
 import { ButtonComponent } from '../../../../../../shared/components/ui/button/button.component';
 

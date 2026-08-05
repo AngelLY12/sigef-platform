@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { InfoCardItemConfig } from '../../../../../../core/models/domain/cards/info-card-item-config.model';
+import { InfoCardItemConfig } from '../../../../../../shared/components/data-display/cards/info-card-item/info-card-item-config.model';
 import { UserBasicInfo } from '../../../../models/response/user-details.model';
-import { InfoCardItemComponent } from '../../../../../../shared/components/data-display/info-card-item/info-card-item.component';
+import { InfoCardItemComponent } from '../../../../../../shared/components/data-display/cards/info-card-item/info-card-item.component';
 
 @Component({
   selector: 'app-user-basic-info',

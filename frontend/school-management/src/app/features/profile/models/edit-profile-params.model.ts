@@ -1,4 +1,4 @@
-import { Address } from "../../../core/models/domain/address.model";
+import { Address } from "../../../core/models/domain/address/address.model";
 import { BloodType } from "../../../core/models/types/blood-type.type";
 import { Gender } from "../../../core/models/types/gender.type";
 

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CheckboxComponent } from '../../../../../../shared/components/form/checkbox/checkbox.component';
+import { CheckboxComponent } from '../../../../../../shared/components/form/controls/checkbox/checkbox.component';
 import { MenuComponent } from '../../../../../../shared/components/navigation/menu/menu.component';
 import { MenuItemComponent } from '../../../../../../shared/components/navigation/menu-item/menu-item.component';
 import { ButtonComponent } from '../../../../../../shared/components/ui/button/button.component';

@@ -1,28 +1,17 @@
 import { CommonModule, Location } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { PaymentHistoryApiService } from '../../../../core/api/students/payment-history.api.service';
+import { PaymentHistoryApiService } from '../../../../core/api/payments/students/payment-history.api.service';
 import { LoadingState } from '../../../../core/models/types/loading-state.type';
 import { PaymentDetailsResponse } from '../../models/payment-history/payment-details-response.model';
-import { PageLayoutComponent } from '../../../../shared/components/navigation/page-layout/page-layout.component';
-import { InfoCardComponent } from '../../../../shared/components/data-display/info-card/info-card.component';
+import { PageLayoutComponent } from '../../../../shared/components/layout/page-layout/page-layout.component';
 import { ActivatedRoute } from '@angular/router';
-import { InfoCardItemComponent } from '../../../../shared/components/data-display/info-card-item/info-card-item.component';
-import {
-  CardPaymentMethod,
-  OxxoPaymentMethod,
-  PaymentMethodDetails,
-  SpeiPaymentMethod,
-} from '../../../../core/models/domain/payment-method-details-type.model';
-import { AnchorComponent } from '../../../../shared/components/ui/anchor/anchor.component';
-import { CurrencyMXNPipe } from '../../../../shared/pipes/currency-mxn.pipe';
 import { ModalService } from '../../../../core/services/modal.service';
 import { PaymentReceiptResponse } from '../../models/payment-history/payment-receipt-response.model';
-import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
 import { PaymentSummaryComponent } from '../../components/payment-details/payment-summary/payment-summary.component';
 import { PaymentMethodComponent } from '../../components/payment-details/payment-method/payment-method.component';
 import { PaymentActionsComponent } from '../../components/payment-details/payment-actions/payment-actions.component';
 import { FolderTabsComponent } from '../../../../shared/components/navigation/folder-tabs/folder-tabs.component';
-import { FolderTab } from '../../../../core/models/domain/folder-tabs-config.model';
+import { FolderTab } from '../../../../shared/components/navigation/folder-tabs/folder-tabs-config.model';
 import { PAYMENT_DETAILS_TABS } from '../../config/client.config';
 
 @Component({

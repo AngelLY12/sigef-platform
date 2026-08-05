@@ -1,18 +1,31 @@
-import { inject, Injectable } from "@angular/core";
-import { AdminService } from "../../../core/api/admin.api.service";
-import { ModalService } from "../../../core/services/modal.service";
-import { LoadingState } from "../../../core/models/types/loading-state.type";
-import { RolesHelper } from "../../../core/utils/roles-helper";
-import { UsersRoles } from "../../../core/models/responses/update-roles-bulk-response.model";
-import { PermissionsSteperComponent } from "../components/permissions-steper/permissions-steper.component";
-import { Observable } from "rxjs";
-import { BulkHelper } from "../../../core/utils/bulk-helper.utils";
-import { UserListItem } from "../models/response/user-list-item.model";
+import { inject, Injectable } from '@angular/core';
+import { AdminService } from '../../../core/api/admin/admin.api.service';
+import { ModalService } from '../../../core/services/modal.service';
+import { LoadingState } from '../../../core/models/types/loading-state.type';
+import { RolesHelper } from '../../../core/utils/roles-helper';
+import { UsersRoles } from '../models/response/permissions/update-roles-bulk-response.model';
+import { PermissionsSteperComponent } from '../components/permissions-steper/permissions-steper.component';
+import { Observable } from 'rxjs';
+import { BulkHelper } from '../../../core/utils/bulk-helper.utils';
+import { UserListItem } from '../models/response/user-list-item.model';
+import { RegisterUsersComponent } from '../components/users/management/register-users/register-users.component';
 
 @Injectable({ providedIn: 'root' })
 export class UserBulkActionsService {
-   private adminService = inject(AdminService);
+  private adminService = inject(AdminService);
   private modalService = inject(ModalService);
+
+  createUser(onSuccess: () => void): void {
+    this.modalService.openCustom({
+      title: 'Crear usuario',
+      component: RegisterUsersComponent,
+      onClose: (result: LoadingState) => {
+        if (result === 'success') {
+          onSuccess();
+        }
+      },
+    });
+  }
 
   delete(
     users: UserListItem[],
@@ -82,10 +95,7 @@ export class UserBulkActionsService {
     });
   }
 
-  openRolesModal(
-    users: UserListItem[],
-    onUpdated: () => void,
-  ): void {
+  openRolesModal(users: UserListItem[], onUpdated: () => void): void {
     this.modalService.openActions(
       {
         title: 'Actualizar roles',

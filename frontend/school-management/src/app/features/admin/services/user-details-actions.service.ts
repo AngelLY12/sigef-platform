@@ -1,17 +1,17 @@
 import { Injectable, inject } from '@angular/core';
-import { AdminService } from '../../../core/api/admin.api.service';
+import { AdminService } from '../../../core/api/admin/admin.api.service';
 import { ModalService } from '../../../core/services/modal.service';
 import { UserDetails } from '../models/response/user-details.model';
-import { CareersResponse } from '../../../core/models/responses/careers-response.model';
+import { CareersResponse } from '../../../core/models/domain/careers/careers-response.model';
 import {
   AttachStudentDetailsParams,
   UpdateStudentDetailsParams,
 } from '../../../core/models/domain/student-details-params.model';
 import { RolesHelper } from '../../../core/utils/roles-helper';
-import { RolesByUser } from '../../../core/models/responses/update-roles-by-user-response.model';
+import { RolesByUser } from '../models/response/permissions/update-roles-by-user-response.model';
 import { PermissionsHelper } from '../../../core/utils/permissions-helper.utils';
-import { Permission } from '../../../core/models/domain/permissions.model';
-import { PermissionsByUser } from '../../../core/models/responses/update-permissions-by-user-response.model';
+import { Permission } from '../models/response/permissions/permissions.model';
+import { PermissionsByUser } from '../models/response/permissions/update-permissions-by-user-response.model';
 import { SelectorActionState } from '../../../core/models/types/permissions-state.type';
 
 @Injectable({ providedIn: 'root' })

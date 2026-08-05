@@ -2,41 +2,49 @@
 
 <div class="kpi-grid">
   <app-kpi-card
-    icon="people"
-    iconType="total"
-    label="Total Usuarios"
-    [value]="summary.populationSummary.total_users"
-    [trend]="{
-      icon: 'arrow_upward',
-      text: '+' + summary.recentActivity.new_users_today + ' hoy',
+    [item]="{
+      icon: 'people',
+      iconType: 'total',
+      label: 'Total Usuarios',
+      value: summary.populationSummary.total_users,
+      trend: {
+        icon: 'arrow_upward',
+        text: '+' + summary.recentActivity.new_users_today + ' hoy',
+      },
     }"
   >
   </app-kpi-card>
 
   <app-kpi-card
-    icon="check_circle"
-    iconType="active"
-    label="Usuarios Activos"
-    [value]="summary.populationSummary.active_users"
-    [percentage]="usersPercentage"
+    [item]="{
+      icon: 'check_circle',
+      iconType: 'active',
+      label: 'Usuarios Activos',
+      value: summary.populationSummary.active_users,
+      percentage: usersPercentage,
+    }"
   >
   </app-kpi-card>
 
   <app-kpi-card
-    icon="school"
-    iconType="students"
-    label="Estudiantes"
-    [value]="summary.academicSummary.students_total"
-    [subtext]="summary.academicSummary.students_with_career + ' con carrera'"
+    [item]="{
+      icon: 'school',
+      iconType: 'students',
+      label: 'Estudiantes',
+      value: summary.academicSummary.students_total,
+      subtext: summary.academicSummary.students_with_career + ' con carrera',
+    }"
   >
   </app-kpi-card>
 
   <app-kpi-card
-    icon="warning"
-    iconType="alerts"
-    label="Alertas"
-    [value]="totalAlerts"
-    subtext="Requieren atención"
+    [item]="{
+      icon: 'warning',
+      iconType: 'alerts',
+      label: 'Alertas',
+      value: totalAlerts,
+      subtext: 'Requieren atención',
+    }"
     [class.has-alerts]="hasAlerts"
   >
   </app-kpi-card>

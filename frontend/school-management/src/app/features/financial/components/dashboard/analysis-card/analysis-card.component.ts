@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { KpiCardComponent } from '../../../../../shared/components/data-display/kpi-card/kpi-card.component';
-import { KpiCardConfig } from '../../../../../core/models/domain/kpi-card-config.model';
+import { KpiCardComponent } from '../../../../../shared/components/data-display/cards/kpi-card/kpi-card.component';
+import { KpiCardConfig } from '../../../../../shared/components/data-display/cards/kpi-card/kpi-card-config.model';
 
 @Component({
   selector: 'app-analysis-card',

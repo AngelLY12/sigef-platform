@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { DashboardService } from '../../../../core/api/financial-staff/dashboard.api.service';
-import { PageLayoutComponent } from '../../../../shared/components/navigation/page-layout/page-layout.component';
+import { DashboardService } from '../../../../core/api/payments/financial-staff/dashboard.api.service';
+import { PageLayoutComponent } from '../../../../shared/components/layout/page-layout/page-layout.component';
 import { LoadingState } from '../../../../core/models/types/loading-state.type';
 import { TotalPending } from '../../models/dashboard/pendig-concept.response.model';
 import { TotalStudents } from '../../models/dashboard/students-summary.response.model';

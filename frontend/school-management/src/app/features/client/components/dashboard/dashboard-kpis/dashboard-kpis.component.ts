@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { PaidData } from '../../../models/dashboard/paid-concepts-response.model';
 import { TotalPending } from '../../../models/dashboard/pending-concepts-response.model';
-import { KpiCardComponent } from '../../../../../shared/components/data-display/kpi-card/kpi-card.component';
+import { KpiCardComponent } from '../../../../../shared/components/data-display/cards/kpi-card/kpi-card.component';
 import { CurrencyMXNPipe } from '../../../../../shared/pipes/currency-mxn.pipe';
 import { getPercentage } from '../../../../../core/helpers';
 

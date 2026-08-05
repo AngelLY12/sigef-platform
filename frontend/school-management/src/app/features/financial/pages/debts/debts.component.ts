@@ -1,7 +1,7 @@
 import { Paginated } from './../../../../core/utils/paginated-helper.utils';
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, inject, OnInit } from '@angular/core';
-import { DebtsApiService } from '../../../../core/api/financial-staff/debts.api.service';
+import { DebtsApiService } from '../../../../core/api/payments/financial-staff/debts.api.service';
 import { ModalService } from '../../../../core/services/modal.service';
 import { ListController } from '../../../../core/utils/list-controller.utils';
 import {
@@ -10,19 +10,19 @@ import {
 } from '../../models/debts/debts-params.model';
 import { DebtsList } from '../../models/debts/debts-list-response.model';
 import { LoadingState } from '../../../../core/models/types/loading-state.type';
-import { PageLayoutComponent } from '../../../../shared/components/navigation/page-layout/page-layout.component';
-import { TableComponent } from '../../../../shared/components/data-display/table/table.component';
-import { PaginatorComponent } from '../../../../shared/components/data-display/paginator/paginator.component';
+import { PageLayoutComponent } from '../../../../shared/components/layout/page-layout/page-layout.component';
+import { TableComponent } from '../../../../shared/components/data-display/tables/table/table.component';
+import { PaginatorComponent } from '../../../../shared/components/data-controls/paginator/paginator.component';
 import { QueryParamsHelper } from '../../../../core/utils/query-params-helper.utils';
 import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
-import { InputComponent } from '../../../../shared/components/form/input/input.component';
+import { InputComponent } from '../../../../shared/components/form/controls/input/input.component';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { StripePaymentsComponent } from '../stripe-payments/stripe-payments.component';
 import { EmptyStateComponent } from '../../../../shared/components/feedback/empty-state/empty-state.component';
 import { FolderTabsComponent } from '../../../../shared/components/navigation/folder-tabs/folder-tabs.component';
-import { FolderTab } from '../../../../core/models/domain/folder-tabs-config.model';
+import { FolderTab } from '../../../../shared/components/navigation/folder-tabs/folder-tabs-config.model';
 import { DEBTS_LIST_TABS } from '../../config/financial.config';
-import { FilterBarComponent } from '../../../../shared/components/features/filter-bar/filter-bar.component';
+import { FilterBarComponent } from '../../../../shared/components/data-controls/filter-bar/filter-bar.component';
 
 @Component({
   selector: 'app-debts',

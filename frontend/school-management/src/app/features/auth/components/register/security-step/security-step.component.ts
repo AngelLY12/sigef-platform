@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { PasswordInputComponent } from '../../../../../shared/components/form/password-input/password-input.component';
+import { PasswordInputComponent } from '../../../../../shared/components/form/controls/password-input/password-input.component';
 
 @Component({
   selector: 'app-security-step',

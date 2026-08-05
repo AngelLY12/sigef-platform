@@ -2,20 +2,20 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { PermissionsHelper } from '../../../../core/utils/permissions-helper.utils';
-import { AdminService } from '../../../../core/api/admin.api.service';
+import { AdminService } from '../../../../core/api/admin/admin.api.service';
 import { RolesHelper } from '../../../../core/utils/roles-helper';
 import { ModalService } from '../../../../core/services/modal.service';
-import { SelectComponent } from '../../../../shared/components/form/select/select.component';
-import { RadioGroupComponent } from '../../../../shared/components/form/radio-group/radio-group.component';
-import { StepperComponent } from '../../../../shared/components/features/stepper/stepper.component';
+import { RadioGroupComponent } from '../../../../shared/components/form/controls/radio-group/radio-group.component';
 import { Role } from '../../../../core/models/enums/role.enum';
 import { UpdatePermissionsBulk } from '../../models/request/update-permissions-bulk.model';
 import { SelectorActionState } from '../../../../core/models/types/permissions-state.type';
-import { GroupedOption } from '../../../../core/models/domain/action-field.modal';
-import { PermissionsByCurps } from '../../../../core/models/responses/permissions-by-curp-response.model';
+import { PermissionsByCurps } from '../../models/response/permissions/permissions-by-curp-response.model';
 import { GroupStateSelectorListComponent } from '../../../../shared/components/form/selector/group-state-selector-list/group-state-selector-list.component';
 import { LoadingState } from '../../../../core/models/types/loading-state.type';
 import { UserListItem } from '../../models/response/user-list-item.model';
+import { SelectComponent } from '../../../../shared/components/form/controls/select/select.component';
+import { StepperComponent } from '../../../../shared/components/form/layouts/stepper/stepper.component';
+import { GroupedOption } from '../../../../shared/components/form/selector/group-state-selector-list/grouped-option.config.model';
 
 @Component({
   selector: 'app-permissions-steper',
@@ -151,7 +151,7 @@ export class PermissionsSteperComponent {
 
   initPermissionsState() {
     this.permissionsState = {};
-    this.permissionsGroups.forEach((group) => {
+    this.permissionsGroups.forEach((group: GroupedOption) => {
       group.items.forEach((p) => {
         this.permissionsState[p.value] = 'none';
       });

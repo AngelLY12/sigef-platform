@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { SectionDividerComponent } from '../../../../../shared/components/layout/section-divider/section-divider.component';
-import { TableComponent } from '../../../../../shared/components/data-display/table/table.component';
+import { TableComponent } from '../../../../../shared/components/data-display/tables/table/table.component';
 import { Paginated } from '../../../../../core/utils/paginated-helper.utils';
 import { ConceptsHistoryItems } from '../../../models/dashboard/concepts-history.response.model';
 

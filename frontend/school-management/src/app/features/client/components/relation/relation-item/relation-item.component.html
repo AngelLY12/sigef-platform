@@ -1,0 +1,16 @@
+<div class="relation-item">
+  <div class="relation-content">
+    <strong class="user-name">{{ item.fullName }}</strong>
+
+    <app-metadata-badge type="info" [text]="item.relationship" />
+  </div>
+
+  @if (showRemoveBtn) {
+    <app-button
+      variant="danger"
+      [iconOnly]="true"
+      iconLeft="delete"
+      (click)="onRemoveClick()"
+    />
+  }
+</div>

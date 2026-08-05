@@ -6,7 +6,7 @@ import { PaymentConceptStatusNotificationMetadataComponent } from '../notificati
 import { PaymentConceptNotificationMetadataComponent } from '../notification-metadata/payment-concept-notification-metadata/payment-concept-notification-metadata.component';
 import { InvitationNotificationMetadataComponent } from '../notification-metadata/invitation-notification-metadata/invitation-notification-metadata.component';
 import { ImportNotificationMetadataComponent } from '../notification-metadata/import-notification-metadata/import-notification-metadata.component';
-import { Notification } from '../../../../core/models/domain/notification.model';
+import { Notification } from '../../models/notification.model';
 import { NotificationType } from '../../../../core/models/enums/notification-type.enum';
 
 @Component({

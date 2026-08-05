@@ -1,25 +1,25 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { AdminService } from '../../../../core/api/admin.api.service';
+import { AdminService } from '../../../../core/api/admin/admin.api.service';
 import { LoadingState } from '../../../../core/models/types/loading-state.type';
-import { PageLayoutComponent } from '../../../../shared/components/navigation/page-layout/page-layout.component';
+import { PageLayoutComponent } from '../../../../shared/components/layout/page-layout/page-layout.component';
 import { Paginated } from '../../../../core/utils/paginated-helper.utils';
-import { PaginatorComponent } from '../../../../shared/components/data-display/paginator/paginator.component';
-import { RecordListComponent } from '../../../../shared/components/data-display/record-list/record-list.component';
+import { PaginatorComponent } from '../../../../shared/components/data-controls/paginator/paginator.component';
+import { RecordListComponent } from '../../../../shared/components/data-display/lists/record-list/record-list.component';
 import { NAVIGATION } from '../../../../core/navigation/navigation.config';
 import { Router } from '@angular/router';
 import { StatusHelper } from '../../../../core/utils/status-helper';
 import {
   createUserListParams,
   UserListParams,
-} from '../../../../core/models/domain/user-list-params.model';
+} from '../../models/request/user-list-params.model';
 import { FormsModule } from '@angular/forms';
 import { ListController } from '../../../../core/utils/list-controller.utils';
 import { QueryParamsHelper } from '../../../../core/utils/query-params-helper.utils';
 import { SelectionHelper } from '../../../../core/utils/selection-helpter.utils';
-import { CheckboxComponent } from '../../../../shared/components/form/checkbox/checkbox.component';
+import { CheckboxComponent } from '../../../../shared/components/form/controls/checkbox/checkbox.component';
 import { SpinnerComponent } from '../../../../shared/components/ui/spinner/spinner.component';
-import { FolderTab } from '../../../../core/models/domain/folder-tabs-config.model';
+import { FolderTab } from '../../../../shared/components/navigation/folder-tabs/folder-tabs-config.model';
 import { FolderTabsComponent } from '../../../../shared/components/navigation/folder-tabs/folder-tabs.component';
 import { UserRecordComponent } from '../../components/users/management/user-record/user-record.component';
 import { UserAvatarComponent } from '../../components/users/management/user-avatar/user-avatar.component';
@@ -27,6 +27,7 @@ import { UserBulkActionsComponent } from '../../components/users/management/user
 import { UserBulkActionsService } from '../../services/user-bulk-actions.service';
 import { USER_MANAGEMENT_TABS } from '../../config/tabs.config';
 import { UserListItem } from '../../models/response/user-list-item.model';
+import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
 
 @Component({
   selector: 'app-users-management',
@@ -43,6 +44,7 @@ import { UserListItem } from '../../models/response/user-list-item.model';
     UserRecordComponent,
     UserAvatarComponent,
     UserBulkActionsComponent,
+    ButtonComponent
   ],
   templateUrl: './users-management.component.html',
   styleUrl: './users-management.component.scss',
@@ -83,6 +85,10 @@ export class UsersManagementComponent implements OnInit {
         this.usersState = 'error';
       },
     });
+  }
+
+  onCreateUser() {
+    this.userBulkActions.createUser(() => this.onRefreshData());
   }
 
   onClickUser(user: UserListItem) {

@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { Address } from '../../../../../../core/models/domain/address.model';
-import { InfoCardItemConfig } from '../../../../../../core/models/domain/cards/info-card-item-config.model';
+import { Address } from '../../../../../../core/models/domain/address/address.model';
+import { InfoCardItemConfig } from '../../../../../../shared/components/data-display/cards/info-card-item/info-card-item-config.model';
 import { ExpandableSectionComponent } from '../../../../../../shared/components/layout/expandable-section/expandable-section.component';
-import { InfoCardItemComponent } from '../../../../../../shared/components/data-display/info-card-item/info-card-item.component';
+import { InfoCardItemComponent } from '../../../../../../shared/components/data-display/cards/info-card-item/info-card-item.component';
 
 @Component({
   selector: 'app-user-address',

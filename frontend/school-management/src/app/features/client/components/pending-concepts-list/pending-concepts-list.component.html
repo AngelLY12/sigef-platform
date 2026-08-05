@@ -1,7 +1,10 @@
 @if (concepts.length > 0) {
   <div class="concepts-grid">
     @for (concept of concepts; track concept.id) {
-      <app-info-card [title]="concept.concept_name" icon="receipt_long">
+      <app-info-card [item]="{
+        title: concept.concept_name,
+        icon: 'receipt_long'
+      }">
         <div class="concept-card">
           <div class="concept-header">
             <div class="concept-amount">

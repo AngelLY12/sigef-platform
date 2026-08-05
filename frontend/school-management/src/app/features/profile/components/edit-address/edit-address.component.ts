@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { AddressComponent } from '../../../../shared/components/features/address/address.component';
 import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
-import { ProfileService } from '../../../../core/api/profile.api.service';
+import { ProfileService } from '../../../../core/api/users/profile.api.service';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Address } from '../../../../core/models/domain/address.model';
+import { Address } from '../../../../core/models/domain/address/address.model';
 import { ModalService } from '../../../../core/services/modal.service';
 import { LoadingState } from '../../../../core/models/types/loading-state.type';
+import { AddressComponent } from '../../../../shared/components/form/sections/address/address.component';
 
 @Component({
   selector: 'app-edit-address',

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { KpiCardComponent } from '../../../../../shared/components/data-display/kpi-card/kpi-card.component';
+import { KpiCardComponent } from '../../../../../shared/components/data-display/cards/kpi-card/kpi-card.component';
 import { CurrencyMXNPipe } from '../../../../../shared/pipes/currency-mxn.pipe';
 import { TotalPending } from '../../../models/dashboard/pendig-concept.response.model';
 import { TotalStudents } from '../../../models/dashboard/students-summary.response.model';

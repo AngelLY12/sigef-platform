@@ -1,20 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, inject, OnInit } from '@angular/core';
-import { PageLayoutComponent } from '../../../../shared/components/navigation/page-layout/page-layout.component';
-import { PaymentConceptApiService } from '../../../../core/api/financial-staff/payment-concepts.api.service';
+import { Component, inject, OnInit } from '@angular/core';
+import { PageLayoutComponent } from '../../../../shared/components/layout/page-layout/page-layout.component';
+import { PaymentConceptApiService } from '../../../../core/api/payments/financial-staff/payment-concepts.api.service';
 import { ActivatedRoute } from '@angular/router';
 import { LoadingState } from '../../../../core/models/types/loading-state.type';
 import { ConceptDetailResponse } from '../../models/concepts/concept-detail-response.model';
 import { CurrencyMXNPipe } from '../../../../shared/pipes/currency-mxn.pipe';
-import { InfoCardItemComponent } from '../../../../shared/components/data-display/info-card-item/info-card-item.component';
+import { InfoCardItemComponent } from '../../../../shared/components/data-display/cards/info-card-item/info-card-item.component';
 import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
 import { catchError, forkJoin, of } from 'rxjs';
 import { ConceptRelationsResponse } from '../../models/concepts/concept-relations-response.model';
-import { CareersService } from '../../../../core/api/careers.api.service';
-import { CareersResponse } from '../../../../core/models/responses/careers-response.model';
+import { CareersService } from '../../../../core/api/academics/careers.api.service';
+import { CareersResponse } from '../../../../core/models/domain/careers/careers-response.model';
 import { ModalService } from '../../../../core/services/modal.service';
 import { ConceptEditFormComponent } from '../../components/concepts/concept-edit-form/concept-edit-form.component';
-import { FolderTab } from '../../../../core/models/domain/folder-tabs-config.model';
+import { FolderTab } from '../../../../shared/components/navigation/folder-tabs/folder-tabs-config.model';
 import { FolderTabsComponent } from '../../../../shared/components/navigation/folder-tabs/folder-tabs.component';
 
 @Component({

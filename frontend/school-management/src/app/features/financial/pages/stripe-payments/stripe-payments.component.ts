@@ -6,10 +6,9 @@ import {
   inject,
   Input,
   OnChanges,
-  OnInit,
   SimpleChanges,
 } from '@angular/core';
-import { DebtsApiService } from '../../../../core/api/financial-staff/debts.api.service';
+import { DebtsApiService } from '../../../../core/api/payments/financial-staff/debts.api.service';
 import { StripePaymentsParams } from '../../models/debts/stripe-payments-params.model';
 import { LoadingState } from '../../../../core/models/types/loading-state.type';
 import { StripePaymentsResponse } from '../../models/debts/stripe-payments-response.model';

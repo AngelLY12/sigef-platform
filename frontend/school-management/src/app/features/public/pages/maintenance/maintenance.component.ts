@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { PublicLayoutComponent } from '../../../../layouts/public-layout/public-layout.component';
-import { Router } from '@angular/router';
-import { AuthService } from '../../../../core/api/auth.api.service';
+import { AuthService } from '../../../../core/api/auth/auth.api.service';
 
 @Component({
   selector: 'app-maintenance',

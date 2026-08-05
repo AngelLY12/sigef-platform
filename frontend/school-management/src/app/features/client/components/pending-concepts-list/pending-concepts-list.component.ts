@@ -2,9 +2,9 @@ import { EmptyStateComponent } from './../../../../shared/components/feedback/em
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PendingConceptsResponse } from '../../models/pending-concepts/pending-concepts-response.model';
-import { InfoCardComponent } from '../../../../shared/components/data-display/info-card/info-card.component';
-import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
 import { CurrencyMXNPipe } from '../../../../shared/pipes/currency-mxn.pipe';
+import { InfoCardComponent } from '../../../../shared/components/data-display/cards/info-card/info-card.component';
+import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
 
 @Component({
   selector: 'app-pending-concepts-list',

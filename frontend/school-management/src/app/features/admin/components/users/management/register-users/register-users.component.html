@@ -1,0 +1,23 @@
+<app-stepper
+  [steps]="steps"
+  [currentStep]="currentStep"
+  [canProceed]="isCurrentStepValid()"
+  (nextStep)="nextStep()"
+  (prevStep)="prevStep()"
+  (completed)="submit()"
+>
+  <div [formGroup]="form">
+    @if (currentStep === 0) {
+      <app-personal-step [form]="form"></app-personal-step>
+    }
+    @if (currentStep === 1) {
+      <app-contact-step [form]="form"></app-contact-step>
+    }
+    @if (currentStep === 2) {
+      <app-address
+        [control]="form.controls.address"
+        [customErrors]="addressCustomErrors"
+      ></app-address>
+    }
+  </div>
+</app-stepper>

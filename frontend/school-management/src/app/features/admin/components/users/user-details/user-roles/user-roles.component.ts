@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Role } from '../../../../../../core/models/enums/role.enum';
 import { RolesHelper } from '../../../../../../core/utils/roles-helper';
-import { InfoCardItemConfig } from '../../../../../../core/models/domain/cards/info-card-item-config.model';
-import { InfoCardItemComponent } from '../../../../../../shared/components/data-display/info-card-item/info-card-item.component';
+import { InfoCardItemConfig } from '../../../../../../shared/components/data-display/cards/info-card-item/info-card-item-config.model';
+import { InfoCardItemComponent } from '../../../../../../shared/components/data-display/cards/info-card-item/info-card-item.component';
 import { ButtonComponent } from '../../../../../../shared/components/ui/button/button.component';
 
 @Component({

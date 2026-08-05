@@ -1,0 +1,27 @@
+.relation-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.relation-content {
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+  flex: 1;
+}
+
+.user-name {
+  font-size: .9rem;
+  font-weight: 500;
+  color: var(--card-text-primary);
+}
+
+@media (max-width: 768px) {
+  .relation-item {
+    padding: .5rem;
+    border-radius: .5rem;
+    background: var(--card-bg-secondary);
+  }
+}

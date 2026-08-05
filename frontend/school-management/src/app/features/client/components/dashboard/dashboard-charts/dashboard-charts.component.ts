@@ -3,10 +3,10 @@ import { ChartService } from '../../../../../core/services/chart.service';
 import { ChartConfiguration, ChartData } from 'chart.js';
 import { PaidData } from '../../../models/dashboard/paid-concepts-response.model';
 import { TotalPending } from '../../../models/dashboard/pending-concepts-response.model';
-import { ChartCardComponent } from '../../../../../shared/components/data-display/chart-card/chart-card.component';
+import { ChartCardComponent } from '../../../../../shared/components/data-display/charts/chart-card/chart-card.component';
 import { SectionDividerComponent } from '../../../../../shared/components/layout/section-divider/section-divider.component';
-import { ChartFooterStatsComponent } from '../../../../../shared/components/data-display/chart-footer-stats/chart-footer-stats.component';
-import { ChartStatItemConfig } from '../../../../../core/models/domain/charts/chart-stat-item-config.model';
+import { ChartFooterStatsComponent } from '../../../../../shared/components/data-display/charts/chart-footer-stats/chart-footer-stats.component';
+import { ChartStatItemConfig } from '../../../../../shared/components/data-display/charts/chart-footer-stats/chart-stat-item-config.model';
 
 @Component({
   selector: 'app-dashboard-charts',

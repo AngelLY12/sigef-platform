@@ -1,11 +1,11 @@
 import { Component, inject, Input, OnChanges } from '@angular/core';
-import { ChartCardComponent } from '../../../../../shared/components/data-display/chart-card/chart-card.component';
+import { ChartCardComponent } from '../../../../../shared/components/data-display/charts/chart-card/chart-card.component';
 import { SectionDividerComponent } from '../../../../../shared/components/layout/section-divider/section-divider.component';
-import { ChartFooterLegendComponent } from '../../../../../shared/components/data-display/chart-footer-legend/chart-footer-legend.component';
-import { ChartFooterStatsComponent } from '../../../../../shared/components/data-display/chart-footer-stats/chart-footer-stats.component';
+import { ChartFooterLegendComponent } from '../../../../../shared/components/data-display/charts/chart-footer-legend/chart-footer-legend.component';
+import { ChartFooterStatsComponent } from '../../../../../shared/components/data-display/charts/chart-footer-stats/chart-footer-stats.component';
 import { DashboardSummary } from '../../../models/response/dashboard-summary.model';
-import { ChartLegendItemConfig } from '../../../../../core/models/domain/charts/chart-legend-item-config.model';
-import { ChartStatItemConfig } from '../../../../../core/models/domain/charts/chart-stat-item-config.model';
+import { ChartLegendItemConfig } from '../../../../../shared/components/data-display/charts/chart-footer-legend/chart-legend-item-config.model';
+import { ChartStatItemConfig } from '../../../../../shared/components/data-display/charts/chart-footer-stats/chart-stat-item-config.model';
 import { ChartService } from '../../../../../core/services/chart.service';
 import { ChartConfiguration, ChartData } from 'chart.js';
 

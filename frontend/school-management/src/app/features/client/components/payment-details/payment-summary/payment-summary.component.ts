@@ -1,7 +1,7 @@
 import { Component, inject, Input } from '@angular/core';
 import { PaymentDetailsResponse } from '../../../models/payment-history/payment-details-response.model';
-import { InfoCardItemComponent } from '../../../../../shared/components/data-display/info-card-item/info-card-item.component';
-import { InfoCardItemConfig } from '../../../../../core/models/domain/cards/info-card-item-config.model';
+import { InfoCardItemComponent } from '../../../../../shared/components/data-display/cards/info-card-item/info-card-item.component';
+import { InfoCardItemConfig } from '../../../../../shared/components/data-display/cards/info-card-item/info-card-item-config.model';
 import { CurrencyMXNPipe } from '../../../../../shared/pipes/currency-mxn.pipe';
 
 @Component({

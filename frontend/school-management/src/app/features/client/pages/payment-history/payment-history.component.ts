@@ -1,9 +1,9 @@
 import { LoadingState } from './../../../../core/models/types/loading-state.type';
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { PageLayoutComponent } from '../../../../shared/components/navigation/page-layout/page-layout.component';
-import { PaymentHistoryApiService } from '../../../../core/api/students/payment-history.api.service';
-import { RecordListComponent } from '../../../../shared/components/data-display/record-list/record-list.component';
+import { PageLayoutComponent } from '../../../../shared/components/layout/page-layout/page-layout.component';
+import { PaymentHistoryApiService } from '../../../../core/api/payments/students/payment-history.api.service';
+import { RecordListComponent } from '../../../../shared/components/data-display/lists/record-list/record-list.component';
 import {
   createPaymentHistoryParams,
   PaymentHistoryParams,
@@ -11,9 +11,8 @@ import {
 import { ListController } from '../../../../core/utils/list-controller.utils';
 import { Paginated } from '../../../../core/utils/paginated-helper.utils';
 import { PaymentHistoryResponse } from '../../models/payment-history/payment-history-response.model';
-import { PaginatorComponent } from '../../../../shared/components/data-display/paginator/paginator.component';
+import { PaginatorComponent } from '../../../../shared/components/data-controls/paginator/paginator.component';
 import { QueryParamsHelper } from '../../../../core/utils/query-params-helper.utils';
-import { CurrencyMXNPipe } from '../../../../shared/pipes/currency-mxn.pipe';
 import { Router } from '@angular/router';
 import { NAVIGATION } from '../../../../core/navigation/navigation.config';
 import { PaymentHistoryItemComponent } from '../../components/payment-history-item/payment-history-item.component';

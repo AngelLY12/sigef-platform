@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { InfoCardComponent } from '../../../../../shared/components/data-display/info-card/info-card.component';
 import { ButtonComponent } from '../../../../../shared/components/ui/button/button.component';
-import { FileInputComponent } from '../../../../../shared/components/form/file-input/file-input.component';
+import { FileInputComponent } from '../../../../../shared/components/form/controls/file-input/file-input.component';
+import { InfoCardComponent } from '../../../../../shared/components/data-display/cards/info-card/info-card.component';
 
 @Component({
   selector: 'app-import-panel',

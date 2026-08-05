@@ -1,4 +1,4 @@
-import { FolderTab } from '../../../core/models/domain/folder-tabs-config.model';
+import { FolderTab } from '../../../shared/components/navigation/folder-tabs/folder-tabs-config.model';
 import { PaymentConceptStatus } from '../../../core/models/enums/payment-concepts-status.enum';
 
 export const CONCEPT_LIST_TABS: FolderTab[] = [

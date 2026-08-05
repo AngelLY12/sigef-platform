@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
-import { KpiCardComponent } from '../../../../../shared/components/data-display/kpi-card/kpi-card.component';
+import { KpiCardComponent } from '../../../../../shared/components/data-display/cards/kpi-card/kpi-card.component';
 import { DashboardSummary } from '../../../models/response/dashboard-summary.model';
 import { SectionDividerComponent } from '../../../../../shared/components/layout/section-divider/section-divider.component';
 import { CommonModule } from '@angular/common';
-import { KpiBreakdownComponent } from '../../../../../shared/components/data-display/kpi-breakdown/kpi-breakdown.component';
-import { MiniStatsComponent } from '../../../../../shared/components/data-display/mini-stats/mini-stats.component';
-import { KpiBreakdownItem } from '../../../../../core/models/domain/cards/kpi-breakdown-item.model';
-import { MiniStatItem } from '../../../../../core/models/domain/cards/mini-stat-item.model';
+import { KpiBreakdownComponent } from '../../../../../shared/components/data-display/metrics/kpi-breakdown/kpi-breakdown.component';
+import { MiniStatsComponent } from '../../../../../shared/components/data-display/metrics/mini-stats/mini-stats.component';
+import { KpiBreakdownItem } from '../../../../../shared/components/data-display/metrics/kpi-breakdown/kpi-breakdown-item.model';
+import { MiniStatItem } from '../../../../../shared/components/data-display/metrics/mini-stats/mini-stat-item.model';
 
 @Component({
   selector: 'app-dashboard-category-details',

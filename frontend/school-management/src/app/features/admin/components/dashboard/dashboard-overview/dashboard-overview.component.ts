@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { SectionDividerComponent } from '../../../../../shared/components/layout/section-divider/section-divider.component';
-import { KpiCardComponent } from '../../../../../shared/components/data-display/kpi-card/kpi-card.component';
+import { KpiCardComponent } from '../../../../../shared/components/data-display/cards/kpi-card/kpi-card.component';
 import { DashboardSummary } from '../../../models/response/dashboard-summary.model';
 import { getPercentage } from '../../../../../core/helpers';
 
