@@ -1,18 +1,22 @@
-import { RegisterUser } from '../../features/auth/models/register.model';
-import { Injectable, signal, computed } from "@angular/core";
+import { RegisterUser } from '../../../features/auth/models/register.model';
+import { Injectable, signal, computed, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { AuthUser } from "../models/auth/auth-user.model";
+import { AuthUser } from "../../models/auth/auth-user.model";
 import { map, Observable, tap, throwError } from "rxjs";
-import { ApiSuccessResponse } from "../models/api-success-response.model";
-import { LoginData } from "../models/auth/login-data.model";
-import { UserTokens } from "../models/auth/user-tokens.model";
-import { API_URL } from "../constants/api.constants";
+import { ApiSuccessResponse } from "../../models/api/api-success-response.model";
+import { LoginData } from "../../models/auth/login-data.model";
+import { UserTokens } from "../../models/auth/user-tokens.model";
+import { API_URL } from "../../constants/api.constants";
+import { NavigationService } from '../../services/navigation.service';
+import { ChildSelectionService } from '../../services/child-selection.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private currentUserSignal = signal<AuthUser | null>(null);
+  private navigationService = inject(NavigationService);
+  private childSelection = inject(ChildSelectionService);
   currentUser = computed(() => this.currentUserSignal());
   isAuthenticated = computed(() => !!this.currentUserSignal());
 
@@ -66,7 +70,7 @@ export class AuthService {
 
   forgotPassword(email: string){
     return this.http.post<ApiSuccessResponse<null>>(
-          `${API_URL}/forgot-password`, email
+          `${API_URL}/forgot-password`, { email }
     );
   }
 
@@ -76,9 +80,13 @@ export class AuthService {
     );
   }
 
-  verifyEmail()
+  verifyEmail(): Observable<string>
   {
-    return this.http.post<ApiSuccessResponse<null>>(`${API_URL}/email/verification-notification`, null);
+    return this.http.post<ApiSuccessResponse<string>>(
+      `${API_URL}/email/verification-notification`, null
+    ).pipe(
+      map(res => res.message)
+    );
   }
 
   private handleAuthSuccess(response: UserTokens): void {
@@ -94,6 +102,8 @@ export class AuthService {
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('user');
     this.currentUserSignal.set(null);
+    this.navigationService.clearPreferredRole();
+    this.childSelection.clearChild();
   }
 
   checkSession(): boolean {

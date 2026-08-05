@@ -1,10 +1,10 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { PendingConceptsParams } from "../../../features/client/models/pending-concepts/pending-concepts-params.model";
+import { PendingConceptsParams } from "../../../../features/client/models/pending-concepts/pending-concepts-params.model";
 import { map, Observable } from "rxjs";
-import { PendingConceptsResponse } from "../../../features/client/models/pending-concepts/pending-concepts-response.model";
-import { STUDENTS_URL } from "../../constants/api.constants";
-import { ApiSuccessResponse } from "../../models/api-success-response.model";
+import { PendingConceptsResponse } from "../../../../features/client/models/pending-concepts/pending-concepts-response.model";
+import { STUDENTS_URL } from "../../../constants/api.constants";
+import { ApiSuccessResponse } from "../../../models/api/api-success-response.model";
 
 @Injectable({ providedIn: 'root' })
 export class PendingConcepts {

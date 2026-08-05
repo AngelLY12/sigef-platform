@@ -1,14 +1,14 @@
-import { PaymentsParams } from './../../../features/financial/models/payments/payments-params.model';
+import { PaymentsParams } from '../../../../features/financial/models/payments/payments-params.model';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { Paginated } from '../../utils/paginated-helper.utils';
-import { FINANCIAL_STAFF_URLS } from '../../constants/api.constants';
-import { ApiSuccessResponse } from '../../models/api-success-response.model';
-import { PaginatedResponse } from '../../models/domain/paginated-response.model';
-import { PaymentsByConceptResponse } from '../../../features/financial/models/payments/payments-by-concept-response.model';
-import { PaymentsByStudentResponse } from '../../../features/financial/models/payments/payments-by-student-response.model';
-import { PaymentsResponse } from '../../../features/financial/models/payments/payments-response.model';
+import { Paginated } from '../../../utils/paginated-helper.utils';
+import { FINANCIAL_STAFF_URLS } from '../../../constants/api.constants';
+import { ApiSuccessResponse } from '../../../models/api/api-success-response.model';
+import { PaginatedResponse } from '../../../models/domain/paginated-response.model';
+import { PaymentsByConceptResponse } from '../../../../features/financial/models/payments/payments-by-concept-response.model';
+import { PaymentsByStudentResponse } from '../../../../features/financial/models/payments/payments-by-student-response.model';
+import { PaymentsResponse } from '../../../../features/financial/models/payments/payments-response.model';
 
 @Injectable({ providedIn: 'root' })
 export class PaymentsApiService {

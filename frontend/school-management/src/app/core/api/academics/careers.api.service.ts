@@ -1,9 +1,9 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
-import { CareersResponse } from "../models/responses/careers-response.model";
-import { CAREER_URL } from "../constants/api.constants";
-import { ApiSuccessResponse } from "../models/api-success-response.model";
+import { CareersResponse } from "../../models/domain/careers/careers-response.model";
+import { CAREER_URL } from "../../constants/api.constants";
+import { ApiSuccessResponse } from "../../models/api/api-success-response.model";
 
 @Injectable({ providedIn: 'root' })
 export class CareersService {

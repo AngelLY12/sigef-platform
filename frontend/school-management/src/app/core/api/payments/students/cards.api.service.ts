@@ -1,17 +1,17 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
-import { CardsListResponse } from "../../../features/client/models/cards/cards-list-response.model";
-import { ApiSuccessResponse } from "../../models/api-success-response.model";
-import { STUDENTS_URL } from "../../constants/api.constants";
+import { CardsListResponse } from "../../../../features/client/models/cards/cards-list-response.model";
+import { ApiSuccessResponse } from "../../../models/api/api-success-response.model";
+import { STUDENTS_URL } from "../../../constants/api.constants";
 
 @Injectable({ providedIn: 'root' })
 export class CardsApiService {
   private http = inject(HttpClient);
 
-  getCards(): Observable<CardsListResponse[]> {
+  getCards(forceRefresh: boolean): Observable<CardsListResponse[]> {
     return this.http.get<ApiSuccessResponse<{ cards: CardsListResponse[] }>>(
-      `${STUDENTS_URL.cards}`
+      `${STUDENTS_URL.cards}?forceRefresh=${forceRefresh}`
     ).pipe(
       map(res => res.data.cards)
     );

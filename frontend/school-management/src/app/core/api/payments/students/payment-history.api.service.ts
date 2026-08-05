@@ -1,14 +1,14 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
-import { PaymentHistoryParams } from "../../../features/client/models/payment-history/payment-history-params.model";
-import { Paginated } from "../../utils/paginated-helper.utils";
-import { PaymentHistoryResponse } from "../../../features/client/models/payment-history/payment-history-response.model";
-import { STUDENTS_URL } from "../../constants/api.constants";
-import { ApiSuccessResponse } from "../../models/api-success-response.model";
-import { PaginatedResponse } from "../../models/domain/paginated-response.model";
-import { PaymentDetailsResponse } from "../../../features/client/models/payment-history/payment-details-response.model";
-import { PaymentReceiptResponse } from "../../../features/client/models/payment-history/payment-receipt-response.model";
+import { PaymentHistoryParams } from "../../../../features/client/models/payment-history/payment-history-params.model";
+import { Paginated } from "../../../utils/paginated-helper.utils";
+import { PaymentHistoryResponse } from "../../../../features/client/models/payment-history/payment-history-response.model";
+import { STUDENTS_URL } from "../../../constants/api.constants";
+import { ApiSuccessResponse } from "../../../models/api/api-success-response.model";
+import { PaginatedResponse } from "../../../models/domain/paginated-response.model";
+import { PaymentDetailsResponse } from "../../../../features/client/models/payment-history/payment-details-response.model";
+import { PaymentReceiptResponse } from "../../../../features/client/models/payment-history/payment-receipt-response.model";
 
 @Injectable({ providedIn: 'root' })
 export class PaymentHistoryApiService {

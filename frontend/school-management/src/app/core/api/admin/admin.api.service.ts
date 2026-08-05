@@ -1,40 +1,51 @@
-import { PermissionsByUserParams } from './../models/domain/permissions-by-user-params.model';
-import { UpdatePermissionsBulkResponse } from './../models/responses/update-permissions-bulk-response.model';
-import { ApiSuccessResponse } from './../models/api-success-response.model';
+import { PermissionsByUserParams } from '../../../features/admin/models/request/permissions-by-user-params.model';
+import { UpdatePermissionsBulkResponse } from '../../models/domain/permissions/update-permissions-bulk-response.model';
+import { ApiSuccessResponse } from '../../models/api/api-success-response.model';
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
-import { ADMIN_URL } from "../constants/api.constants";
-import { DashboardSummary } from "../../features/admin/models/dashboard-summary.model";
-import { UserListItem } from "../../features/admin/models/user-list-item.model";
-import { Paginated } from "../utils/paginated-helper.utils";
-import { PaginatedResponse } from "../models/domain/paginated-response.model";
-import { UserDetails } from "../../features/admin/models/user-details.model";
-import { UserListParams } from "../models/domain/user-list-params.model";
-import { ActivateUsers, ChangeUsersStatus, DeleteUsers, DisableUsers, TemporaryDisableUsers } from "../models/responses/change-users-status-response.model";
-import { UpdateRolesBulk } from "../../features/admin/models/update-roles-bulk.model";
-import { UpdateRolesBulkResponse, UsersRoles } from "../models/responses/update-roles-bulk-response.model";
-import { cleanObjectWithOptions } from "../helpers";
-import { UpdatePermissionsBulk } from "../../features/admin/models/update-permissions-bulk.model";
-import { UsersPermissions } from "../models/responses/update-permissions-bulk-response.model";
-import { PermissionsByCurps, PermissionsByCurpsResponse } from '../models/responses/permissions-by-curp-response.model';
-import { PermissionsByRole, PermissionsByRoleResponse } from '../models/responses/permissions-by-role-response.model';
-import { Permission } from '../models/domain/permissions.model';
-import { PermissionsByUserResponse } from '../models/responses/permissions-by-user-response.model';
-import { UpdateRolesToUser } from '../../features/admin/models/update-roles-to-user.model';
-import { UpdatePermissionsToUser } from '../../features/admin/models/update-permissions-to-user.model';
-import { RolesByUser, UpdateRolesByUserResponse } from '../models/responses/update-roles-by-user-response.model';
-import { PermissionsByUser, UpdatePermissionsByUserResponse } from '../models/responses/update-permissions-by-user-response.model';
-import { AttachStudentDetailsParams, UpdateStudentDetailsParams } from '../models/domain/student-details-params.model';
-import { PromoteStudentsResponse } from '../models/responses/promote-students-response.model';
+import { ADMIN_URL } from "../../constants/api.constants";
+import { DashboardSummary } from "../../../features/admin/models/response/dashboard-summary.model";
+import { Paginated } from "../../utils/paginated-helper.utils";
+import { PaginatedResponse } from "../../models/domain/paginated-response.model";
+import { UserDetails } from "../../../features/admin/models/response/user-details.model";
+import { UserListParams } from "../../../features/admin/models/request/user-list-params.model";
+import { ActivateUsers, ChangeUsersStatus, DeleteUsers, DisableUsers, TemporaryDisableUsers } from "../../models/domain/users/change-users-status-response.model";
+import { UpdateRolesBulk } from "../../../features/admin/models/request/update-roles-bulk.model";
+import { UpdateRolesBulkResponse, UsersRoles } from "../../models/domain/permissions/update-roles-bulk-response.model";
+import { cleanObjectWithOptions } from "../../helpers";
+import { UpdatePermissionsBulk } from "../../../features/admin/models/request/update-permissions-bulk.model";
+import { UsersPermissions } from "../../models/domain/permissions/update-permissions-bulk-response.model";
+import { PermissionsByCurps, PermissionsByCurpsResponse } from '../../models/domain/permissions/permissions-by-curp-response.model';
+import { PermissionsByRole, PermissionsByRoleResponse } from '../../models/domain/permissions/permissions-by-role-response.model';
+import { Permission } from '../../models/domain/permissions/permissions.model';
+import { PermissionsByUserResponse } from '../../models/domain/permissions/permissions-by-user-response.model';
+import { UpdateRolesToUser } from '../../../features/admin/models/request/update-roles-to-user.model';
+import { UpdatePermissionsToUser } from '../../../features/admin/models/request/update-permissions-to-user.model';
+import { RolesByUser, UpdateRolesByUserResponse } from '../../models/domain/permissions/update-roles-by-user-response.model';
+import { PermissionsByUser, UpdatePermissionsByUserResponse } from '../../models/domain/permissions/update-permissions-by-user-response.model';
+import { AttachStudentDetailsParams, UpdateStudentDetailsParams } from '../../models/domain/student-details-params.model';
+import { PromoteStudentsResponse } from '../../models/domain/users/promote-students-response.model';
+import { DashboardRequest } from '../../../features/admin/models/request/dashboard-request.model';
+import { UserListItem } from '../../../features/admin/models/response/user-list-item.model';
+import { CreateUserRequest } from '../../../features/admin/models/request/create-user-request.model';
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
   private http = inject(HttpClient);
 
-  getSummary(): Observable<ApiSuccessResponse<{ summary: DashboardSummary }>> {
+  createUser(user: CreateUserRequest): Observable<string> {
+    return this.http.post<ApiSuccessResponse<string>>(`${ADMIN_URL}/register`, user)
+    .pipe(
+      map(res => res.message)
+    );
+  }
+
+  getSummary(params: DashboardRequest): Observable<ApiSuccessResponse<{ summary: DashboardSummary }>> {
+    const {only_this_year, forceRefresh} = params;
+    const url = `${ADMIN_URL}/users-summary?only_this_year=${only_this_year}${forceRefresh ? '&forceRefresh=true' : ''}`;
     return this.http.get<ApiSuccessResponse<{ summary: DashboardSummary }>>(
-      `${ADMIN_URL}/users-summary`
+      url
     );
   }
 
@@ -50,10 +61,10 @@ export class AdminService {
       );
   }
 
-  getUserDetails(id: number): Observable<UserDetails> {
+  getUserDetails(id: number, forceRefresh: boolean): Observable<UserDetails> {
     return this.http
       .get<ApiSuccessResponse<{ user: UserDetails }>>(
-        `${ADMIN_URL}/show-users/${id}`
+        `${ADMIN_URL}/show-users/${id}?forceRefresh=${forceRefresh}`
       )
       .pipe(
         map(res => res.data.user)

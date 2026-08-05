@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { NotificationParams } from '../models/domain/notification-params.model';
+import { NotificationParams } from '../../../features/notifications/models/notification-params.model';
 import { map, Observable } from 'rxjs';
-import { Paginated } from '../utils/paginated-helper.utils';
-import { NOTIFICATIONS_URL } from '../constants/api.constants';
-import { ApiSuccessResponse } from '../models/api-success-response.model';
-import { Notification } from '../models/domain/notification.model';
-import { ReadNotificationsPaginatedResponse } from '../models/responses/notifications-response.model';
-import { PaginatedResponse } from '../models/domain/paginated-response.model';
+import { Paginated } from '../../utils/paginated-helper.utils';
+import { NOTIFICATIONS_URL } from '../../constants/api.constants';
+import { ApiSuccessResponse } from '../../models/api/api-success-response.model';
+import { Notification } from '../../models/domain/notifications/notification.model';
+import { ReadNotificationsPaginatedResponse } from '../../models/domain/notifications/notifications-response.model';
+import { PaginatedResponse } from '../../models/domain/paginated-response.model';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {

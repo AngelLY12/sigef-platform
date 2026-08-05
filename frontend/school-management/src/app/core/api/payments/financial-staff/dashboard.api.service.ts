@@ -1,17 +1,17 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { DashboardParams } from "../../../features/financial/models/dashboard/dashboard-params.model";
+import { DashboardParams } from "../../../../features/financial/models/dashboard/dashboard-params.model";
 import { map, Observable } from "rxjs";
-import { TotalPending } from "../../../features/client/models/dashboard/pending-concepts-response.model";
-import { ApiSuccessResponse } from "../../models/api-success-response.model";
-import { PendingConceptsResponse } from "../../../features/financial/models/dashboard/pendig-concept.response.model";
-import { FINANCIAL_STAFF_URLS } from "../../constants/api.constants";
-import { StudentsSummaryResponse, TotalStudents } from "../../../features/financial/models/dashboard/students-summary.response.model";
-import { PaymentsData, PaymentsResponse } from "../../../features/financial/models/dashboard/payments.response.model";
-import { Paginated } from "../../utils/paginated-helper.utils";
-import { ConceptsHistoryItems } from "../../../features/financial/models/dashboard/concepts-history.response.model";
-import { PaginatedResponse } from "../../models/domain/paginated-response.model";
-import { Payout, PayoutResponse } from "../../../features/financial/models/dashboard/payout-response.model";
+import { TotalPending } from "../../../../features/client/models/dashboard/pending-concepts-response.model";
+import { ApiSuccessResponse } from "../../../models/api/api-success-response.model";
+import { PendingConceptsResponse } from "../../../../features/financial/models/dashboard/pendig-concept.response.model";
+import { FINANCIAL_STAFF_URLS } from "../../../constants/api.constants";
+import { StudentsSummaryResponse, TotalStudents } from "../../../../features/financial/models/dashboard/students-summary.response.model";
+import { PaymentsData, PaymentsResponse } from "../../../../features/financial/models/dashboard/payments.response.model";
+import { Paginated } from "../../../utils/paginated-helper.utils";
+import { ConceptsHistoryItems } from "../../../../features/financial/models/dashboard/concepts-history.response.model";
+import { PaginatedResponse } from "../../../models/domain/paginated-response.model";
+import { Payout, PayoutResponse } from "../../../../features/financial/models/dashboard/payout-response.model";
 
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
