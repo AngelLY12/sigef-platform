@@ -28,6 +28,7 @@ namespace App\Core\Application\DTO\Response\Parents;
  *             type="object",
  *             @OA\Property(property="id", type="integer", example=3),
  *             @OA\Property(property="name", type="string", example="Jesus Perez"),
+ *             @OA\Property(property="relationship", type="string", example="Padre"),
  *         )
  *     ),
  * )
