@@ -1,4 +1,4 @@
-import { SelectOption } from "../models/domain/action-field.modal";
+import { SelectOption } from "../../shared/components/form/controls/select/select-option.config.model";
 import { Role } from "../models/enums/role.enum";
 
 export class RolesHelper {

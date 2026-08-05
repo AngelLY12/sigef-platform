@@ -1,4 +1,3 @@
-import { Notification } from "../models/domain/notification.model";
 import { PaginatedResponse } from "../models/domain/paginated-response.model";
 
 export function mapLaravelPagination<T>(res: any): PaginatedResponse<T> {

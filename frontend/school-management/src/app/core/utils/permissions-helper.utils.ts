@@ -1,9 +1,10 @@
 import { PERMISSIONS_UI } from '../config/permissions-ui.config';
-import { GroupedOption, SelectOption } from '../models/domain/action-field.modal';
-import { Permission } from '../models/domain/permissions.model';
-import { PermissionsByCurps } from '../models/responses/permissions-by-curp-response.model';
-import { PermissionsByRole } from '../models/responses/permissions-by-role-response.model';
+import { Permission } from '../../features/admin/models/response/permissions/permissions.model';
+import { PermissionsByCurps } from '../../features/admin/models/response/permissions/permissions-by-curp-response.model';
+import { PermissionsByRole } from '../../features/admin/models/response/permissions/permissions-by-role-response.model';
 import { Permission as PermissionType } from '../models/types/permissions.type';
+import { GroupedOption } from '../../shared/components/form/selector/group-state-selector-list/grouped-option.config.model';
+import { SelectOption } from '../../shared/components/form/controls/select/select-option.config.model';
 
 export class PermissionsHelper {
   static mapPermissionsByCurpToOptions(
