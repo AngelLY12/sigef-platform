@@ -13,7 +13,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\traits\ResolvesTargetUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Activitylog\LogOptions;
@@ -126,7 +125,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
     public function sendPasswordResetNotification(#[\SensitiveParameter] $token): void
     {
-        $resetUrl=config('app.frontend_url')."/password-reset/$token?email={$this->getEmailForPasswordReset()}";
+        $resetUrl=config('app.frontend_url')."/auth/password-reset/$token?email={$this->getEmailForPasswordReset()}";
         SendMailJob::dispatch(
             new SendPasswordResetLinkMail($this,$resetUrl),
             $this->email,
