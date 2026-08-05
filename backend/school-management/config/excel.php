@@ -357,7 +357,7 @@ return [
         | in conjunction with queued imports and exports.
         |
         */
-        'remote_disk'         => 'gcs',
+        'remote_disk'         => env('FILESYSTEM_DISK', 'local'),
         'remote_prefix'       =>  'excel-uploads',
 
         /*
