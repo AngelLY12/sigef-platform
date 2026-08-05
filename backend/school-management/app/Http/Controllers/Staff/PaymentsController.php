@@ -57,7 +57,7 @@ class PaymentsController extends Controller
         $students = $this->paymentsService->showAllStudents($search, $perPage, $page, $forceRefresh);
 
         return Response::success(
-            ['students' => $students],
+            ['payments' => $students],
             empty($students->items) ? 'No hay estudiantes registrados.' : null
         );
     }
