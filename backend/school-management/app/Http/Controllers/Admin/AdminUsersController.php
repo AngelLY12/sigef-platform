@@ -50,7 +50,7 @@ class AdminUsersController extends Controller
     public function import(ImportRequest $request)
     {
         try {
-            $file= $request->file('file')->store('imports','gcs');
+            $file= $request->file('file')->store('imports');
         }catch (\Exception $e){
             return Response::error('No se pudo subir el archivo: ' . $e->getMessage());
         }
@@ -59,7 +59,7 @@ class AdminUsersController extends Controller
             Auth::user(),
         );
 
-        Excel::queueImport($import,$file,'gcs')->onQueue('imports');
+        Excel::queueImport($import,$file)->onQueue('imports');
         return Response::success(null, 'Usuarios procesandose, se te notificara cuando termine.');
 
     }
