@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { catchError, Observable, of } from "rxjs";
-import { CpData, CpDataCollection, SepoMexResponse } from "../models/sepoMex-response.model";
+import { CpData, CpDataCollection, SepoMexResponse } from "../models/domain/address/sepoMex-response.model";
 
 @Injectable({ providedIn: 'root' })
 export class SepoMexService {
@@ -38,7 +38,6 @@ export class SepoMexService {
       });
     }
 
-    // Si no se encuentra el CP
     return of({ response: null });
   }
 

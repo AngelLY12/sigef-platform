@@ -1,24 +1,28 @@
-import { inject, Injectable } from "@angular/core";
-import { Router } from "@angular/router";
-import { ModalService } from "./modal.service";
-import { NAVIGATION } from "../navigation/navigation.config";
-import { Observable } from "rxjs";
-import { AuthService } from "../api/auth.api.service";
+import { inject, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { ModalService } from './modal.service';
+import { NAVIGATION } from '../navigation/navigation.config';
+import { Observable } from 'rxjs';
+import { AuthService } from '../api/auth/auth.api.service';
+import { ChildSelectionService } from './child-selection.service';
+import { NavigationService } from './navigation.service';
 
 @Injectable({ providedIn: 'root' })
 export class LogoutService {
   private authService = inject(AuthService);
+  private childSelection = inject(ChildSelectionService);
+  private navigationService = inject(NavigationService);
   private router = inject(Router);
   private modalService = inject(ModalService);
 
   logout(): Observable<void> {
-    return new Observable(subscriber => {
+    return new Observable((subscriber) => {
       this.authService.logout().subscribe({
         next: () => {
           this.modalService.show({
             message: 'Has cerrado sesión.',
             type: 'success',
-            display: 'alert'
+            display: 'alert',
           });
           this.router.navigate([NAVIGATION.auth.login]);
           subscriber.next();
@@ -29,7 +33,7 @@ export class LogoutService {
           this.router.navigate([NAVIGATION.auth.login]);
           subscriber.next();
           subscriber.complete();
-        }
+        },
       });
     });
   }

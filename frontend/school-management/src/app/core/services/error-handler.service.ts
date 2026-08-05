@@ -2,7 +2,7 @@ import { Injectable, inject } from "@angular/core";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Router } from "@angular/router";
 import { ModalService } from "./modal.service";
-import { ApiErrorResponse } from "../models/api-error-response.model";
+import { ApiErrorResponse } from "../models/api/api-error-response.model";
 import { BackendErrorCode } from "../models/types/backend-error-code.type";
 import { ERROR_MESSAGES, ErrorConfig } from "../config/error-message.config";
 import { logError } from "../utils/error-logger.utils";

@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { DisplayType } from '../models/types/display-type.type';
 import { ModalType } from '../models/types/modal-error.type';
-import { ActionModalConfig } from '../models/domain/action-modal-config.model';
-import { ConfirmModalConfig } from '../models/domain/confirm-moda-config.model';
+import { ActionModalConfig } from '../../shared/components/overlays/modal/actions-modal/action-modal-config.model';
+import { ConfirmModalConfig } from '../../shared/components/overlays/modal/confirm-modal/confirm-modal-config.model';
 
 @Injectable({ providedIn: 'root' })
 export class ModalService {

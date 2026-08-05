@@ -7,6 +7,8 @@ import { NAVIGATION } from '../navigation/navigation.config';
 export class NavigationService {
   private router = inject(Router);
   private pendingRoles: Role[] = [];
+  private readonly KEY = 'preferredRole';
+
   redirectByRole(roles: string[]): void {
     const validRoles = roles.filter((r) => r !== Role.UNVERIFIED) as Role[];
 
@@ -53,12 +55,17 @@ export class NavigationService {
   }
 
   saveRolePreference(role: Role): void {
-    localStorage.setItem('preferredRole', role);
+    localStorage.setItem(this.KEY, role);
     this.navigateToRoleDashboard(role);
   }
 
   getPreferredRole(): Role | null {
-    return localStorage.getItem('preferredRole') as Role | null;
+    return localStorage.getItem(this.KEY) as Role | null;
+  }
+
+  clearPreferredRole(){
+    this.pendingRoles = [];
+    localStorage.removeItem(this.KEY);
   }
 
   cancelRoleSelection(): void {
