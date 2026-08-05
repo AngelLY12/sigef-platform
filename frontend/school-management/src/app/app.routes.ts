@@ -55,6 +55,13 @@ export const routes: Routes = [
     data: {roles: [Role.STUDENT, Role.APPLICANT, Role.PARENT]}
   },
   {
+    path: 'parent',
+    loadChildren: () =>
+      import('./features/parents/parents.routes')
+    .then(m => m.PARENTS_ROUTES),
+    canActivate: [maintenanceGuard],
+  },
+  {
     path: 'profile',
     loadChildren: () =>
       import('./features/profile/profile.routes')
