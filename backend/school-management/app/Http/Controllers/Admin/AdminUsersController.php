@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Core\Application\Mappers\UserMapper;
-use App\Core\Application\Services\Admin\AdminUsersServiceFacades;
+use App\Core\Application\Services\Facades\Admin\AdminUsersServiceFacades;
 use App\Core\Domain\Enum\User\UserStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ChangeUserStatusRequest;
@@ -15,7 +15,6 @@ use App\Http\Requests\Payments\Staff\DashboardRequest;
 use App\Imports\UsersImport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -56,7 +55,7 @@ class AdminUsersController extends Controller
         }
         $import = new UsersImport(
             $this->service,
-            Auth::user(),
+            $request->user()
         );
 
         Excel::queueImport($import,$file)->onQueue('imports');

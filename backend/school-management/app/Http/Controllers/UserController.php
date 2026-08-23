@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Core\Application\Services\User\UserServiceFacades;
+use App\Core\Application\Services\Facades\User\UserServiceFacades;
 use App\Http\Requests\General\ForceRefreshRequest;
 use App\Http\Requests\User\UpdatePasswordRequest;
 use App\Http\Requests\User\UpdateUserRequest;

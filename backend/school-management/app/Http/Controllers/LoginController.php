@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Core\Application\Mappers\GeneralMapper;
 use App\Core\Application\Mappers\UserMapper;
-use App\Core\Application\Services\Auth\LoginServiceFacades;
+use App\Core\Application\Services\Facades\Auth\LoginServiceFacades;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use Illuminate\Support\Facades\Response;

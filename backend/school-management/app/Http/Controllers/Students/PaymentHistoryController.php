@@ -2,16 +2,12 @@
 
 namespace App\Http\Controllers\Students;
 
-use App\Core\Application\Services\Payments\Student\PaymentHistoryService;
+use App\Core\Application\Services\Facades\Payments\Student\PaymentHistoryService;
 use App\Core\Infraestructure\Mappers\UserMapper;
 use App\Http\Controllers\Concerns\ResolvesRequestUser;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\General\ForceRefreshRequest;
 use App\Http\Requests\General\PaginationRequest;
-use App\Models\Payment;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 

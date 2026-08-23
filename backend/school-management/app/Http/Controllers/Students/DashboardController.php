@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Students;
 
-use App\Core\Application\Services\Payments\Student\DashboardServiceFacades;
+use App\Core\Application\Services\Facades\Payments\Student\DashboardServiceFacades;
 use App\Core\Infraestructure\Mappers\UserMapper;
 use App\Http\Controllers\Concerns\ResolvesRequestUser;
-use App\Http\Requests\Payments\Staff\DashboardRequest;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\General\PaginationRequest;
+use App\Http\Requests\Payments\Staff\DashboardRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 
 /**

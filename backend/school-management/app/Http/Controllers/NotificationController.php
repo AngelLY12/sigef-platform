@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Core\Application\Services\Misc\NotificationsServiceFacades;
+use App\Core\Application\Services\Facades\Misc\NotificationsServiceFacades;
 use App\Http\Requests\General\PaginationRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;

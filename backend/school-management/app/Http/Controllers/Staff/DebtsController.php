@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Staff;
 
-use App\Core\Application\Services\Payments\Staff\DebtsServiceFacades;
+use App\Core\Application\Services\Facades\Payments\Staff\DebtsServiceFacades;
+use App\Core\Domain\Enum\Exceptions\ErrorCode;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Payments\Staff\GetStripePaymentsRequest;
 use App\Http\Requests\Payments\Staff\PaginationWithSearchRequest;
-use App\Http\Requests\Payments\Staff\ValidatePaymentRequest;
+use App\Http\Requests\Payments\Staff\ReconcilePaymentRequest;
 use Illuminate\Support\Facades\Response;
 
 /**
@@ -37,18 +38,20 @@ class DebtsController extends Controller
             empty($pendingPayments->items) ? 'No hay pagos pendientes registrados.' : null
         );
     }
-   public function validatePayment(ValidatePaymentRequest $request)
+   public function reconcilePayment(ReconcilePaymentRequest $request)
     {
         $data = $request->validated();
-
-        $validatedPayment = $this->debtsService->validatePayment(
-            $data['search'],
-            $data['payment_intent_id']
+        $reconciled = $this->debtsService->reconcilePayment(
+            $data['user_id'],
+            $data['payment_id']
         );
-
+        if($reconciled->reconciled === false)
+        {
+            return Response::error(message: $reconciled->message, status: 400, code: ErrorCode::BAD_REQUEST_RECONCILIATION->value);
+        }
         return Response::success(
-            ['validated_payment' => $validatedPayment],
-            'Pago validado correctamente.'
+            ['reconciled_payment' => $reconciled],
+            'Pago reconciliado correctamente.'
         );
     }
     public function getStripePayments(GetStripePaymentsRequest $request)

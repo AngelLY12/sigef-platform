@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Core\Application\Mappers\CareerMapper;
-use App\Core\Application\Services\Misc\CareerServiceFacades;
+use App\Core\Application\Services\Facades\Misc\CareerServiceFacades;
 use App\Http\Requests\Career\CreateCareerRequest;
 use App\Http\Requests\Career\UpdateCareerRequest;
 use App\Http\Requests\General\ForceRefreshRequest;

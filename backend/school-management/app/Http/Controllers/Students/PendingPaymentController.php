@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Students;
 
-use App\Core\Application\Services\Payments\Student\PendingPaymentServiceFacades;
+use App\Core\Application\Services\Facades\Payments\Student\PendingPaymentServiceFacades;
 use App\Core\Infraestructure\Mappers\UserMapper;
 use App\Http\Controllers\Concerns\ResolvesRequestUser;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\General\ForceRefreshRequest;
 use App\Http\Requests\Payments\Students\PayConceptRequest;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 
 /**

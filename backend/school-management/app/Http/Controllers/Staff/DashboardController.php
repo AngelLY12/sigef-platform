@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Staff;
 
-use App\Core\Application\Services\Payments\Staff\DashboardServiceFacades;
+use App\Core\Application\Services\Facades\Payments\Staff\DashboardServiceFacades;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Payments\Staff\AllConceptsRequest;
 use App\Http\Requests\Payments\Staff\DashboardRequest;

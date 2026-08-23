@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Staff;
 
-use App\Core\Application\Services\Payments\Staff\PaymentsService;
+use App\Core\Application\Services\Facades\Payments\Staff\PaymentsService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Payments\Staff\PaginationWithSearchRequest;
 use Illuminate\Support\Facades\Response;

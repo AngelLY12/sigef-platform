@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers\Students;
 
-use App\Core\Application\Services\Payments\Stripe\WebhookServiceFacades;
-use Illuminate\Http\Request;
-use Stripe\Exception\SignatureVerificationException;
-use Stripe\Webhook;
+use App\Core\Application\Services\Facades\Payments\Stripe\WebhookServiceFacades;
 use App\Http\Controllers\Controller;
-use App\Jobs\ReconcilePayments;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
+use Stripe\Charge;
+use Stripe\Checkout\Session;
+use Stripe\Exception\SignatureVerificationException;
+use Stripe\PaymentIntent;
+use Stripe\PaymentMethod;
 use Stripe\Stripe;
+use Stripe\Webhook;
 
 class WebhookController extends Controller
 
@@ -39,18 +42,36 @@ class WebhookController extends Controller
                 'checkout.session.expired' => 'La sesión de pago expiró'
             ];
             switch($eventType){
-
                 case 'checkout.session.completed':
+                    /** @var Session $obj */
                     $result =$this->webhookService->sessionCompleted($obj, $eventId);
-                    if($obj->payment_status==='paid' && $result){
-                        $reconciliation =$this->webhookService->reconcilePayment($eventId, $obj->id);
-                        return Response::success($reconciliation, "Se reconcilio el pago del evento {$eventId}");
-                    }
-                    return Response::success(null, 'Se completó la sesión');
+                    return Response::success(
+                        null,
+                        $result ? 'Se completó la sesión' : 'No se pudo procesar la sesión'
+                    );
+                    break;
+
+                case 'charge.succeeded':
+                    /** @var Charge $obj */
+                    $result = $this->webhookService->chargeSucceeded($obj, $eventId);
+                    return Response::success(
+                        $result,
+                        'El pago fue validado correctamente'
+                    );
+                    break;
+
+                case 'payment_intent.succeeded':
+                    /** @var PaymentIntent $obj */
+                    $result = $this->webhookService->paymentIntentSucceeded($obj, $eventId);
+                    return Response::success(
+                        $result,
+                        'Evento registrado correctamente'
+                    );
                     break;
                 case 'payment_intent.payment_failed':
                 case 'payment_intent.canceled':
                 case 'checkout.session.expired':
+                    /** @var Session|PaymentIntent $obj */
                     $result = $this->webhookService->handleFailedOrExpiredPayment($obj,$eventType, $eventId);
                     if(!$result)
                     {
@@ -59,6 +80,7 @@ class WebhookController extends Controller
                     return Response::success(null, $messageMap[$eventType] ?? 'Evento procesado');
                     break;
                 case 'payment_method.attached':
+                    /** @var PaymentMethod $obj */
                     $result = $this->webhookService->paymentMethodAttached($obj, $eventId);
                     if (!$result) {
                         return Response::success(null, 'El método de pago ya existe');
@@ -66,6 +88,7 @@ class WebhookController extends Controller
                     return Response::success(null, 'Se creó el método de pago');
                     break;
                 case 'payment_method.detached':
+                    /** @var PaymentMethod $obj */
                     $result = $this->webhookService->detachPaymentMethod($obj, $eventType ,$eventId);
                     if(!$result)
                     {
@@ -74,6 +97,7 @@ class WebhookController extends Controller
                     return Response::success(null, 'Se creó elimino método de pago');
                     break;
                 case 'payment_method.automatically_updated':
+                    /** @var PaymentMethod $obj */
                     $result = $this->webhookService->updatePaymentMethodAutomatically($obj, $eventType ,$eventId);
                     if(!$result)
                     {
@@ -82,15 +106,17 @@ class WebhookController extends Controller
                     return Response::success(null, 'Se actualizo el método de pago');
                     break;
                 case 'checkout.session.async_payment_succeeded':
+                    /** @var Session $obj */
                     $result = $this->webhookService->sessionAsync($obj, $eventId);
-                    if($result)
-                    {
-                        $reconciliation=$this->webhookService->reconcilePayment($eventId, $obj->id);
-                        return Response::success($reconciliation, "Se reconcilio el pago del evento {$eventId}");
-                    }
-                    return Response::success(null, 'Se actualizó el estado del pago');
+                    return Response::success(
+                        null,
+                        $result
+                            ? 'Se actualizó el estado del pago'
+                            : 'No se pudo actualizar el estado del pago'
+                    );
                     break;
                 case 'payment_intent.requires_action':
+                    /** @var PaymentIntent $obj */
                     $this->webhookService->requiresAction($obj, $eventId);
                     return Response::success(null, 'Se notificó correctamente al usuario');
                     break;

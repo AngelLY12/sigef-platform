@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Core\Application\Services\Auth\RefreshTokenServiceFacades;
+use App\Core\Application\Services\Facades\Auth\RefreshTokenServiceFacades;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;

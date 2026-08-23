@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Core\Application\Services\Payments\Student\PaymentHistoryService;
+use App\Core\Application\Services\Facades\Payments\Student\PaymentHistoryService;
 
 
 class ReceiptController extends Controller

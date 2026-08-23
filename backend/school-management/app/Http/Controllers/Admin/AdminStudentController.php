@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Core\Application\Mappers\StudentDetailMapper;
-use App\Core\Application\Services\Admin\AdminStudentServiceFacades;
+use App\Core\Application\Services\Facades\Admin\AdminStudentServiceFacades;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AttachStudentRequest;
 use App\Http\Requests\Admin\UpdateStudentRequest;
@@ -12,8 +12,6 @@ use App\Imports\StudentDetailsImport;
 use App\Jobs\PromoteStudentsJob;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
 /**
@@ -70,7 +68,7 @@ class AdminStudentController extends Controller
         }catch (\Exception $e){
             return Response::error('No se pudo subir el archivo: ' . $e->getMessage());
         }
-        $import= new StudentDetailsImport($this->service, Auth::user());
+        $import= new StudentDetailsImport($this->service, $request->user());
         Excel::queueImport($import,$file)->onQueue('imports');
         return Response::success(null, 'Usuarios procesandose, se te notificara cuando termine.');
     }

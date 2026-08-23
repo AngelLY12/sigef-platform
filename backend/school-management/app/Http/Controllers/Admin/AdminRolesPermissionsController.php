@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Core\Application\Mappers\UserMapper;
-use App\Core\Application\Services\Admin\AdminRolePermissionsServiceFacades;
+use App\Core\Application\Services\Facades\Admin\AdminRolePermissionsServiceFacades;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\FindPermissionsByCurpsRequest;
 use App\Http\Requests\Admin\FindPermissionsByRoleRequest;
@@ -13,7 +13,6 @@ use App\Http\Requests\Admin\UpdatePermissionsToUserRequest;
 use App\Http\Requests\Admin\UpdateRolesRequest;
 use App\Http\Requests\Admin\UpdateRolesToUserRequest;
 use App\Http\Requests\General\ForceRefreshRequest;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 
 /**

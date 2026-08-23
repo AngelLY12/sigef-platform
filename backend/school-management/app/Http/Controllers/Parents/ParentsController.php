@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Parents;
 
-use App\Core\Application\Services\Parents\ParentsServiceFacades;
+use App\Core\Application\Services\Facades\Parents\ParentsServiceFacades;
 use App\Core\Infraestructure\Mappers\UserMapper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\General\ForceRefreshRequest;
