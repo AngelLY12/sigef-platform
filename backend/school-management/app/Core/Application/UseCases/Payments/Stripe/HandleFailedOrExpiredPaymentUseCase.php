@@ -2,23 +2,28 @@
 
 namespace App\Core\Application\UseCases\Payments\Stripe;
 
+use App\Core\Application\Factories\Emails\Events\EmailEventFactory;
+use App\Core\Application\Factories\Payments\Stripe\WebhookPaymentIntentEventFactory;
+use App\Core\Application\Factories\Payments\Stripe\WebhookSessionEventFactory;
 use App\Core\Application\Mappers\MailMapper;
+use App\Core\Application\Services\Events\Contracts\EmailEventManagerInterface;
+use App\Core\Application\Services\Events\Contracts\PaymentEventManagerInterface;
 use App\Core\Domain\Entities\Payment;
 use App\Core\Domain\Entities\PaymentEvent;
 use App\Core\Domain\Entities\User;
-use App\Core\Domain\Enum\Payment\PaymentEventType;
+use App\Core\Domain\Enum\Events\Sources\EmailEventSourceType;
+use App\Core\Domain\Enum\Events\Types\EmailEventType;
+use App\Core\Domain\Enum\Events\Types\PaymentEventType;
 use App\Core\Domain\Enum\Payment\PaymentStatus;
-use App\Core\Domain\Repositories\Command\Payments\PaymentEventRepInterface;
 use App\Core\Domain\Repositories\Command\Payments\PaymentRepInterface;
-use App\Core\Domain\Repositories\Query\Payments\PaymentEventQueryRepInterface;
 use App\Core\Domain\Repositories\Query\Payments\PaymentQueryRepInterface;
 use App\Core\Domain\Repositories\Query\User\UserQueryRepInterface;
 use App\Core\Domain\Repositories\Stripe\StripeGatewayInterface;
-use App\Core\Domain\Utils\Helpers\Money;
 use App\Exceptions\DomainException;
 use App\Jobs\ClearStudentCacheJob;
-use App\Jobs\SendMailJob;
 use App\Mail\PaymentFailedMail;
+use Stripe\Checkout\Session;
+use Stripe\PaymentIntent;
 
 class HandleFailedOrExpiredPaymentUseCase
 {
@@ -27,103 +32,106 @@ class HandleFailedOrExpiredPaymentUseCase
         private PaymentRepInterface $paymentRepo,
         private PaymentQueryRepInterface $pqRepo,
         private StripeGatewayInterface $stripeGateway,
-        private PaymentEventRepInterface $paymentEventRep,
-        private PaymentEventQueryRepInterface $paymentEventQueryRep
+        private PaymentEventManagerInterface $paymentEventManager,
+        private EmailEventManagerInterface $emailEventManager,
     ) {
 
     }
-    public function execute($obj, string $eventType, string $eventId)
+    public function execute(Session|PaymentIntent $obj, string $eventType, string $eventId)
     {
         $paymentEventType = $this->mapEventTypeToEnum($eventType);
-        $payment = $this->findPayment($obj, $eventType);
+        $payment = $this->pqRepo->findById($obj->metadata->payment_id);
         if (!$payment) {
-            logger()->warning("No se encontró el pago para el evento: {$eventType}, id: {$obj->id}");
             return false;
         }
 
-        $event = $this->createPaymentEvent($payment, $obj, $eventId, $paymentEventType, $eventType);
+        $event = $this->paymentEventManager->findOrCreate(
+            stripeEventId: $eventId,
+            eventType: $paymentEventType,
+            factory: fn () => $this->createPaymentEvent(
+                payment: $payment,
+                obj: $obj,
+                eventId: $eventId,
+                eventType: $paymentEventType,
+            )
+        );
 
         if ($event->processed) {
-            logger()->info("PaymentEvent ya procesado: {$event->id} para evento {$eventType}");
             return true;
         }
 
         try {
-            $user = $this->uqRepo->getUserByStripeCustomer($obj->customer);
-            $error = $this->determineErrorMessage($obj, $eventType);
-            $hasPartialPayment = $payment->amount_received > 0;
-            logger()->info("Procesando pago fallido: payment_id={$payment->id}, motivo: {$error}");
-            $this->sendFailedOrExpiredPaymentMail($user, $payment, $error, $eventId);
-            if (!$hasPartialPayment) {
-                $this->paymentRepo->delete($payment->id);
-                logger()->info("Pago fallido eliminado: payment_id={$payment->id}");
-            } else {
-                $this->stripeGateway->expireSessionIfPending($payment->stripe_session_id);
-                logger()->info("Pago parcial marcado como fallido: payment_id={$payment->id}");
-            }
-            ClearStudentCacheJob::dispatch($user->id)->onQueue('cache');
-            $this->paymentEventRep->update($event->id, [
-                'processed' => true,
-                'processed_at' => now(),
-                'status' => PaymentStatus::FAILED->value,
-                'metadata' => array_merge($event->metadata ?? [], [
-                    'email_sent' => true,
-                    'payment_action' => $hasPartialPayment ? 'expired_session' : 'deleted',
-                    'has_partial_payment' => $hasPartialPayment,
-                    'error_message' => $error,
-                    'user_id' => $user->id
-                ])
-            ]);
+            $this->paymentEventManager->process(
+                event: $event,
+                callback: fn () => $this->processFailedPayment(
+                    event: $event,
+                    payment: $payment,
+                    obj: $obj,
+                    eventType: $paymentEventType,
+                    eventId: $eventId,
+                )
+            );
             return true;
         }catch (\Exception $e) {
-            if($event->id)
-            {
-                $this->paymentEventRep->update($event->id, [
-                    'error_message' => $e->getMessage(),
-                    'retry_count' => ($event->retryCount ?? 0) + 1,
-                    'metadata' => array_merge($event->metadata ?? [], [
-                        'failed_at' => now()->toISOString(),
-                        'error_class' => get_class($e)
-                    ])
-                ]);
-
-            }
             if (!($e instanceof DomainException) && !($e instanceof \Illuminate\Validation\ValidationException)) {
                 throw $e;
             }
-
-            logger()->warning("Error procesando evento {$eventType}: " . $e->getMessage(), [
-                'exception' => get_class($e),
-                'event_id' => $eventId,
-                'payment_id' => $payment->id ?? null
-            ]);
-
             return false;
         }
     }
+    private function processFailedPayment(
+        PaymentEvent $event,
+        Payment $payment,
+        Session|PaymentIntent $obj,
+        PaymentEventType $eventType,
+        string $eventId,
+    ): void {
+        $user = $this->uqRepo->getUserByStripeCustomer($obj->customer);
 
-    private function findPayment($obj, string $eventType): ?object
-    {
-        if (in_array($eventType, ['payment_intent.payment_failed', 'payment_intent.canceled'])) {
-            return $this->pqRepo->findByIntentId($obj->id);
-        } elseif ($eventType === 'checkout.session.expired') {
-            return $this->pqRepo->findBySessionId($obj->id);
+        $error = $this->determineErrorMessage(
+            obj: $obj,
+            eventType: $eventType,
+        );
+
+        $hasPartialPayment = ($payment->amount_received ?? 0) > 0;
+
+        $this->sendFailedOrExpiredPaymentMail(
+            user: $user,
+            payment: $payment,
+            error: $error,
+            eventId: $eventId,
+        );
+
+        if (!$hasPartialPayment) {
+            $this->paymentRepo->delete($payment->id);
+        } else {
+            $this->stripeGateway->expireSessionIfPending(
+                $payment->stripe_session_id
+            );
         }
 
-        return null;
-    }
+        ClearStudentCacheJob::dispatch($user->id)
+            ->onQueue('cache');
 
-    private function determineErrorMessage($obj, string $eventType): string
+        $event->setStatus(PaymentStatus::FAILED);
+    }
+    private function determineErrorMessage(Session|PaymentIntent $obj, PaymentEventType $eventType): string
     {
-        if (in_array($eventType, ['payment_intent.payment_failed', 'payment_intent.canceled'])) {
-            return $obj->last_payment_error->message ?? 'Error desconocido';
-        } elseif ($eventType === 'checkout.session.expired') {
-            return "La sesión de pago expiró";
-        }
+        return match ($eventType) {
+            PaymentEventType::WEBHOOK_PAYMENT_FAILED =>
+                $obj->last_payment_error->message
+                ?? 'El pago fue rechazado.',
 
-        return 'Error desconocido en el pago';
+            PaymentEventType::WEBHOOK_PAYMENT_CANCELLED =>
+            'El pago fue cancelado.',
+
+            PaymentEventType::WEBHOOK_SESSION_EXPIRED =>
+            'La sesión de pago expiró.',
+
+            default =>
+            'Error desconocido en el pago.',
+        };
     }
-
     private function mapEventTypeToEnum(string $stripeEventType): PaymentEventType
     {
         return match($stripeEventType) {
@@ -133,82 +141,55 @@ class HandleFailedOrExpiredPaymentUseCase
             default => PaymentEventType::WEBHOOK_PAYMENT_FAILED
         };
     }
-
     private function createPaymentEvent(
-        $payment,
-        $obj,
+        Payment $payment,
+        Session|PaymentIntent $obj,
         string $eventId,
         PaymentEventType $eventType,
-        string $stripeEventType
     ): PaymentEvent
     {
-        $existing = $this->paymentEventQueryRep->findByStripeEvent($eventId, $eventType);
+        return match ($eventType) {
+            PaymentEventType::WEBHOOK_PAYMENT_CANCELLED =>
+                WebhookPaymentIntentEventFactory::cancelled(
+                    $eventId,
+                    $payment,
+                    $obj,
+                ),
+            PaymentEventType::WEBHOOK_PAYMENT_FAILED =>
+                WebhookPaymentIntentEventFactory::failed(
+                    $eventId,
+                    $payment,
+                    $obj
+                ),
+            PaymentEventType::WEBHOOK_SESSION_EXPIRED =>
+                WebhookSessionEventFactory::expired(
+                    $payment,
+                    $obj,
+                    $eventId
+                )
+        };
 
-        if ($existing) {
-            return $existing;
-        }
-
-        $amount = '0.00';
-        if (isset($obj->amount) && $obj->amount > 0) {
-            $amount = Money::from($obj->amount)->divide('100')->finalize();
-        } elseif (isset($payment->amount_received) && $payment->amount_received > 0) {
-            $amount = $payment->amount_received;
-        }
-
-        $event = PaymentEvent::createWebhookEvent(
-            paymentId: $payment->id,
-            stripeEventId: $eventId,
-            paymentIntentId: $obj->payment_intent ?? $obj->id ?? null,
-            sessionId: $obj->id ?? ($stripeEventType === 'checkout.session.expired' ? $obj->id : null),
-            amount: $amount,
-            eventType: $eventType,
-            metadata: [
-                'raw_object' => $obj,
-                'stripe_event_type' => $stripeEventType,
-                'email_type' => 'payment_failed_mail',
-                'original_status' => $payment->status ?? null,
-                'amount_original' => $payment->amount ?? null,
-                'amount_received_original' => $payment->amount_received ?? null,
-                'has_partial_payment' => ($payment->amount_received ?? 0) > 0,
-                'error_details' => $this->determineErrorMessage($obj, $stripeEventType)
-            ],
-        );
-
-        return $this->paymentEventRep->create($event);
     }
-
     private function sendFailedOrExpiredPaymentMail(User $user, Payment $payment, string $error, string $eventId ): void
     {
-        $data = [
-            'recipientName' => $user->fullName(),
-            'recipientEmail' => $user->email,
-            'concept_name' => $payment->concept_name,
-            'amount' => $payment->amount,
-            'error' => $error
-        ];
-        $emailEvent = $this->createEmailEvent($user, $payment, $error, $eventId);
-        $mail = new PaymentFailedMail(MailMapper::toPaymentFailedEmailDTO($data));
-        SendMailJob::forUser($mail, $user->email, 'failed_or_expired_payment', $emailEvent->id)->onQueue('emails');
-    }
-
-    private function createEmailEvent(User $user, Payment $payment, string $error, string $eventId): PaymentEvent
-    {
-        $emailEvent = PaymentEvent::createEmailEvent(
-            paymentId: $payment->id,
-            eventId: $eventId,
-            paymentIntentId: $payment->payment_intent_id ?? null,
-            sessionId: $payment->stripe_session_id ?? null,
-            eventType: PaymentEventType::EMAIL_PAYMENT_FAILED,
-            recipientEmail: $user->email,
-            emailData: [
-                'email_template' => 'payment_failed',
-                'concept_name' => $payment->concept_name,
-                'error_message' => $error,
-                'has_partial_payment' => ($payment->amount_received ?? 0) > 0,
-            ]
+        $emailEvent = $this->emailEventManager->findOrCreate(
+            eventType: EmailEventType::PAYMENT_FAILED,
+            sourceType: EmailEventSourceType::STRIPE,
+            sourceId: $eventId,
+            factory: fn () => EmailEventFactory::paymentFailed(
+                payment: $payment,
+                user: $user,
+                stripeEventId: $eventId,
+                errorMessage: $error,
+            ),
         );
-        return $this->paymentEventRep->create($emailEvent);
 
+        $mail = new PaymentFailedMail(MailMapper::toPaymentFailedEmailDTO(user: $user,payment: $payment,error: $error));
+        $this->emailEventManager->dispatch(
+            event: $emailEvent,
+            mail: $mail,
+            recipientEmail: $user->email,
+            jobType: 'failed_or_expired_payment',
+        );
     }
-
 }

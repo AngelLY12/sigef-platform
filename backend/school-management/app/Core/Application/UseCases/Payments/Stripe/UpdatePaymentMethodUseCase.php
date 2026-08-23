@@ -18,28 +18,17 @@ class UpdatePaymentMethodUseCase
         private CacheService $cacheService
     ){}
 
-    public function execute($obj, string $eventType, string $eventId): bool
+    public function execute(\Stripe\PaymentMethod $obj, string $eventType, string $eventId): bool
     {
         if (!isset($obj->type) || $obj->type !== 'card') {
-            logger()->info('Ignoring non-card payment method in automatic update', [
-                'stripe_id' => $obj->id ?? 'unknown',
-                'type' => $obj->type ?? 'unknown'
-            ]);
             return true;
         }
 
         if (!isset($obj->card)) {
-            logger()->warning('Card payment method without card data', [
-                'stripe_id' => $obj->id ?? 'unknown'
-            ]);
             return false;
         }
         $exists = $this->paymentMethodQueryRep->findByStripeId($obj->id);
         if (!$exists) {
-            logger()->warning('Payment method not found for automatic update', [
-                'stripe_id' => $obj->id,
-                'customer_id' => $obj->customer ?? null
-            ]);
             return false;
         }
 
@@ -52,11 +41,6 @@ class UpdatePaymentMethodUseCase
             ];
 
             if (!$this->hasChanges($exists, $fields)) {
-                logger()->debug('No actual changes detected in automatic update', [
-                    'stripe_id' => $obj->id,
-                    'event_id' => $eventId
-                ]);
-
                 return true;
             }
 
@@ -65,32 +49,11 @@ class UpdatePaymentMethodUseCase
             if ($affectedRows > 0) {
                 $this->clearUserCache($exists->user_id);
 
-                logger()->info('Card automatically updated successfully', [
-                    'stripe_id' => $obj->id,
-                    'changes' => $fields,
-                    'previous' => [
-                        'brand' => $exists->brand,
-                        'last4' => $exists->last4,
-                        'exp_month' => $exists->exp_month,
-                        'exp_year' => $exists->exp_year,
-                    ]
-                ]);
-
                 return true;
             }
-
-            logger()->error('Failed to update payment method (0 rows affected)', [
-                'stripe_id' => $obj->id,
-                'event_id' => $eventId
-            ]);
             return false;
 
         }catch (\Exception $e) {
-            logger()->error('Error in payment method automatic update', [
-                'stripe_id' => $obj->id ?? 'unknown',
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
 
             if (!($e instanceof DomainException) && !($e instanceof \Illuminate\Validation\ValidationException)) {
                 throw $e;
@@ -118,6 +81,4 @@ class UpdatePaymentMethodUseCase
 
         $this->cacheService->flushTags($tags);
     }
-
-
 }

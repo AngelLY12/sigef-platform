@@ -2,139 +2,121 @@
 
 namespace App\Core\Application\UseCases\Payments\Stripe;
 
-use App\Core\Application\Mappers\EnumMapper;
+use App\Core\Application\DTO\Request\Mail\RequiresActionEmailDTO;
+use App\Core\Application\Factories\Emails\Events\EmailEventFactory;
+use App\Core\Application\Factories\Payments\Stripe\WebhookPaymentIntentEventFactory;
 use App\Core\Application\Mappers\MailMapper;
+use App\Core\Application\Services\Events\Contracts\EmailEventManagerInterface;
+use App\Core\Application\Services\Events\Contracts\PaymentEventManagerInterface;
 use App\Core\Domain\Entities\Payment;
-use App\Core\Domain\Entities\PaymentEvent;
 use App\Core\Domain\Entities\User;
-use App\Core\Domain\Enum\Payment\PaymentEventType;
-use App\Core\Domain\Repositories\Command\Payments\PaymentEventRepInterface;
-use App\Core\Domain\Repositories\Command\Payments\PaymentRepInterface;
-use App\Core\Domain\Repositories\Query\Payments\PaymentEventQueryRepInterface;
+use App\Core\Domain\Enum\Events\Sources\EmailEventSourceType;
+use App\Core\Domain\Enum\Events\Types\EmailEventType;
+use App\Core\Domain\Enum\Events\Types\PaymentEventType;
 use App\Core\Domain\Repositories\Query\Payments\PaymentQueryRepInterface;
 use App\Core\Domain\Repositories\Query\User\UserQueryRepInterface;
-use App\Core\Domain\Utils\Helpers\Money;
 use App\Exceptions\DomainException;
-use App\Exceptions\NotFound\PaymentNotFountException;
-use App\Jobs\ClearStudentCacheJob;
-use App\Jobs\SendMailJob;
 use App\Mail\RequiresActionMail;
+use Stripe\PaymentIntent;
 
 class RequiresActionUseCase
 {
     public function __construct(
         private UserQueryRepInterface $userRepo,
-        private PaymentEventQueryRepInterface $paymentEventQueryRep,
-        private PaymentEventRepInterface $paymentEventRep,
+        private PaymentQueryRepInterface $paymentQueryRep,
+        private PaymentEventManagerInterface $paymentEventManager,
+        private EmailEventManagerInterface $emailEventManager,
 
     ) {
     }
-    public function execute($obj, string $eventId){
-        $eventMail = $this->paymentEventQueryRep->findByStripeEvent($eventId,PaymentEventType::EMAIL_REQUIRES_ACTION );
-        if($eventMail && $eventMail->processed)
-        {
-            logger("El evento ya fue procesado y se envio el email");
+    public function execute(PaymentIntent $obj, string $eventId){
+        $payment = $this->paymentQueryRep->findById($obj->metadata->payment_id);
+
+        if (!$payment) {
+            return false;
+        }
+
+        $paymentEvent = $this->paymentEventManager->findOrCreate(
+            stripeEventId: $eventId,
+            eventType: PaymentEventType::WEBHOOK_PAYMENT_REQUIRES_ACTION,
+            factory: fn () => WebhookPaymentIntentEventFactory::requiresAction(
+                eventId: $eventId,
+                payment: $payment,
+                paymentIntent: $obj,
+            ),
+        );
+
+        if ($paymentEvent->processed) {
             return true;
         }
-        $user = $this->userRepo->getUserByStripeCustomer($obj->customer);
 
         try {
-            $data = null;
-            $sendMail = false;
-            $nextAction = null;
-            if (in_array('oxxo', $obj->payment_method_types ?? [])) {
-                $nextAction = $obj->next_action ?? null;
-                if ($nextAction) {
-                    $data = $this->prepareDataForEmail($user, $obj, $nextAction);
-                    $sendMail = true;
-                }
-            }
-
-            if (in_array('customer_balance', $obj->payment_method_types ?? [])) {
-                $nextAction = $obj->next_action ?? null;
-
-                if ($nextAction) {
-                    $data = $this->prepareDataForEmail($user, $obj, $nextAction);
-                    $sendMail = true;
-                }
-            }
-
-            if ($sendMail && $data) {
-                $this->sendRequiresActionMail($data, $user, $eventId);
-            }
-
+            $this->paymentEventManager->process(
+                event: $paymentEvent,
+                callback: fn () => $this->processRequiresAction(
+                    payment: $payment,
+                    paymentIntent: $obj,
+                    eventId: $eventId,
+                ),
+            );
             return true;
         } catch (\Exception $e) {
             if (!($e instanceof DomainException) && !($e instanceof \Illuminate\Validation\ValidationException)) {
                 throw $e;
             }
 
-            logger()->warning("Error procesando evento requires_action: " . $e->getMessage(), [
-                'exception' => get_class($e),
-                'event_id' => $eventId,
-                'payment_intent_id' => $obj->id
-            ]);
-
             return false;
         }
     }
 
-    private function prepareDataForEmail(User $user, $obj, $nextAction): array
-    {
-        $data = [
-            'recipientName' => $user->fullName(),
-            'recipientEmail' => $user->email,
-            'amount' => $obj->amount,
-
-        ];
-        if (isset($nextAction->oxxo_display_details)) {
-            $data['next_action'] = [
-                'type' => 'oxxo',
-                'reference' => $nextAction->oxxo_display_details->number,
-                'url' => $nextAction->oxxo_display_details->hosted_voucher_url,
-            ];
-            $data['payment_method_options'] = [
-                'expires_after_days' => $obj->payment_method_options->oxxo->expires_after_days ?? null
-            ];
-        }
-
-        if (isset($nextAction->display_bank_transfer_instructions)) {
-            $data['next_action'] = [
-                'type' => 'spei',
-                'reference' => $nextAction->display_bank_transfer_instructions->reference,
-                'url' => $nextAction->display_bank_transfer_instructions->hosted_instructions_url,
-            ];
-            $data['payment_method_options'] = [
-                'expires_after_days' => null
-            ];
-        }
-        return $data;
-    }
-
-    private function sendRequiresActionMail(array $data, User $user, string $eventId): void
-    {
-        $emailEvent = $this->createEmailEvent($data, $user, $eventId);
-        $mail = new RequiresActionMail(MailMapper::toRequiresActionEmailDTO($data));
-        SendMailJob::forUser($mail, $user->email, 'requires_action', $emailEvent->id)->onQueue('emails');
-    }
-
-    private function createEmailEvent(array $data, User $user, string $eventId): PaymentEvent
-    {
-        $emailEvent = PaymentEvent::createEmailEvent(
-            paymentId: null,
-            eventId: $eventId,
-            paymentIntentId:  null,
-            sessionId: null,
-            eventType: PaymentEventType::EMAIL_REQUIRES_ACTION,
-            recipientEmail: $user->email,
-            emailData: [
-                'email_template' => 'requires_action',
-                'next_action_type' => $data['next_action_type'] ?? 'unknown',
-            ]
+    private function processRequiresAction(
+        Payment $payment,
+        PaymentIntent $paymentIntent,
+        string $eventId,
+    ): void {
+        $user = $this->userRepo->getUserByStripeCustomer(
+            $paymentIntent->customer
         );
 
-        return $this->paymentEventRep->create($emailEvent);
+        $data = MailMapper::toRequiresActionEmailDTO(user: $user,paymentIntent: $paymentIntent);
+
+        if (!$data) {
+            return;
+        }
+
+        $this->sendRequiresActionMail(
+            data: $data,
+            payment: $payment,
+            user: $user,
+            eventId: $eventId,
+        );
     }
 
+    private function sendRequiresActionMail(
+        RequiresActionEmailDTO $data,
+        Payment $payment,
+        User $user,
+        string $eventId,
+    ): void {
+        $emailEvent = $this->emailEventManager->findOrCreate(
+            eventType: EmailEventType::PAYMENT_REQUIRES_ACTION,
+            sourceType: EmailEventSourceType::STRIPE,
+            sourceId: $eventId,
+            factory: fn () => EmailEventFactory::paymentRequiresAction(
+                payment: $payment,
+                user: $user,
+                stripeEventId: $eventId,
+                requiredAction: $data->requiredActionDetails
+            ),
+        );
 
+        $mail = new RequiresActionMail($data);
+
+        $this->emailEventManager->dispatch(
+            event: $emailEvent,
+            mail: $mail,
+            recipientEmail: $user->email,
+            jobType: 'requires_action',
+        );
+    }
 }
