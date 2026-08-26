@@ -21,6 +21,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Response;
 use App\Core\Domain\Enum\Exceptions\ErrorCode;
+use App\Http\Controllers\Admin\AdminPaymentEventsController;
+use App\Http\Controllers\Admin\AdminEmailEventsController;
+use App\Http\Controllers\Admin\AdminReconciliationEventsController;
 
 
 Route::get('/health', function () {
@@ -117,7 +120,7 @@ Route::prefix('v1')->middleware(['auth:sanctum'])->group(function (){
 
     Route::prefix('debts')->middleware(['role:financial-staff'])->group(function(){
         Route::middleware(['permission:view.debts', 'throttle:global'])->get('/', [DebtsController::class, 'index']);
-        Route::middleware(['permission:validate.debt', 'throttle:10,1'])->post('/validate', [DebtsController::class, 'validatePayment']);
+        Route::middleware(['permission:validate.debt', 'throttle:10,1'])->post('/reconcile', [DebtsController::class, 'reconcilePayment']);
         Route::middleware(['permission:view.stripe.payments', 'throttle:10,1'])->get('/stripe-payments', [DebtsController::class, 'getStripePayments']);
     });
 
@@ -129,6 +132,32 @@ Route::prefix('v1')->middleware(['auth:sanctum'])->group(function (){
     });
 
     Route::prefix('admin-actions')->middleware(['role:admin|supervisor', 'throttle:global'])->group(function(){
+        Route::controller(AdminPaymentEventsController::class)
+            ->middleware('permission:view.payment-events')
+            ->prefix('payment-events')
+            ->group(function () {
+                Route::get('/', 'index');
+                Route::get('/timeline/{paymentId}', 'timeline');
+                Route::get('/{eventId}', 'show');
+            });
+
+        Route::controller(AdminEmailEventsController::class)
+            ->middleware('permission:view.email-events')
+            ->prefix('email-events')
+            ->group(function () {
+                Route::get('/', 'index');
+                Route::get('/history/{userId}', 'history');
+                Route::get('/{eventId}', 'show');
+            });
+
+        Route::controller(AdminReconciliationEventsController::class)
+            ->middleware('permission:view.reconciliation-events')
+            ->prefix('reconciliation-events')
+            ->group(function () {
+                Route::get('/', 'index');
+                Route::get('/timeline/{paymentId}', 'timeline');
+                Route::get('/{eventId}', 'show');
+            });
 
         Route::controller(AdminStudentController::class)->group(function(){
             Route::middleware('permission:attach.student')->post('/attach-student','attachStudent');
