@@ -38,7 +38,7 @@ class ProcessRecipientsListener implements ShouldQueue
             return;
         }
 
-        $this->case->execute($paymentConcept, $event->appliesTo);
+        $this->case->execute($paymentConcept, $event->appliesTo, $event->operationId);
 
         Log::info('Payment concept recipients processed via listener', [
             'concept_id' => $event->paymentConceptId,

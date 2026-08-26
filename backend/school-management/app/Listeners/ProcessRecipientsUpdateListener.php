@@ -46,7 +46,7 @@ class ProcessRecipientsUpdateListener implements ShouldQueue
         }
         $oldPaymentConcept = PaymentConcept::fromArray($event->oldPaymentConceptArray);
         $dto=UpdatePaymentConceptRelationsDTO::fromArray($event->dtoArray);
-        $this->update->execute($newPaymentConcept, $oldPaymentConcept, $event->oldRecipientIds ,$dto, $event->appliesTo);
+        $this->update->execute($newPaymentConcept, $oldPaymentConcept, $event->oldRecipientIds ,$dto, $event->appliesTo, $event->operationId);
         Log::info('Payment concept recipients processed', [
             'concept_id' => $event->newPaymentConceptId,
             'applies_to' => $event->appliesTo
