@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Core\Domain\Enum\Payment\PaymentEventType;
+use App\Core\Domain\Enum\Events\Types\PaymentEventType;
 use App\Core\Domain\Enum\Payment\PaymentStatus;
 use App\Models\Payment;
 use App\Models\PaymentEvent;
