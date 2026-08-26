@@ -3,6 +3,7 @@
 namespace App\Core\Application\UseCases\Jobs;
 
 use App\Core\Application\DTO\Request\PaymentConcept\UpdatePaymentConceptRelationsDTO;
+use App\Core\Application\Services\Events\Contracts\EmailEventManagerInterface;
 use App\Core\Application\Traits\HasPaymentConcept;
 use App\Core\Domain\Entities\PaymentConcept;
 use App\Core\Domain\Enum\PaymentConcept\PaymentConceptAppliesTo;
@@ -17,12 +18,14 @@ class ProcessUpdateConceptRecipientsUseCase
 
     public function __construct(
         private UserQueryRepInterface $uqRepo,
+        private readonly EmailEventManagerInterface $emailEventManager
     )
     {
         $this->setRepository($uqRepo);
+        $this->setEmailEventManager($this->emailEventManager);
     }
 
-    public function execute(PaymentConcept $newPaymentConcept, PaymentConcept $oldPaymentConcept, array $oldRecipientIds ,UpdatePaymentConceptRelationsDTO $dto ,string $appliesTo): void
+    public function execute(PaymentConcept $newPaymentConcept, PaymentConcept $oldPaymentConcept, array $oldRecipientIds ,UpdatePaymentConceptRelationsDTO $dto ,string $appliesTo, string $operationId): void
     {
         $notificationData=$this->getNotificationData($newPaymentConcept,$oldPaymentConcept);
         $notificationDecision= $this->shouldSendNotification($newPaymentConcept, $oldRecipientIds,$notificationData, $dto);
@@ -50,7 +53,7 @@ class ProcessUpdateConceptRecipientsUseCase
                 ]);
                 return;
             }
-            $this->notifyRecipients($newPaymentConcept,$recipients);
+            $this->notifyRecipients($newPaymentConcept,$recipients, $operationId);
 
             Log::info('Payment concept update notifications sent', [
                 'concept_id' =>$newPaymentConcept->id,

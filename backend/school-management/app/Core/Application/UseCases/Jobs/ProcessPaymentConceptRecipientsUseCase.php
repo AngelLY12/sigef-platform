@@ -2,6 +2,7 @@
 
 namespace App\Core\Application\UseCases\Jobs;
 
+use App\Core\Application\Services\Events\Contracts\EmailEventManagerInterface;
 use App\Core\Application\Traits\HasPaymentConcept;
 use App\Core\Domain\Entities\PaymentConcept;
 use App\Core\Domain\Repositories\Query\User\UserQueryRepInterface;
@@ -13,13 +14,15 @@ class ProcessPaymentConceptRecipientsUseCase
     use HasPaymentConcept;
 
     public function __construct(
-        private UserQueryRepInterface $uqRepo,
+        private UserQueryRepInterface               $uqRepo,
+        private readonly EmailEventManagerInterface $emailEventManager,
     )
     {
         $this->setRepository($uqRepo);
+        $this->setEmailEventManager($this->emailEventManager);
     }
 
-    public function execute(PaymentConcept $paymentConcept, string $appliesTo): void
+    public function execute(PaymentConcept $paymentConcept, string $appliesTo, string $operationId): void
     {
         $recipients = $this->uqRepo->getRecipients($paymentConcept, $appliesTo);
         if(empty($recipients)){
@@ -29,7 +32,7 @@ class ProcessPaymentConceptRecipientsUseCase
             ]);
             return;
         }
-        $this->notifyRecipients($paymentConcept,$recipients);
+        $this->notifyRecipients($paymentConcept,$recipients, $operationId);
         $userIds=[];
         foreach ($recipients as $recipient)
         {

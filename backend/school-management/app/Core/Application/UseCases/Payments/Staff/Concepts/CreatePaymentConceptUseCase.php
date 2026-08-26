@@ -10,6 +10,7 @@ use App\Core\Domain\Entities\PaymentConcept;
 use App\Core\Domain\Enum\PaymentConcept\PaymentConceptAppliesTo;
 use App\Core\Domain\Repositories\Command\Payments\PaymentConceptRepInterface;
 use App\Core\Domain\Repositories\Query\User\UserQueryRepInterface;
+use App\Core\Domain\Utils\Helpers\EventSourceId;
 use App\Core\Domain\Utils\Validators\PaymentConceptValidator;
 use App\Events\AdministrationEvent;
 use App\Events\PaymentConceptCreated;
@@ -35,6 +36,7 @@ class CreatePaymentConceptUseCase
 
     public function execute(CreatePaymentConceptDTO $dto): CreatePaymentConceptResponse {
         $this->preValidateRecipients($dto);
+        $operationId = EventSourceId::generateOperationId();
         $paymentConcept= DB::transaction(function() use ($dto) {
             $pc = PaymentConceptMapper::toDomain($dto);
             PaymentConceptValidator::ensureConceptHasRequiredFields($pc);
@@ -55,7 +57,7 @@ class CreatePaymentConceptUseCase
             return $paymentConcept;
         });
         $affectedCount = count($this->uqRepo->getRecipientsIds($paymentConcept, $dto->appliesTo->value));
-        event(new PaymentConceptCreated($paymentConcept->id, $paymentConcept->applies_to->value));
+        event(new PaymentConceptCreated($paymentConcept->id, $paymentConcept->applies_to->value, $operationId));
         if( config('concepts.amount.notifications.enabled') && bccomp($paymentConcept->amount, config('concepts.amount.notifications.threshold')) === 1)
         {
             event(new AdministrationEvent(
@@ -63,6 +65,7 @@ class CreatePaymentConceptUseCase
                 id: $paymentConcept->id,
                 concept_name: $paymentConcept->concept_name,
                 action: "creó",
+                operationId: $operationId,
             ));
         }
         return PaymentConceptMapper::toCreatePaymentConceptResponse($paymentConcept, $affectedCount);

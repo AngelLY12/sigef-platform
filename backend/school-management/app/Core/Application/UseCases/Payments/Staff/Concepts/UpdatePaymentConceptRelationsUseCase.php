@@ -11,6 +11,7 @@ use App\Core\Domain\Enum\PaymentConcept\PaymentConceptAppliesTo;
 use App\Core\Domain\Repositories\Command\Payments\PaymentConceptRepInterface;
 use App\Core\Domain\Repositories\Query\Payments\PaymentConceptQueryRepInterface;
 use App\Core\Domain\Repositories\Query\User\UserQueryRepInterface;
+use App\Core\Domain\Utils\Helpers\EventSourceId;
 use App\Core\Domain\Utils\Validators\PaymentConceptValidator;
 use App\Events\PaymentConceptUpdatedRelations;
 use App\Exceptions\NotFound\CareersNotFoundException;
@@ -35,6 +36,7 @@ class UpdatePaymentConceptRelationsUseCase
     }
     public function execute(UpdatePaymentConceptRelationsDTO $dto): UpdatePaymentConceptRelationsResponse {
         $this->preValidateUpdate($dto);
+        $operationId = EventSourceId::generateOperationId();
         [$newPaymentConcept, $oldPaymentConcept, $oldRecipientIds]= DB::transaction(function() use ($dto) {
 
             $existingConcept = $this->pcqRepo->findById($dto->id);
@@ -87,6 +89,7 @@ class UpdatePaymentConceptRelationsUseCase
             $dto->toArrayEntire(),
             $newPaymentConcept->applies_to->value,
             $oldRecipientIds,
+            $operationId
         ));
 
         return $this->formattResponse($newPaymentConcept,$oldPaymentConcept,$oldRecipientIds);

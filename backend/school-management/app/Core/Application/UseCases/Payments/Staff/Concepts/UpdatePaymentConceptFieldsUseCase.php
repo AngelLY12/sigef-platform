@@ -8,6 +8,7 @@ use App\Core\Application\Mappers\PaymentConceptMapper;
 use App\Core\Domain\Entities\PaymentConcept;
 use App\Core\Domain\Repositories\Command\Payments\PaymentConceptRepInterface;
 use App\Core\Domain\Repositories\Query\Payments\PaymentConceptQueryRepInterface;
+use App\Core\Domain\Utils\Helpers\EventSourceId;
 use App\Core\Domain\Utils\Helpers\Money;
 use App\Core\Domain\Utils\Validators\PaymentConceptValidator;
 use App\Events\AdministrationEvent;
@@ -75,11 +76,13 @@ class UpdatePaymentConceptFieldsUseCase
         }
         if(config('concepts.amount.notifications.enabled') && bccomp($newPaymentConcept->amount, config('concepts.amount.notifications.threshold')) === 1)
         {
+            $operationId = EventSourceId::generateOperationId();
             event(new AdministrationEvent(
                 amount: $newPaymentConcept->amount,
                 id: $newPaymentConcept->id,
                 concept_name: $newPaymentConcept->concept_name,
                 action: "actualizó",
+                operationId: $operationId
             ));
         }
         return PaymentConceptMapper::toUpdatePaymentConceptResponse($newPaymentConcept, $data);
