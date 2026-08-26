@@ -2,13 +2,13 @@
 
 namespace App\Jobs;
 
-use App\Core\Domain\Repositories\Command\Payments\PaymentEventRepInterface;
-use App\Core\Domain\Repositories\Query\Payments\PaymentEventQueryRepInterface;
+use App\Core\Domain\Repositories\Command\Events\EmailEventRepInterface;
+use App\Core\Domain\Repositories\Query\Events\EmailEventQueryRepInterface;
 use Illuminate\Contracts\Mail\Mailable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Bus\PendingDispatch;
 use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
@@ -23,18 +23,18 @@ class SendMailJob implements ShouldQueue
     protected Mailable $mailable;
     protected string $recipientEmail;
     protected ?string $jobType = null;
-    protected ?int $paymentEventId = null;
+    protected ?int $emailEventId = null;
 
 
     /**
      * Create a new job instance.
      */
-    public function __construct(Mailable $mailable, string $recipientEmail,  ?string $jobType = null, ?int $paymentEventId = null)
+    public function __construct(Mailable $mailable, string $recipientEmail,  ?string $jobType = null, ?int $emailEventId = null)
     {
         $this->mailable = $mailable;
         $this->recipientEmail = $recipientEmail;
         $this->jobType = $jobType;
-        $this->paymentEventId = $paymentEventId;
+        $this->emailEventId = $emailEventId;
     }
     public function retryUntil()
     {
@@ -44,15 +44,32 @@ class SendMailJob implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(PaymentEventRepInterface $paymentEventRep, PaymentEventQueryRepInterface $paymentEventQueryRep): void
+    public function handle(EmailEventRepInterface $emailEventRep, EmailEventQueryRepInterface $emailEventQueryRep): void
     {
-        if ($this->paymentEventId) {
-            $this->updateEmailStatus($paymentEventRep, $paymentEventQueryRep,'sending', null);
+        $emailEvent = null;
+        if ($this->emailEventId !== null) {
+            $emailEvent = $emailEventQueryRep->findById(
+                $this->emailEventId
+            );
+            if (!$emailEvent) {
+                Log::warning(
+                    'EmailEvent no encontrado para email',
+                    [
+                        'event_id' => $this->emailEventId,
+                        'email' => $this->recipientEmail,
+                    ]
+                );
+
+                return;
+            }
+            $emailEvent->registerAttempt();
+            $emailEventRep->save($emailEvent);
         }
         try {
             Mail::to($this->recipientEmail)->send($this->mailable);
-            if ($this->paymentEventId) {
-                $this->updateEmailStatus($paymentEventRep, $paymentEventQueryRep,'delivered', null);
+            if ($emailEvent) {
+                $emailEvent->markAsSent();
+                $emailEventRep->save($emailEvent);
             }
             $logContext = [
                 'email' => $this->recipientEmail,
@@ -62,58 +79,12 @@ class SendMailJob implements ShouldQueue
 
             Log::info("Correo enviado exitosamente", $logContext);
         } catch (\Throwable $e) {
-            if ($this->paymentEventId) {
-                $this->updateEmailStatus($paymentEventRep, $paymentEventQueryRep,'failed', $e->getMessage());
+            if ($emailEvent) {
+                $emailEvent->markAsFailed($e->getMessage());
+                $emailEventRep->save($emailEvent);
             }
             $this->handleError($e);
         }
-    }
-
-    private function updateEmailStatus(
-        PaymentEventRepInterface $repo,
-        PaymentEventQueryRepInterface $queryRep,
-        string $status,
-        ?string $error = null
-    ): void {
-        $event = $queryRep->findById($this->paymentEventId);
-
-        if (!$event) {
-            Log::warning("PaymentEvent no encontrado para email", [
-                'event_id' => $this->paymentEventId,
-                'email' => $this->recipientEmail
-            ]);
-            return;
-        }
-
-        $updateData = [
-            'metadata' => array_merge($event->metadata ?? [], [
-                'email_status' => $status,
-                'last_updated_at' => now()->toISOString(),
-            ])
-        ];
-
-        switch ($status) {
-            case 'sending':
-                $updateData['metadata']['attempt_count'] =
-                    ($event->metadata['attempt_count'] ?? 0) + 1;
-                $updateData['metadata']['last_attempt_at'] = now()->toISOString();
-                break;
-
-            case 'delivered':
-                $updateData['processed'] = true;
-                $updateData['processed_at'] = now();
-                $updateData['metadata']['delivered_at'] = now()->toISOString();
-                $updateData['metadata']['recipient_email'] = $this->recipientEmail;
-                break;
-
-            case 'failed':
-                $updateData['error_message'] = $error;
-                $updateData['metadata']['last_error'] = $error;
-                $updateData['metadata']['failed_at'] = now()->toISOString();
-                break;
-        }
-
-        $repo->update($this->paymentEventId, $updateData);
     }
 
     private function handleError(\Throwable $e): void
@@ -176,14 +147,14 @@ class SendMailJob implements ShouldQueue
             str_contains($message, '554');
     }
 
-    public static function forUser(Mailable $mailable, string $recipientEmail, ?string $jobType = null, ?int $paymentEventId=null): PendingDispatch
+    public static function forUser(Mailable $mailable, string $recipientEmail, ?string $jobType = null, ?int $emailEventId=null): PendingDispatch
     {
-         return self::dispatch($mailable, $recipientEmail, $jobType, $paymentEventId);
+         return self::dispatch($mailable, $recipientEmail, $jobType, $emailEventId);
     }
 
-    public static function fromBulkRetry(Mailable $mailable, string $recipientEmail): PendingDispatch
+    public static function fromBulkRetry(Mailable $mailable, string $recipientEmail, int $emailEventId): PendingDispatch
     {
-        return self::dispatch($mailable, $recipientEmail, 'bulk_retry');
+        return self::dispatch($mailable, $recipientEmail, 'bulk_retry', $emailEventId);
 
     }
 }

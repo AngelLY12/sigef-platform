@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Core\Domain\Repositories\Command\Events\EmailEventRepInterface;
+use App\Core\Domain\Repositories\Query\Events\EmailEventQueryRepInterface;
 use Illuminate\Contracts\Mail\Mailable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\PendingDispatch;
@@ -26,14 +28,25 @@ class SendBulkMailJob implements ShouldQueue
 
     protected array $mailables;
     protected array $recipientEmails;
+    protected array $emailEventIds;
     protected ?string $jobType = null;
-    public function __construct(array $mailables, array $recipientEmails, ?string $jobType = null)
+    public function __construct(
+        array $mailables,
+        array $recipientEmails,
+        array $emailEventIds,
+        ?string $jobType = null)
     {
-        if (count($mailables) !== count($recipientEmails)) {
-            throw new \InvalidArgumentException('Mailables y emails deben tener misma cantidad');
+        if (
+            count($mailables) !== count($recipientEmails) ||
+            count($mailables) !== count($emailEventIds)
+        ) {
+            throw new \InvalidArgumentException(
+                'Mailables, emails y EmailEvent IDs deben tener la misma cantidad'
+            );
         }
         $this->mailables = $mailables;
         $this->recipientEmails = $recipientEmails;
+        $this->emailEventIds = $emailEventIds;
         $this->jobType = $jobType;
     }
     public function retryUntil()
@@ -44,7 +57,10 @@ class SendBulkMailJob implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(): void
+    public function handle(
+        EmailEventRepInterface $emailEventRep,
+        EmailEventQueryRepInterface $emailEventQueryRep
+    ): void
     {
         $startTime = microtime(true);
         $emailCount = 0;
@@ -53,7 +69,31 @@ class SendBulkMailJob implements ShouldQueue
 
         foreach ($this->mailables as $index => $mailable) {
             $recipientEmail = $this->recipientEmails[$index];
+            $emailEventId = $this->emailEventIds[$index];
+            $emailEvent = $emailEventQueryRep->findById($emailEventId);
 
+            if (!$emailEvent) {
+                Log::warning(
+                    'EmailEvent no encontrado para email bulk',
+                    [
+                        'event_id' => $emailEventId,
+                        'email' => $recipientEmail,
+                    ]
+                );
+
+                $failCount++;
+                continue;
+            }
+
+            if (
+                $emailEvent->alreadySent() ||
+                $emailEvent->alreadyDelivered()
+            ) {
+                continue;
+            }
+
+            $emailEvent->registerAttempt();
+            $emailEventRep->save($emailEvent);
             try {
                 if ($this->shouldThrottle($startTime, $emailCount)) {
                     $this->throttle($startTime);
@@ -62,15 +102,25 @@ class SendBulkMailJob implements ShouldQueue
                 }
 
                 Mail::to($recipientEmail)->send($mailable);
+                $emailEvent->markAsSent();
+                $emailEventRep->save($emailEvent);
                 $successCount++;
                 $emailCount++;
 
+                Log::info('Correo bulk enviado exitosamente', [
+                    'event_id' => $emailEventId,
+                    'email' => $recipientEmail,
+                    'job_type' => $this->jobType,
+                    'mailable' => get_class($mailable),
+                ]);
 
                 usleep(self::DELAY_BETWEEN_EMAILS);
 
             } catch (\Throwable $e) {
                 $failCount++;
-                $this->handleEmailError($e, $recipientEmail, $mailable);
+                $emailEvent->markAsFailed($e->getMessage());
+                $emailEventRep->save($emailEvent);
+                $this->handleEmailError($e, $recipientEmail, $mailable, $emailEventId);
                 continue;
             }
         }
@@ -106,7 +156,12 @@ class SendBulkMailJob implements ShouldQueue
         }
     }
 
-    private function handleEmailError(\Throwable $e, string $recipientEmail, Mailable $mailable): void
+    private function handleEmailError(
+        \Throwable $e,
+        string $recipientEmail,
+        Mailable $mailable,
+        int $emailEventId
+    ): void
     {
         $message = $e->getMessage();
 
@@ -115,6 +170,13 @@ class SendBulkMailJob implements ShouldQueue
                 'email' => $recipientEmail,
                 'job_type' => $this->jobType
             ]);
+            SendMailJob::fromBulkRetry(
+                mailable: clone $mailable,
+                recipientEmail: $recipientEmail,
+                emailEventId: $emailEventId,
+            )
+                ->onQueue('emails')
+                ->delay(now()->addMinutes(1));
             return;
         }
 
@@ -124,7 +186,11 @@ class SendBulkMailJob implements ShouldQueue
             'job_type' => $this->jobType
         ]);
 
-        SendMailJob::fromBulkRetry(clone $mailable, $recipientEmail)
+        SendMailJob::fromBulkRetry(
+            mailable: clone $mailable,
+            recipientEmail: $recipientEmail,
+            emailEventId: $emailEventId,
+        )
             ->onQueue('emails')
             ->delay(now()->addMinutes(1));
     }
@@ -132,8 +198,9 @@ class SendBulkMailJob implements ShouldQueue
     public static function forRecipients(
         array $mailables,
         array $recipientEmails,
+        array $emailEventIds,
         ?string $jobType = null
     ): PendingDispatch {
-        return self::dispatch($mailables, $recipientEmails, $jobType);
+        return self::dispatch($mailables, $recipientEmails, $emailEventIds, $jobType);
     }
 }
