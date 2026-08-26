@@ -9,7 +9,7 @@ class NewPaymentConceptEmailDTO
         public readonly string $recipientEmail,
         public readonly string $concept_name,
         public readonly string $amount,
-        public readonly string $end_date,
+        public readonly ?string $end_date,
         public readonly string $start_date,
         public readonly bool $isDisable,
     )
