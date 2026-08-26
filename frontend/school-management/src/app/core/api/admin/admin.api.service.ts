@@ -25,7 +25,6 @@ import { UpdatePermissionsToUser } from '../../../features/admin/models/request/
 import { RolesByUser, UpdateRolesByUserResponse } from '../../../features/admin/models/response/permissions/update-roles-by-user-response.model';
 import { PermissionsByUser, UpdatePermissionsByUserResponse } from '../../../features/admin/models/response/permissions/update-permissions-by-user-response.model';
 import { AttachStudentDetailsParams, UpdateStudentDetailsParams } from '../../models/domain/student-details-params.model';
-import { PromoteStudentsResponse } from '../../../features/admin/models/response/promote-students-response.model';
 import { DashboardRequest } from '../../../features/admin/models/request/dashboard-request.model';
 import { UserListItem } from '../../../features/admin/models/response/user-list-item.model';
 import { CreateUserRequest } from '../../../features/admin/models/request/create-user-request.model';
