@@ -7,8 +7,8 @@ use App\Exceptions\DomainException;
 
 class PaymentNotFountException extends DomainException
 {
-    public function __construct()
+    public function __construct(string $message = 'El pago solicitado no fue encontrado.')
     {
-        parent::__construct(404, 'El pago solicitado no fue encontrado.', ErrorCode::PAYMENT_NOT_FOUND);
+        parent::__construct(404, $message, ErrorCode::PAYMENT_NOT_FOUND);
     }
 }
