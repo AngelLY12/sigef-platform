@@ -1,22 +1,46 @@
 <?php
 
 namespace App\Core\Domain\Entities;
-use App\Core\Domain\Enum\Payment\PaymentEventType;
+use App\Core\Domain\Enum\Events\Types\PaymentEventType;
 use App\Core\Domain\Enum\Payment\PaymentStatus;
+use App\Core\Domain\ValueObjects\Payment\PaymentEvents\Metadata\PaymentEventMetadata;
 use DateTime;
+
+/**
+ * @OA\Schema(
+ *     schema="PaymentEvent",
+ *     type="object",
+ *     required={"eventType","amountReceived","processed","retryCount"},
+ *     @OA\Property(property="id", type="integer", nullable=true),
+ *     @OA\Property(property="paymentId", type="integer", nullable=true),
+ *     @OA\Property(property="stripeEventId", type="string", nullable=true),
+ *     @OA\Property(property="stripePaymentIntentId", type="string", nullable=true),
+ *     @OA\Property(property="stripeSessionId", type="string", nullable=true),
+ *     @OA\Property(property="eventType", ref="#/components/schemas/PaymentEventType"),
+ *     @OA\Property(property="metadata", type="object", nullable=true),
+ *     @OA\Property(property="amountReceived", type="string", nullable=true),
+ *     @OA\Property(property="status", ref="#/components/schemas/PaymentStatus", nullable=true),
+ *     @OA\Property(property="processed", type="boolean"),
+ *     @OA\Property(property="errorMessage", type="string", nullable=true),
+ *     @OA\Property(property="retryCount", type="integer"),
+ *     @OA\Property(property="processedAt", type="string", format="date-time", nullable=true),
+ *     @OA\Property(property="createdAt", type="string", format="date-time", nullable=true),
+ *     @OA\Property(property="updatedAt", type="string", format="date-time", nullable=true),
+ * )
+ */
 class PaymentEvent
 {
 
     public function __construct(
-        public ?int $id,
-        public ?int $paymentId,
-        public ?string $stripeEventId,
-        public ?string $stripePaymentIntentId,
-        public ?string $stripeSessionId,
+        public ?int $id = null,
+        public ?int $paymentId = null,
+        public ?string $stripeEventId = null,
+        public ?string $stripePaymentIntentId = null,
+        public ?string $stripeSessionId = null,
         public PaymentEventType $eventType,
-        public ?array $metadata,
+        public ?PaymentEventMetadata $metadata = null,
         public ?string $amountReceived,
-        public ?PaymentStatus $status,
+        public ?PaymentStatus $status = null,
         public bool $processed = false,
         public ?string $errorMessage = null,
         public int $retryCount = 0,
@@ -32,7 +56,7 @@ class PaymentEvent
         ?string $sessionId,
         ?string $amount,
         PaymentEventType $eventType,
-        array $metadata,
+        PaymentEventMetadata $metadata,
     ): self {
         return new self(
             id: null,
@@ -48,96 +72,38 @@ class PaymentEvent
         );
     }
 
-    public static function createReconciliationEvent(
-        ?int $paymentId,
-        string $outcome,
-        ?string $stripeEventId,
-        ?string $stripeSessionId,
-        PaymentEventType $eventType,
-        ?string $paymentIntentId,
-        array $metadata = [],
-        ?string $amount = null,
-        ?string $error = null,
-        ?PaymentStatus $status = null,
-        bool $processed = true
-    ): self {
-
-        return new self(
-            id: null,
-            paymentId: $paymentId,
-            stripeEventId: $stripeEventId,
-            stripePaymentIntentId: $paymentIntentId,
-            stripeSessionId: $stripeSessionId,
-            eventType: $eventType,
-            metadata: array_merge($metadata, ['outcome' => $outcome]),
-            amountReceived: $amount,
-            status: $status,
-            processed: $processed,
-            errorMessage: $error,
-            processedAt: $processed ? new \DateTime() : null
-        );
-    }
-
-    public static function createEmailEvent(
-        ?int $paymentId,
-        string $eventId,
-        ?string $paymentIntentId,
-        ?string $sessionId,
-        PaymentEventType $eventType,
-        string $recipientEmail,
-        array $emailData = [],
-        string $initialStatus = 'pending'
-    ): self {
-        if (!$eventType->isEmail()) {
-            throw new \InvalidArgumentException("El tipo de evento debe ser un email");
-        }
-
-        return new self(
-            id: null,
-            paymentId: $paymentId,
-            stripeEventId: $eventId,
-            stripePaymentIntentId: $paymentIntentId,
-            stripeSessionId: $sessionId,
-            eventType: $eventType,
-            metadata: array_merge($emailData, [
-                'email_status' => $initialStatus,
-                'recipient_email' => $recipientEmail,
-                'initial_status' => $initialStatus,
-                'created_at' => (new DateTime())->format('c'),
-                'attempt_count' => 0,
-                'last_attempt_at' => null,
-                'delivered_at' => null,
-                'failed_at' => null,
-            ]),
-            amountReceived: null,
-            status: null,
-            processed: $initialStatus === 'delivered',
-            processedAt: $initialStatus === 'delivered' ? new DateTime() : null,
-        );
-    }
-
-    public function setRetryCount(int $retryCount): void
+    public function registerRetry(): void
     {
-        $this->retryCount = $retryCount;
+        $this->retryCount++;
     }
 
-    public function setErrorMessage(string $errorMessage): void
+    public function markAsProcessed(): void
     {
+        $this->processed = true;
+        $this->processedAt = new DateTime();
+        $this->errorMessage = null;
+    }
+
+    public function markAsFailed(string $errorMessage): void
+    {
+        $this->processed = false;
         $this->errorMessage = $errorMessage;
-    }
-    public function setProcessedAt(DateTime $processedAt): void
-    {
-        $this->processedAt = $processedAt;
+        $this->registerRetry();
     }
 
-    public function setProccessed(bool $processed): void
+    public function clearError(): void
     {
-        $this->processed = $processed;
+        $this->errorMessage = null;
     }
 
     public function setStatus(PaymentStatus $status): void
     {
         $this->status = $status;
+    }
+
+    public function setAmountReceived(string $amountReceived): void
+    {
+        $this->amountReceived = $amountReceived;
     }
 
 }

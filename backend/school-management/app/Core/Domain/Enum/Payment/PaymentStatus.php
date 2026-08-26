@@ -25,6 +25,20 @@ enum PaymentStatus: string
     case DEFAULT = 'pending';
     case UNDERPAID = 'underpaid';
 
+    public function label(): string
+    {
+        return match ($this) {
+            self::UNPAID => 'No pagado',
+            self::PAID => 'Pagado',
+            self::REQUIRES_ACTION => 'Requiere acción',
+            self::DEFAULT => 'Pendiente',
+            self::UNDERPAID => 'Pago parcial',
+            self::OVERPAID => 'Sobrepago',
+            self::FAILED => 'Fallido',
+            self::SUCCEEDED => 'Completado',
+        };
+    }
+
 
     public static function paidStatuses(): array
     {

@@ -4,6 +4,7 @@ namespace App\Core\Domain\Entities;
 
 use App\Core\Domain\Enum\Payment\PaymentStatus;
 use App\Core\Domain\Utils\Helpers\Money;
+use App\Core\Domain\ValueObjects\Payment\PaymentMethodDetails\PaymentMethodDetails;
 use Carbon\Carbon;
 
 /**
@@ -40,7 +41,7 @@ class Payment
         public string $amount,
         /** @var PaymentStatus */
         public PaymentStatus $status,
-        public array $payment_method_details = [],
+        public ?PaymentMethodDetails $payment_method_details = null,
         public ?int $id = null,
         /** @var User */
         public ?int $user_id= null,

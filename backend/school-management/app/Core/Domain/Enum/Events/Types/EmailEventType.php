@@ -33,6 +33,7 @@ enum EmailEventType: string
 
     // Users
     case USER_CREATED = 'user_created';
+    case PARENT_INVITED = 'parent_invited';
 
     public function label(): string
     {
@@ -46,6 +47,7 @@ enum EmailEventType: string
             self::PAYMENT_REQUIRES_ACTION => 'Acción requerida para el pago',
 
             self::USER_CREATED => 'Usuario creado',
+            self::PARENT_INVITED => 'Invitación a padre',
         };
     }
 
