@@ -82,4 +82,8 @@ export class PaymentHistoryComponent implements OnInit {
   openDetails(payment: PaymentHistoryResponse) {
     this.router.navigate(NAVIGATION.client.paymentDetails(payment.id));
   }
+  onRefreshData() {
+    const updatedParams = QueryParamsHelper.refreshData(this.paymentHistoryParams);
+    this.listController.update(updatedParams);
+  }
 }

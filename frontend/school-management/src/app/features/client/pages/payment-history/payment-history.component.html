@@ -5,6 +5,9 @@
   icon="payments"
   [state]="loading"
   (retry)="loadPaymentHistory()"
+  [refreshable]="true"
+  [refreshing]="loading === 'loading'"
+  (refresh)="onRefreshData()"
 >
   @if (loading === "success" && paginatedHistory) {
     <app-record-list
