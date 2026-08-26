@@ -9,9 +9,14 @@ use App\Core\Application\DTO\Request\Mail\PaymentFailedEmailDTO;
 use App\Core\Application\DTO\Request\Mail\PaymentValidatedEmailDTO;
 use App\Core\Application\DTO\Request\Mail\RequiresActionEmailDTO;
 use App\Core\Application\DTO\Request\Mail\SendParentInviteEmailDTO;
+use App\Core\Application\DTO\Response\User\UserRecipientDTO;
+use App\Core\Application\Factories\Payments\Stripe\RequiredActionDetailsFactory;
 use App\Core\Domain\Entities\Payment;
+use App\Core\Domain\Entities\PaymentConcept;
+use App\Core\Domain\Entities\User;
 use App\Core\Domain\Utils\Helpers\Money;
 use Carbon\Carbon;
+use Stripe\PaymentIntent;
 
 class MailMapper
 {
@@ -28,72 +33,76 @@ class MailMapper
         );
     }
 
-    public static function toNewPaymentConceptEmailDTO(array $data): NewPaymentConceptEmailDTO
+    public static function toNewPaymentConceptEmailDTO(UserRecipientDTO $user, PaymentConcept $concept): NewPaymentConceptEmailDTO
     {
         return new NewPaymentConceptEmailDTO(
-            recipientName:$data['recipientName'],
-            recipientEmail:$data['recipientEmail'],
-            concept_name:$data['concept_name'],
-            amount:$data['amount'],
-            end_date:$data['end_date'],
-            start_date:$data['start_date'],
-            isDisable: $data['isDisable'],
+            recipientName: $user->fullName,
+            recipientEmail: $user->email,
+            concept_name: $concept->concept_name,
+            amount: $concept->amount,
+            end_date: $concept->end_date?->format('d-m-Y'),
+            start_date: $concept->start_date->format('d-m-Y'),
+            isDisable: $concept->isDisable(),
         );
     }
 
-    public static function toPaymentValidatedEmailDTO(array $data): PaymentValidatedEmailDTO
+    public static function toPaymentValidatedEmailDTO(User $user, Payment $payment): PaymentValidatedEmailDTO
     {
         return new PaymentValidatedEmailDTO(
-            recipientName: $data['recipientName'],
-            recipientEmail: $data['recipientEmail'],
-            concept_name: $data['concept_name'],
-            amount: $data['amount'],
-            amount_received: $data['amount_received'],
-            status: $data['status'],
-            payment_method_detail: $data['payment_method_detail'],
-            payment_intent_id: $data['payment_intent_id'],
-            url:$data['url']
+            recipientName: $user->fullName(),
+            recipientEmail: $user->email,
+            concept_name: $payment->concept_name,
+            amount: $payment->amount,
+            amount_received:$payment->amount_received,
+            status: $payment->status->value,
+            payment_method_detail: $payment->payment_method_details ?? null,
+            payment_intent_id: $payment->payment_intent_id,
+            url:$payment->url ?? null,
         );
     }
 
-    public static function toPaymentFailedEmailDTO(array $data): PaymentFailedEmailDTO
+    public static function toPaymentFailedEmailDTO(User $user, Payment $payment, string $error): PaymentFailedEmailDTO
     {
         return new PaymentFailedEmailDTO(
-            recipientName: $data['recipientName'],
-            recipientEmail: $data['recipientEmail'],
-            concept_name: $data['concept_name'],
-            amount:$data['amount'],
-            error:$data['error']
+            recipientName: $user->fullName(),
+            recipientEmail: $user->email,
+            concept_name: $payment->concept_name,
+            amount:$payment->amount,
+            error: $error
         );
     }
 
-    public static function toRequiresActionEmailDTO(array $data): RequiresActionEmailDTO
+    public static function toRequiresActionEmailDTO(User $user, PaymentIntent $paymentIntent): ?RequiresActionEmailDTO
     {
-        $nextAction = $data['next_action'];
-        $methodOptions = $data['payment_method_options'];
+        $requiredAction = RequiredActionDetailsFactory::fromStripe(
+            $paymentIntent
+        );
+
+        if (!$requiredAction) {
+            return null;
+        }
         return new RequiresActionEmailDTO(
-            recipientName: $data['recipientName'],
-            recipientEmail: $data['recipientEmail'],
-            amount: $data['amount'],
-            next_action: $nextAction,
-            payment_method_options: $methodOptions
+            recipientName: $user->fullName(),
+            recipientEmail: $user->email,
+            amount: (string) $paymentIntent->amount,
+            requiredActionDetails: $requiredAction,
         );
     }
-    public static function toNewUserCreatedEmailDTO(array $data): NewUserCreatedEmailDTO
+    public static function toNewUserCreatedEmailDTO(string $fullName, string $email, string $password): NewUserCreatedEmailDTO
     {
         return new NewUserCreatedEmailDTO(
-            recipientName: $data['recipientName'],
-            recipientEmail:$data['recipientEmail'],
-            password:$data['password']
+            recipientName: $fullName,
+            recipientEmail: $email,
+            password: $password
         );
     }
 
-    public static function toSendParentInviteEmail(array $data): SendParentInviteEmailDTO
+    public static function toSendParentInviteEmail(string $fullName, string $email, string $token): SendParentInviteEmailDTO
     {
         return new SendParentInviteEmailDTO(
-            recipientName: $data['recipientName'],
-            recipientEmail:$data['recipientEmail'],
-            token:$data['token']
+            recipientName: $fullName,
+            recipientEmail:$email,
+            token:$token
         );
     }
 

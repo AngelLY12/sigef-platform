@@ -13,6 +13,7 @@ use App\Core\Domain\Enum\User\UserActorType;
 use App\Core\Domain\Utils\Helpers\EventSourceId;
 use App\Core\Domain\ValueObjects\EmailEvent\ConceptCreatedEmailMetadata;
 use App\Core\Domain\ValueObjects\EmailEvent\ConceptCriticalAmountAlertEmailMetadata;
+use App\Core\Domain\ValueObjects\EmailEvent\ParentInvitedEmailMetadata;
 use App\Core\Domain\ValueObjects\EmailEvent\PaymentCreatedEmailMetadata;
 use App\Core\Domain\ValueObjects\EmailEvent\PaymentFailedEmailMetadata;
 use App\Core\Domain\ValueObjects\EmailEvent\PaymentRequiresActionEmailMetadata;
@@ -111,6 +112,27 @@ final class EmailEventFactory
                 $user->id
             ),
             metadata: UserCreatedEmailMetadata::create(user: $user, actorType: $actorType),
+        );
+    }
+
+    public static function parentInvited(
+        User $user,
+        string $operationId,
+    ): EmailEvent {
+        $eventType = EmailEventType::PARENT_INVITED;
+        $sourceType = EmailEventSourceType::USER;
+        return EmailEvent::createEmailEvent(
+            userId: $user->id,
+            eventType: $eventType,
+            recipientEmail: $user->email,
+            sourceType: $sourceType,
+            sourceId: EventSourceId::email(
+                sourceType: $sourceType,
+                eventType: $eventType,
+                operationId: $operationId,
+                recipientId: $user->id
+            ),
+            metadata: ParentInvitedEmailMetadata::create(user: $user),
         );
     }
 

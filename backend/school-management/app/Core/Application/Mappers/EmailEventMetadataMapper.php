@@ -5,6 +5,7 @@ namespace App\Core\Application\Mappers;
 use App\Core\Application\DTO\Response\Events\EmailEvent\Metadata\ConceptCreatedMetadataResponse;
 use App\Core\Application\DTO\Response\Events\EmailEvent\Metadata\ConceptCriticalAmountAlertMetadataResponse;
 use App\Core\Application\DTO\Response\Events\EmailEvent\Metadata\EmailEventMetadataResponse;
+use App\Core\Application\DTO\Response\Events\EmailEvent\Metadata\ParentInvitedMetadataResponse;
 use App\Core\Application\DTO\Response\Events\EmailEvent\Metadata\PaymentCreatedMetadataResponse;
 use App\Core\Application\DTO\Response\Events\EmailEvent\Metadata\PaymentFailedMetadataResponse;
 use App\Core\Application\DTO\Response\Events\EmailEvent\Metadata\PaymentRequiresActionMetadataResponse;
@@ -14,6 +15,7 @@ use App\Core\Domain\Enum\Events\Types\EmailEventType;
 use App\Core\Domain\ValueObjects\EmailEvent\ConceptCreatedEmailMetadata;
 use App\Core\Domain\ValueObjects\EmailEvent\ConceptCriticalAmountAlertEmailMetadata;
 use App\Core\Domain\ValueObjects\EmailEvent\EmailEventMetadata;
+use App\Core\Domain\ValueObjects\EmailEvent\ParentInvitedEmailMetadata;
 use App\Core\Domain\ValueObjects\EmailEvent\PaymentCreatedEmailMetadata;
 use App\Core\Domain\ValueObjects\EmailEvent\PaymentFailedEmailMetadata;
 use App\Core\Domain\ValueObjects\EmailEvent\PaymentRequiresActionEmailMetadata;
@@ -43,6 +45,8 @@ class EmailEventMetadataMapper
                 self::paymentValidated($eventMetadata),
             EmailEventType::USER_CREATED =>
                 self::userCreated($eventMetadata),
+            EmailEventType::PARENT_INVITED =>
+                self::parentInvited($eventMetadata),
         };
     }
 
@@ -117,5 +121,16 @@ class EmailEventMetadataMapper
             throw new \LogicException('Invalid metadata for user_created.');
         }
         return UserCreatedMetadataResponse::create($metadata);
+    }
+
+    private static function parentInvited(
+        EmailEventMetadata $metadata
+    ): ParentInvitedMetadataResponse
+    {
+        if(!$metadata instanceof ParentInvitedEmailMetadata)
+        {
+            throw new \LogicException('Invalid metadata for parent_invited.');
+        }
+        return ParentInvitedMetadataResponse::create($metadata);
     }
 }

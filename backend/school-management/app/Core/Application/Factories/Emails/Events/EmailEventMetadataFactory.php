@@ -5,6 +5,7 @@ namespace App\Core\Application\Factories\Emails\Events;
 use App\Core\Domain\ValueObjects\EmailEvent\ConceptCreatedEmailMetadata;
 use App\Core\Domain\ValueObjects\EmailEvent\ConceptCriticalAmountAlertEmailMetadata;
 use App\Core\Domain\ValueObjects\EmailEvent\EmailEventMetadata;
+use App\Core\Domain\ValueObjects\EmailEvent\ParentInvitedEmailMetadata;
 use App\Core\Domain\ValueObjects\EmailEvent\PaymentCreatedEmailMetadata;
 use App\Core\Domain\ValueObjects\EmailEvent\PaymentFailedEmailMetadata;
 use App\Core\Domain\ValueObjects\EmailEvent\PaymentRequiresActionEmailMetadata;
@@ -31,6 +32,8 @@ final class EmailEventMetadataFactory
 
             'users.created' =>
             UserCreatedEmailMetadata::createFromArray($data),
+            'parents.invite' =>
+            ParentInvitedEmailMetadata::createFromArray($data),
 
             'concepts.new-concept' =>
             ConceptCreatedEmailMetadata::createFromArray($data),
