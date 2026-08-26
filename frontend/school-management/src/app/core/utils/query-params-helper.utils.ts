@@ -67,4 +67,62 @@ export class QueryParamsHelper {
       ...(resetPage && 'page' in params ? { page: 1 } : {}),
     };
   }
+
+  static changeEventType<T extends {eventType?: string | null }>(
+    params: T,
+    eventType: string | null,
+  ): T {
+    return {
+      ...params,
+      eventType: eventType ?? undefined,
+      page: 1,
+    };
+  }
+
+  static changeSourceType<T extends {sourceType?: string | null}>(
+    params: T,
+    sourceType: string | null,
+  ): T {
+    return {
+      ...params,
+      sourceType: sourceType ?? undefined,
+      page: 1,
+    };
+  }
+
+  static changeDateRange<T extends {from?: string | null, to?: string| null }>(
+      params: T,
+      from: string | null,
+      to: string | null,
+    ): T {
+      return {
+        ...params,
+        from: from ?? undefined,
+        to: to ?? undefined,
+        page: 1,
+      };
+    }
+
+    static changeFromRange<T extends {from?: string | null}>(
+      params: T,
+      from: string | null,
+    ): T {
+      return {
+        ...params,
+        from: from ?? undefined,
+        page: 1,
+      };
+    }
+
+    static changeToRange<T extends {to?: string | null}>(
+      params: T,
+      to: string | null,
+    ): T {
+      return {
+        ...params,
+        to: to ?? undefined,
+        page: 1,
+      };
+    }
+
 }
