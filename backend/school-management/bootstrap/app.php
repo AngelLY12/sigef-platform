@@ -8,7 +8,6 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Exceptions\DomainException;
-use App\Http\Middleware\SecureHeadersMiddleware;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -51,7 +50,6 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withSchedule(function (Schedule $schedule){
-        $schedule->command('payments:dispatch-reconcile-payments-job')->everyTwoHours()->withoutOverlapping(30)->onOneServer();
         $schedule->command('tokens:dispatch-clean-expired-tokens')->everyThreeHours()->withoutOverlapping(30)->onOneServer();
         $schedule->command('backup:clean')->dailyAt('23:50');
         $schedule->command('concepts:dispatch-finalize-job')->dailyAt('00:05')->withoutOverlapping(30)->onOneServer();
