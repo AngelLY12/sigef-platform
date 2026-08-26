@@ -26,3 +26,18 @@ export const PARENTS_URL = {
   parents: `${API_URL}/parents/get-parents`,
   removeParent: `${API_URL}/parents/delete-parent`,
 };
+
+export const EMAIL_EVENTS_URL = {
+  events: `${API_URL}/admin-actions/email-events`,
+  history: `${API_URL}/admin-actions/email-events/history`,
+};
+
+export const PAYMENT_EVENTS_URL = {
+  events: `${API_URL}/admin-actions/payment-events`,
+  history: `${API_URL}/admin-actions/payment-events/timeline`,
+};
+
+export const RECONCILE_EVENTS_URL = {
+events: `${API_URL}/admin-actions/reconciliation-events`,
+  history: `${API_URL}/admin-actions/reconciliation-events/timeline`,
+};
