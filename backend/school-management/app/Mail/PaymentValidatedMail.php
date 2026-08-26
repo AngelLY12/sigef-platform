@@ -5,6 +5,8 @@ namespace App\Mail;
 use App\Core\Application\DTO\Request\Mail\PaymentValidatedEmailDTO;
 use App\Core\Domain\Enum\Payment\PaymentStatus;
 use App\Core\Domain\Utils\Helpers\Money;
+use App\Core\Domain\ValueObjects\Payment\PaymentMethodDetails\OxxoPaymentMethodDetails;
+use App\Core\Domain\ValueObjects\Payment\PaymentMethodDetails\SpeiPaymentMethodDetails;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -40,8 +42,15 @@ class PaymentValidatedMail extends Mailable
      */
     public function content(): Content
     {
-        $isOxxo = ($this->data->payment_method_detail['type'] ?? '') === 'oxxo';
-        $isSpei = ($this->data->payment_method_detail['type'] ?? '') === 'spei';
+        $paymentMethodDetails = $this->data->payment_method_detail;
+        $paymentMethodType = $paymentMethodDetails?->type() ?? 'Desconocido';
+        $reference = match (true) {
+            $paymentMethodDetails instanceof OxxoPaymentMethodDetails
+            , $paymentMethodDetails instanceof SpeiPaymentMethodDetails
+            => $paymentMethodDetails->reference,
+
+            default => null,
+        };
         return new Content(
             view: 'emails.payments.validated',
             with: [
@@ -49,9 +58,9 @@ class PaymentValidatedMail extends Mailable
                 'conceptName' => $this->data->concept_name,
                 'amount' => $this->data->amount,
                 'amountReceived' => $this->data->amount_received,
-                'paymentMethodType' => $this->data->payment_method_detail['type'] ?? 'No especificado',
+                'paymentMethodType' => $paymentMethodType,
                 'paymentIntentId' => $this->data->payment_intent_id,
-                'reference' => $this->data->payment_method_detail['reference'],
+                'reference' => $reference,
                 'url' => $this->data->url,
                 'paymentLegend' => $this->buildPaymentLegend(),
             ]
