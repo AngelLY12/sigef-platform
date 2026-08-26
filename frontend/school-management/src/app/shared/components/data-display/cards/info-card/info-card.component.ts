@@ -23,7 +23,7 @@ import { InfoCardActionConfig, InfoCardConfig } from './info-card-config.model';
   styleUrl: './info-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InfoCardComponent implements OnInit, AfterViewInit {
+export class InfoCardComponent implements AfterViewInit {
   @Input({ required: true }) item!: InfoCardConfig;
   @Input() actionConfig: InfoCardActionConfig | null = null;
 
@@ -32,12 +32,7 @@ export class InfoCardComponent implements OnInit, AfterViewInit {
   @ViewChild('contentRef', { static: false })
   contentRef?: ElementRef<HTMLDivElement>;
 
-  expanded = true;
-  contentHeight: number | null = null;
-
-  ngOnInit(): void {
-    this.expanded = this.item.defaultExpanded ?? false;
-  }
+  contentHeight: number = 0;
 
   ngAfterViewInit(): void {
     requestAnimationFrame(() => {
@@ -46,7 +41,7 @@ export class InfoCardComponent implements OnInit, AfterViewInit {
   }
 
   toggleExpand() {
-    this.expanded = !this.expanded;
+    this.item.defaultExpanded = !this.item.defaultExpanded;
 
     requestAnimationFrame(() => {
       this.updateHeight();
@@ -71,6 +66,12 @@ export class InfoCardComponent implements OnInit, AfterViewInit {
 
     const el = this.contentRef.nativeElement;
 
-    this.contentHeight = this.expanded ? el.scrollHeight : 0;
+    this.contentHeight = this.item.defaultExpanded ? el.scrollHeight : 0;
   }
+
+  get expanded()
+  {
+    return this.item.defaultExpanded ?? false;
+  }
+
 }

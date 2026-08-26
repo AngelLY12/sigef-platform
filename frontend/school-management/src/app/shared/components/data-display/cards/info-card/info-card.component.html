@@ -49,7 +49,7 @@
     #contentRef
     class="card-content"
     [class.collapsed]="!expanded"
-    [style.maxHeight]="contentHeight !== null ? contentHeight + 'px' : null"
+    [style.maxHeight]="contentHeight + 'px'"
   >
     <div class="card-content-inner">
       <ng-content></ng-content>
