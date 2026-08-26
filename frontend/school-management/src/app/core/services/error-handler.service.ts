@@ -1,13 +1,13 @@
-import { Injectable, inject } from "@angular/core";
-import { HttpErrorResponse } from "@angular/common/http";
-import { Router } from "@angular/router";
-import { ModalService } from "./modal.service";
-import { ApiErrorResponse } from "../models/api/api-error-response.model";
-import { BackendErrorCode } from "../models/types/backend-error-code.type";
-import { ERROR_MESSAGES, ErrorConfig } from "../config/error-message.config";
-import { logError } from "../utils/error-logger.utils";
-import { ModalType } from "../models/types/modal-error.type";
-import { NAVIGATION } from "../navigation/navigation.config";
+import { Injectable, inject } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { ModalService } from './modal.service';
+import { ApiErrorResponse } from '../models/api/api-error-response.model';
+import { BackendErrorCode } from '../models/types/backend-error-code.type';
+import { ERROR_MESSAGES, ErrorConfig } from '../config/error-message.config';
+import { logError } from '../utils/error-logger.utils';
+import { ModalType } from '../models/types/modal-error.type';
+import { NAVIGATION } from '../navigation/navigation.config';
 
 @Injectable({ providedIn: 'root' })
 export class ErrorHandlerService {
@@ -29,7 +29,7 @@ export class ErrorHandlerService {
   private handleKnownError(
     err: HttpErrorResponse,
     errorCode: BackendErrorCode,
-    apiError: ApiErrorResponse
+    apiError: ApiErrorResponse,
   ): void {
     const config = ERROR_MESSAGES[errorCode];
 
@@ -43,12 +43,12 @@ export class ErrorHandlerService {
   }
 
   private handleGenericError(err: HttpErrorResponse): void {
-
     if (err.status === 0) {
       this.modalService.show({
-        message: 'No se pudo conectar con el servidor. Seras redireccionado a la página de mantenimiento.',
+        message:
+          'No se pudo conectar con el servidor. Seras redireccionado a la página de mantenimiento.',
         type: 'warn',
-        display: 'modal'
+        display: 'modal',
       });
       setInterval(() => {
         this.router.navigate([NAVIGATION.common.maintenance]);
@@ -63,23 +63,21 @@ export class ErrorHandlerService {
       403: 'Acceso denegado',
       422: 'No procesable',
       404: 'Recurso no encontrada',
-      500: 'Error interno del servidor'
+      500: 'Error interno del servidor',
     };
 
     if (err.status >= 500) {
       this.modalService.show({
         message: 'Error en el servidor. Intenta más tarde',
         type: 'error',
-        display: 'modal'
+        display: 'modal',
       });
       console.error('Error de servidor:', err);
-    }
-    else if (err.status === 401) {
+    } else if (err.status === 401) {
       this.router.navigate([NAVIGATION.auth.login]);
     } else if (httpMessages[err.status]) {
-      const apiError = typeof err.error === 'object'
-        ? err.error as ApiErrorResponse
-        : null;
+      const apiError =
+        typeof err.error === 'object' ? (err.error as ApiErrorResponse) : null;
 
       this.modalService.show({
         message: httpMessages[err.status],
@@ -87,16 +85,15 @@ export class ErrorHandlerService {
           ? this.flattenErrors(apiError.errors)
           : undefined,
         type: 'warn',
-        display: 'modal'
+        display: 'modal',
       });
-
     }
   }
 
   private showErrorModal(
     config: ErrorConfig,
     errorCode: BackendErrorCode,
-    apiError: ApiErrorResponse
+    apiError: ApiErrorResponse,
   ): void {
     let errors: string[] | undefined;
     let mainMessage: string;
@@ -122,16 +119,20 @@ export class ErrorHandlerService {
       message: allMessages.join('\n\n'),
       errors,
       type: this.mapLogLevelToModalType(config.logLevel),
-      display: 'modal'
+      display: 'modal',
     });
   }
 
   private mapLogLevelToModalType(level: ModalType): ModalType {
-    switch(level) {
-      case 'error': return 'error';
-      case 'warn': return 'warn';
-      case 'info': return 'info';
-      default: return 'info';
+    switch (level) {
+      case 'error':
+        return 'error';
+      case 'warn':
+        return 'warn';
+      case 'info':
+        return 'info';
+      default:
+        return 'info';
     }
   }
 
@@ -146,8 +147,6 @@ export class ErrorHandlerService {
       return errors;
     }
 
-    return Object.entries(errors).flatMap(([field, fieldErrors]) =>
-      fieldErrors.map(error => `${field}: ${error}`)
-    );
+    return Object.values(errors).flatMap((fieldErrors) => fieldErrors);
   }
 }
