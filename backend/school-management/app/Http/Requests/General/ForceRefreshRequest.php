@@ -53,4 +53,11 @@ class ForceRefreshRequest extends FormRequest
             ]);
         }
     }
+
+    public function attributes(): array
+    {
+        return [
+            'forceRefresh' => 'recarga',
+        ];
+    }
 }
