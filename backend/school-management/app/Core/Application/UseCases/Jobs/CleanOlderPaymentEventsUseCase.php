@@ -2,7 +2,7 @@
 
 namespace App\Core\Application\UseCases\Jobs;
 
-use App\Core\Domain\Repositories\Command\Payments\PaymentEventRepInterface;
+use App\Core\Domain\Repositories\Command\Events\PaymentEventRepInterface;
 
 class CleanOlderPaymentEventsUseCase
 {
