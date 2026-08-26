@@ -9,7 +9,7 @@ use Stripe\Checkout\Session;
 interface StripeGatewayInterface{
     public function createStripeUser(User $user):string;
     public function createSetupSession(string $customerId):Session;
-    public function createCheckoutSession(string $customerId, PaymentConcept $paymentConcept, string $amount, int $userId):Session;
+    public function createCheckoutSession(string $customerId, PaymentConcept $paymentConcept, string $amount, int $userId, int $paymentId):Session;
     public function deletePaymentMethod(string $paymentMethodId):bool;
     public function expireSessionIfPending(string $sessionId): bool;
     public function createPayout(): array;

@@ -84,7 +84,7 @@ class StripeGateway implements StripeGatewayInterface
 
     }
 
-     public function createCheckoutSession(string $customerId, PaymentConcept $paymentConcept, string $amount, int $userId): Session
+     public function createCheckoutSession(string $customerId, PaymentConcept $paymentConcept, string $amount, int $userId, int $paymentId): Session
     {
         try{
             $sessionData = [
@@ -96,18 +96,20 @@ class StripeGateway implements StripeGatewayInterface
                 'price_data' => [
                     'currency' => 'mxn',
                     'product_data' => ['name' => $paymentConcept->concept_name],
-                    'unit_amount' => Money::from($paymentConcept->amount)->toMinorUnits(),
+                    'unit_amount' => Money::from($amount)->toMinorUnits(),
                 ],
                 'quantity' => 1,
             ]],
             'payment_method_types' => ['card', 'oxxo', 'customer_balance'],
             'metadata' => [
+                'payment_id' => $paymentId,
                 'payment_concept_id' => $paymentConcept->id,
                 'concept_name' => $paymentConcept->concept_name,
                 'user_id' => $userId,
             ],
             'payment_intent_data' => [
                 'metadata' => [
+                    'payment_id' => $paymentId,
                     'payment_concept_id' => $paymentConcept->id,
                     'concept_name' => $paymentConcept->concept_name,
                     'user_id' => $userId,

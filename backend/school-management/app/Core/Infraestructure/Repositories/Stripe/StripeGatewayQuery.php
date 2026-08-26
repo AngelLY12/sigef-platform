@@ -8,6 +8,7 @@ use App\Core\Domain\Utils\Helpers\Money;
 use App\Core\Domain\Utils\Validators\StripeValidator;
 use App\Exceptions\ServerError\StripeGatewayException;
 use App\Exceptions\Validation\ValidationException;
+use Illuminate\Support\Collection;
 use Stripe\Balance;
 use Stripe\BalanceTransaction;
 use Stripe\Charge;
@@ -76,16 +77,39 @@ class StripeGatewayQuery implements StripeGatewayQueryInterface
         }
     }
 
+    public function getChargeById(string $latestCharge): Charge
+    {
+        return Charge::retrieve($latestCharge);
+    }
+
+    public function getChargesByIds(array $chargeIds): Collection
+    {
+        return collect($chargeIds)
+            ->filter()
+            ->unique()
+            ->map(fn (string $chargeId) => Charge::retrieve($chargeId));
+    }
+
+    public function getChargesByIntentIds(array $paymentIntentIds): Collection
+    {
+        return collect($paymentIntentIds)
+            ->filter()
+            ->unique()
+            ->flatMap(
+                fn (string $paymentIntentId) =>
+                Charge::all([
+                    'payment_intent' => $paymentIntentId,
+                    'limit' => 100,
+                ])->data
+            )
+            ->values();
+    }
 
     public function getStudentPaymentsFromStripe(User $user, ?int $year): array
     {
         $params = [
             'limit' => 100,
             'customer' => $user->stripe_customer_id,
-            'expand' => [
-                'data.payment_intent',
-                'data.payment_intent.latest_charge'
-            ],
         ];
 
         if ($year) {
@@ -96,7 +120,7 @@ class StripeGatewayQuery implements StripeGatewayQueryInterface
         }
 
         try {
-            $allSessions = [];
+            $allCharges = [];
             $lastId = null;
 
             do {
@@ -104,54 +128,40 @@ class StripeGatewayQuery implements StripeGatewayQueryInterface
                     $params['starting_after'] = $lastId;
                 }
 
-                $sessions = Session::all($params);
+                $charges = Charge::all($params);
 
-                $allSessions = array_merge($allSessions, $sessions->data);
+                $allCharges = array_merge($allCharges, $charges->data);
 
-                $lastId = end($sessions->data)->id ?? null;
+                $lastId = end($charges->data)->id ?? null;
 
-            } while ($lastId && count($sessions->data) === $params['limit']);
+            } while ($lastId && count($charges->data) === $params['limit']);
 
             $paymentsWithDetails = [];
 
-            foreach ($allSessions as $session) {
+            /** @var Charge $charge */
+            foreach ($allCharges as $charge) {
 
-                if ($session->payment_status !== 'paid') {
+                if (!$charge->paid || $charge->status !== 'succeeded') {
                     continue;
                 }
 
-                $metadata = $session->metadata
-                    ? $session->metadata->toArray()
+                $metadata = $charge->metadata
+                    ? $charge->metadata->toArray()
                     : [];
 
-                $pi = $session->payment_intent;
-
-                $piId = is_object($pi) ? $pi->id : $pi;
-
-                $amountReceived = is_object($pi)
-                    ? ($pi->amount_received ?? 0)
-                    : ($session->amount_total ?? 0);
-
-                $receiptUrl = null;
-
-                if (is_object($pi) && isset($pi->latest_charge)) {
-                    $charge = $pi->latest_charge;
-
-                    if (is_object($charge)) {
-                        $receiptUrl = $charge->receipt_url ?? null;
-                    }
-                }
-
-                $paymentsWithDetails[] = (object)[
-                    'id' => $session->id,
-                    'payment_intent_id' => $piId,
-                    'concept_name' => $metadata['concept_name'] ?? null,
-                    'status' => $session->payment_status,
-                    'amount_total' => $session->amount_total,
-                    'amount_received' => $amountReceived,
-                    'created' => $session->created,
-                    'receipt_url' => $receiptUrl,
-                    'metadata_array' => $metadata,
+                $paymentsWithDetails[] = (object) [
+                    'customer_name' => $charge->billing_details->name ?? 'Desconocido',
+                    'concept_name' => $metadata['concept_name'] ?? 'Desconocido',
+                    'payment_id' => $metadata['payment_id'] ?? null,
+                    'user_id' => $metadata['user_id'] ?? null,
+                    'concept_id' => $metadata['payment_concept_id'] ?? null,
+                    'paid' => $charge->paid,
+                    'status' => $charge->status,
+                    'amount' => $charge->amount,
+                    'amount_received' => $charge->amount_captured ?? 0,
+                    'created' => $charge->created,
+                    'receipt_url' => $charge->receipt_url,
+                    'payment_method_type' => $charge->payment_method_details->type ?? 'Desconocido',
                 ];
             }
 
@@ -159,7 +169,7 @@ class StripeGatewayQuery implements StripeGatewayQueryInterface
 
         } catch (\Stripe\Exception\ApiErrorException $e) {
 
-            logger()->error('Stripe error fetching sessions', [
+            logger()->error('Stripe error fetching charges', [
                 'message' => $e->getMessage(),
             ]);
 

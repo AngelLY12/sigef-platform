@@ -3,6 +3,8 @@
 namespace App\Core\Domain\Repositories\Stripe;
 
 use App\Core\Domain\Entities\User;
+use Illuminate\Support\Collection;
+use Stripe\Charge;
 use Stripe\PaymentIntent;
 
 interface StripeGatewayQueryInterface
@@ -10,6 +12,9 @@ interface StripeGatewayQueryInterface
     public function getSetupIntentFromSession(string $sessionId);
     public function retrievePaymentMethod(string $paymentMethodId);
     public function getIntentAndCharge(string $paymentIntentId): array;
+    public function getChargeById(string $latestCharge): Charge;
+    public function getChargesByIds(array $chargeIds): Collection;
+    public function getChargesByIntentIds(array $paymentIntentIds): Collection;
     public function getStudentPaymentsFromStripe(User $user, ?int $year): array;
     public function getPaymentIntentFromSession(string $sessionId): PaymentIntent;
     public function getBalanceFromStripe(): array;
