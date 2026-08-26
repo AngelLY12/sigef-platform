@@ -12,7 +12,9 @@ use App\Core\Application\DTO\Response\General\PermissionToDisplay;
 use App\Core\Application\DTO\Response\General\RolesUpdatedToUserResponse;
 use App\Core\Application\DTO\Response\General\StripePaymentsResponse;
 use App\Core\Application\DTO\Response\General\StripePayoutResponse;
+use App\Core\Application\Factories\Payments\Stripe\StripePaymentMethodDetailsFactory;
 use App\Core\Domain\Utils\Helpers\Money;
+use App\Core\Domain\ValueObjects\Payment\Stripe\PaymentStripeMetadata;
 use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -53,28 +55,32 @@ class GeneralMapper{
         );
     }
 
-    public static function toStripePaymentResponse($session): StripePaymentsResponse
+    public static function toStripePaymentResponse($payment): StripePaymentsResponse
     {
-        $metadata = $session->metadata_array ?? [];
-
         return new StripePaymentsResponse(
-            id: $session->id ?? null,
-            payment_intent_id: $session->payment_intent_id ?? null,
-            concept_name: $metadata['concept_name'] ?? null,
-            status: $session->status ?? null,
-            amount_total: $session->amount_total !== null
-                ? Money::from((string) $session->amount_total)->divide('100')->finalize()
+            customer_name: $payment->customer_name ?? null,
+            concept_name: $payment->concept_name ?? null,
+            payment_id: $payment->payment_id ?? null,
+            user_id: $payment->user_id ?? null,
+            concept_id: $payment->concept_id ?? null,
+            paid: $payment->paid ?? false,
+            status: $payment->status ?? null,
+            amount: $payment->amount !== null
+                ? Money::from($payment->amount)->divide('100')->finalize()
                 : null,
-            amount_received: $session->amount_received !== null
-                ? Money::from((string) $session->amount_received)->divide('100')->finalize()
+            amount_received: $payment->amount_received !== null
+                ? Money::from($payment->amount_received)->divide('100')->finalize()
                 : '0.00',
-            created: $session->created
-                ? date('Y-m-d H:i:s', is_numeric($session->created)
-                    ? (int) $session->created
-                    : strtotime($session->created)
+            created: $payment->created
+                ? date(
+                    'Y-m-d H:i:s',
+                    is_numeric($payment->created)
+                        ? (int) $payment->created
+                        : strtotime($payment->created)
                 )
                 : null,
-            receipt_url: $session->receipt_url ?? null
+            receipt_url: $payment->receipt_url ?? null,
+            payment_method_type: $payment->payment_method_type ?  StripePaymentMethodDetailsFactory::fromStripeString($payment->payment_method_type) : null,
         );
     }
 
