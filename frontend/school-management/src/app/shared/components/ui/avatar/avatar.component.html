@@ -1,6 +1,6 @@
 <app-dropdown
   #menu
-  position="top"
+  [position]="collapsed ? 'right-bottom' : 'top-right'"
 >
   <div dropdown-trigger class="avatar-container">
 
@@ -42,7 +42,7 @@
 
   </div>
 
-  <div dropdown-content class="user-menu">
+  <div dropdown-content>
 
     <app-menu-item
       icon="person"
