@@ -1,5 +1,10 @@
-import { Component, inject } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { Component, DestroyRef, inject } from '@angular/core';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  Router,
+  RouterOutlet,
+} from '@angular/router';
 import { NotificationModalComponent } from './shared/components/overlays/modal/notification-modal/notification-modal.component';
 import { AlertComponent } from './shared/components/feedback/alert/alert.component';
 import { CommonModule } from '@angular/common';
@@ -8,21 +13,34 @@ import { CustomModalComponent } from './shared/components/overlays/modal/custom-
 import { Title } from '@angular/platform-browser';
 import { filter } from 'rxjs';
 import { ConfirmModalComponent } from './shared/components/overlays/modal/confirm-modal/confirm-modal.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule ,NotificationModalComponent, AlertComponent, ActionsModalComponent, CustomModalComponent, ConfirmModalComponent],
+  imports: [
+    RouterOutlet,
+    CommonModule,
+    NotificationModalComponent,
+    AlertComponent,
+    ActionsModalComponent,
+    CustomModalComponent,
+    ConfirmModalComponent,
+  ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
 })
 export class AppComponent {
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
   private titleService = inject(Title);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit() {
     this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe(() => {
         const route = this.getDeepestRoute(this.activatedRoute);
         const title = route.snapshot.data['title'];
