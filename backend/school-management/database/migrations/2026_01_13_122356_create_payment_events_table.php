@@ -31,6 +31,7 @@ return new class extends Migration
             $table->index(['stripe_payment_intent_id', 'processed']);
             $table->index(['stripe_session_id', 'processed']);
             $table->index(['event_type', 'processed', 'created_at']);
+            $table->index(['created_at']);
         });
 
     }

@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('concept_name')->index();
             $table->decimal('amount', 7,2)->index();
             $table->decimal('amount_received', 7,2)->nullable()->index();
-            $table->json('payment_method_details');
+            $table->json('payment_method_details')->nullable();
             $table->string('status',50)->default(PaymentStatus::DEFAULT->value);
             $table->string('payment_intent_id',100)->unique()->nullable();
             $table->text('url')->nullable();
