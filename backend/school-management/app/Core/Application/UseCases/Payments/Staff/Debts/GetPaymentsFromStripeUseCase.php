@@ -28,8 +28,8 @@ class GetPaymentsFromStripeUseCase
         if (!$student->stripe_customer_id) {
             throw new ValidationException("El estudiante no tiene Stripe ID.");
         }
-        $sessions = $this->stripeRepo->getStudentPaymentsFromStripe($student,$year);
+        $payments = $this->stripeRepo->getStudentPaymentsFromStripe($student,$year);
 
-        return array_map(fn($s) => GeneralMapper::toStripePaymentResponse($s), $sessions);
+        return array_map(fn($s) => GeneralMapper::toStripePaymentResponse($s), $payments);
     }
 }
