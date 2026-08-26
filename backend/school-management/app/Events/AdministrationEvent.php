@@ -15,15 +15,17 @@ class AdministrationEvent
     public int $id;
     public string $concept_name;
     public string $action;
+    public string $operationId;
     /**
      * Create a new event instance.
      */
-    public function __construct(string $amount, int $id, string $concept_name, string $action)
+    public function __construct(string $amount, int $id, string $concept_name, string $action, string $operationId)
     {
         $this->amount = $amount;
         $this->id = $id;
         $this->concept_name = $concept_name;
         $this->action = $action;
+        $this->operationId = $operationId;
     }
 
     /**

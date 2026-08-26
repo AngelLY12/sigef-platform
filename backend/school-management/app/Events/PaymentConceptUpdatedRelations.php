@@ -22,7 +22,8 @@ class PaymentConceptUpdatedRelations
         public array $oldPaymentConceptArray,
         public array $dtoArray,
         public string $appliesTo,
-        public array $oldRecipientIds
+        public array $oldRecipientIds,
+        public string $operationId
     )
     {
         //

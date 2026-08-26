@@ -16,7 +16,8 @@ class PaymentConceptCreated
      */
     public function __construct(
         public int $paymentConceptId,
-        public string $appliesTo
+        public string $appliesTo,
+        public string $operationId
     )
     {
 
