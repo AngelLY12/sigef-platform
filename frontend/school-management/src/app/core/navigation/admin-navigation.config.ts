@@ -1,6 +1,15 @@
-export const  ADMIN_NAVIGATION = {
+export const ADMIN_NAVIGATION = {
   dashboard: '/admin/dashboard',
   users: '/admin/users',
   userDetails: (id: number) => ['/admin/users', id],
-  import: '/admin/import'
-}
+  import: '/admin/import',
+  emailEvents: '/admin/email-events',
+  emailEventsHistory: (userId: number) => ['/admin/email-events/history', userId,],
+  emailEventDetails: (eventId: number) => ['/admin/email-events', eventId],
+  paymentEvents: '/admin/payment-events',
+  paymentEventsTimeline: (paymentId: number) => ['/admin/payment-events/timeline',paymentId,],
+  paymentEventDetails: (eventId: number) => ['/admin/payment-events', eventId],
+  reconciliationEvents: '/admin/reconciliation-events',
+  reconciliationEventsTimeline: (paymentId: number) => ['/admin/reconciliation-events/timeline',paymentId,],
+  reconciliationEventDetails: (eventId: number) => ['/admin/reconciliation-events',eventId,],
+};
