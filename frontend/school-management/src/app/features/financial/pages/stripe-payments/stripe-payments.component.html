@@ -6,20 +6,20 @@
     <div class="payment-header">
       <h3>{{ item.concept_name }}</h3>
       <span class="status" [attr.data-status]="item.status">
-        {{ item.status }}
+          {{ item.paid ? 'Pagado' : 'No pagado' }}
       </span>
     </div>
 
     <div class="payment-body">
 
       <div class="row">
-        <span class="label">ID</span>
-        <span class="value mono">{{ item.id }}</span>
+        <span class="label">Usuario</span>
+        <span class="value mono">{{ item.customer_name }}</span>
       </div>
 
       <div class="row">
-        <span class="label">Payment Intent</span>
-        <span class="value mono">{{ item.payment_intent_id }}</span>
+        <span class="label">Método de pago</span>
+        <span class="value mono">{{ item.payment_method_type }}</span>
       </div>
 
       <div class="row">
@@ -28,8 +28,8 @@
       </div>
 
       <div class="row highlight">
-        <span class="label">Monto total</span>
-        <span class="value money">{{ item.amount_total | currency:'MXN' }}</span>
+        <span class="label">Monto del concepto</span>
+        <span class="value money">{{ item.amount | currency:'MXN' }}</span>
       </div>
 
       <div class="row highlight">
@@ -51,7 +51,7 @@
       <div class="row">
         <app-button
         variant="ghost"
-        (click)="onValidatePayment(item.id)"
+        (click)="onValidatePayment(item.user_id!, item.payment_id!)"
         >
           Validar pago
         </app-button>

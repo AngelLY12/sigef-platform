@@ -18,6 +18,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { SpinnerComponent } from '../../../../shared/components/ui/spinner/spinner.component';
 import { ButtonComponent } from '../../../../shared/components/ui/button/button.component';
 import { AnchorComponent } from '../../../../shared/components/ui/anchor/anchor.component';
+import { ReconciledPaymentResponse } from '../../models/debts/reconciled-payment-response.model';
 
 @Component({
   selector: 'app-stripe-payments',
@@ -84,16 +85,17 @@ export class StripePaymentsComponent implements OnChanges {
     });
   }
 
-  onValidatePayment(payment_intent_id: string) {
+  onValidatePayment(user_id: number, payment_id: number) {
     const params: ValidatePaymentParams = {
-      search: this.nControl,
-      payment_intent_id: payment_intent_id,
+      user_id: user_id,
+      payment_id: payment_id
     };
     this.debtsService.validatePayment(params).subscribe({
       next: (res) => {
         this.modalService.closeCustom({ refreshed: true });
+
         this.modalService.show({
-          message: res.message,
+          message: res,
           display: 'modal',
           type: 'success',
         });

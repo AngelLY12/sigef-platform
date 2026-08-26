@@ -1,4 +1,4 @@
 export interface ValidatePaymentParams {
-  search: string;
-  payment_intent_id: string;
+  user_id: number;
+  payment_id: number;
 }

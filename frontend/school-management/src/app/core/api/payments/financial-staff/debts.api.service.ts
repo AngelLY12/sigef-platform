@@ -10,7 +10,7 @@ import { ApiSuccessResponse } from '../../../models/api/api-success-response.mod
 import { PaginatedResponse } from '../../../models/domain/paginated-response.model';
 import { StripePaymentsResponse } from '../../../../features/financial/models/debts/stripe-payments-response.model';
 import { ValidatePaymentParams } from '../../../../features/financial/models/debts/validate-payment-params.model';
-import { PaymentMetadata, ValidatePaymentResponse } from '../../../../features/financial/models/debts/validate-payment-response.model';
+import { ReconciledPaymentResponse } from '../../../../features/financial/models/debts/reconciled-payment-response.model';
 
 @Injectable({ providedIn: 'root' })
 export class DebtsApiService {
@@ -40,11 +40,11 @@ export class DebtsApiService {
 
   validatePayment(
     params: ValidatePaymentParams
-  ): Observable<PaymentMetadata> {
-    return this.http.post<ApiSuccessResponse<{ validated_payment: ValidatePaymentResponse }>>(
-      `${FINANCIAL_STAFF_URLS.debts}/validate`, params
+  ): Observable<string> {
+    return this.http.post<ApiSuccessResponse<{ reconciled_payment: ReconciledPaymentResponse }>>(
+      `${FINANCIAL_STAFF_URLS.debts}/reconcile`, params
     ).pipe(
-      map(res => res.data.validated_payment.metadata)
+      map(res => res.message)
     )
 
   }
