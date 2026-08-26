@@ -74,6 +74,9 @@ class PermissionsSeeder extends Seeder
             'view.student' => ['administration' => UserRoles::administrationContext()],
             'update.student' => ['administration' => UserRoles::administrationContext()],
             'promote.student' => ['administration' => UserRoles::administrationContext()],
+            'view.payment-events' => ['administration' => UserRoles::administrationContext()],
+            'view.email-events' => ['administration' => UserRoles::administrationContext()],
+            'view.reconciliation-events' => ['administration' => UserRoles::administrationContext()],
         ];
 
         /**
@@ -131,6 +134,9 @@ class PermissionsSeeder extends Seeder
             'view.student' => 'model',
             'update.student' => 'model',
             'promote.student' => 'model',
+            'view.payment-events' => 'model',
+            'view.email-events' => 'model',
+            'view.reconciliation-events' => 'model',
         ];
 
 
