@@ -14,7 +14,11 @@ export const NOTIFICATIONS_ROUTE: Routes = [
       },
       {
         path: 'all',
-        component: NotificationsComponent
+        component: NotificationsComponent,
+        data: {
+          title: 'Notificaciones',
+          breadcrumb: 'Notificaciones',
+        },
       },
     ]
   }

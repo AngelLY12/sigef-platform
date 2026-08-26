@@ -14,7 +14,11 @@ export const PROFILE_ROUTES: Routes = [
       },
       {
         path: 'view',
-        component: ProfileViewComponent
+        component: ProfileViewComponent,
+        data: {
+          title: 'Perfil',
+          breadcrumb: 'Perfil',
+        },
       }
     ]
   }

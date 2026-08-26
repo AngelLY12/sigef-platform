@@ -6,5 +6,9 @@ export const PARENTS_ROUTES: Routes = [
   {
     path: 'accept-invite',
     component: AcceptInviteComponent,
+    data: {
+      title: 'Invitación',
+      breadcrumb: 'Invitación',
+    },
   },
 ];

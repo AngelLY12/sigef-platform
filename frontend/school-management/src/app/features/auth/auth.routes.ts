@@ -15,17 +15,17 @@ export const AUTH_ROUTES: Routes = [
   {
     path: 'register',
     component: RegisterComponent,
-    data: { title: 'Register' },
+    data: { title: 'Registro' },
   },
   {
     path: 'forgot-password',
     component: ForgotPasswordComponent,
-    data: { title: 'Forgot-Password' },
+    data: { title: 'Olvide mi contraseña' },
   },
   {
     path: 'password-reset/:token',
     component: ResetPasswordComponent,
-    data: { title: 'Reset-Password' },
+    data: { title: 'Reiniciar contraseña' },
   },
   {
     path: '',
