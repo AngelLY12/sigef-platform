@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use App\Core\Domain\Enum\Payment\PaymentEventType;
+use App\Core\Domain\Enum\Events\Types\PaymentEventType;
 use App\Core\Domain\Enum\Payment\PaymentStatus;
+use App\Core\Infraestructure\Casts\PaymentEventMetadataCast;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -30,7 +31,7 @@ class PaymentEvent extends Model
     protected function casts(): array
     {
         return [
-            'metadata' => 'array',
+            'metadata' => PaymentEventMetadataCast::class,
             'amount_received' => 'decimal:2',
             'processed' => 'boolean',
             'retry_count' => 'integer',

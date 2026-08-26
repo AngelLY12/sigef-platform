@@ -71,6 +71,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
     }
 
+    public function emailEvents()
+    {
+        return $this->hasMany(EmailEvent::class);
+    }
+
     public function currentRefreshToken(): ?RefreshToken
     {
         return $this->refreshTokens()

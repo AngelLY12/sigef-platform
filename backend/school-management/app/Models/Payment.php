@@ -3,11 +3,10 @@
 namespace App\Models;
 
 use App\Core\Domain\Enum\Payment\PaymentStatus;
+use App\Core\Infraestructure\Casts\PaymentMethodDetailsCast;
 use App\Core\Infraestructure\Mappers\PaymentMapper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
-use App\Models\PaymentConcept;
 
 class Payment extends Model
 {
@@ -47,6 +46,10 @@ class Payment extends Model
         return $this->hasOne(Receipt::class);
     }
 
+    public function reconciliationEvents()
+    {
+        return $this->hasMany(PaymentReconciliationEvent::class);
+    }
 
     public function toDomain(): \App\Core\Domain\Entities\Payment
     {
@@ -55,7 +58,7 @@ class Payment extends Model
 
     protected function casts(): array
     {   return [
-            'payment_method_details' => 'array',
+            'payment_method_details' => PaymentMethodDetailsCast::class,
             'amount' => 'decimal:2',
             'amount_received' => 'decimal:2',
             'status' => PaymentStatus::class
