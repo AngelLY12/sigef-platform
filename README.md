@@ -9,7 +9,7 @@ Full-stack school and financial management platform built with Laravel, Angular,
 
 ## Overview
 
-SIGEF (Sistema de Gestión Escolar y Financiera) is a full-stack platform focused on academic administration, financial management, and payment processing for educational institutions.
+SIGEF (Sistema de Gestión Escolar y Financiera) is a full-stack platform focused on academic administration, financial management, payment processing, reconciliation, and event tracking for educational institutions.
 
 ## Features
 - User authentication and authorization
@@ -21,12 +21,19 @@ SIGEF (Sistema de Gestión Escolar y Financiera) is a full-stack platform focuse
 - Financial administration
 - Dashboard and reporting modules
 - Responsive user interface
+- Responsive navigation with desktop/mobile sidebars and nested menu support
+- Breadcrumb-based navigation
 - Secure backend API communication
 - Secure payment processing with Stripe
 - Stripe webhook integration for payment status tracking
+- Payment reconciliation and validation
+- Stripe payment lookup and manual reconciliation workflows
+- Event tracking for payments, emails, and reconciliation processes
+- Event history, filtering, timelines, and detailed event inspection
 - Queue-based asynchronous processing for emails, Excel imports, and background tasks
 - Google Cloud Storage integration for receipt management
 - Transactional email notifications with MailerSend
+- Email event tracking and delivery workflow management
 - Scheduled task automation using Laravel Scheduler
 - Event-driven payment processing using Stripe webhooks and Redis queues
   
@@ -70,7 +77,9 @@ The environment includes:
 
 ## Project Architecture
 
-The backend follows a layered architecture inspired by Hexagonal Architecture principles, separating domain logic, application services, and infrastructure concerns.
+The backend follows a layered architecture inspired by Hexagonal Architecture principles, with domain entities and value objects separated from application use cases, services, factories, and infrastructure implementations.
+
+Event processing is centralized through dedicated event managers for email, payment, and reconciliation workflows, improving consistency and reusability across the application.
 
 ### Backend Structure
 
@@ -78,16 +87,20 @@ The backend follows a layered architecture inspired by Hexagonal Architecture pr
 app/Core
 ├── Application
 │   ├── DTO
+│   ├── Factories
 │   ├── Services
 │   ├── UseCases
 │   └── Mappers
 ├── Domain
 │   ├── Entities
 │   ├── Repositories
-│   └── Enum
+│   |── Enum
+│   ├── Utils
+│   ├── ValueObjects
 └── Infrastructure
     ├── Repositories
     ├── Cache
+    ├── Casts
     └── Mappers
 ```
 
@@ -165,11 +178,15 @@ ng serve
 
 ## Ongoing Improvements
 
-- Frontend redesign and UI modernization
-- Backend performance and architecture optimizations
-- Mobile responsiveness improvements
-- Extended audit logging and monitoring
-- Additional reporting and analytics features
+- Payment transaction history to preserve the payment concept while supporting multiple payments over time
+- Payment reconstruction using payment events and Stripe data
+- Extended payment reconciliation and recovery workflows
+- Improved filtering and querying capabilities across existing endpoints
+- Continued backend architecture refactoring and domain modeling improvements
+- Continued frontend architecture improvements and component reuse
+- Performance optimizations across API queries, event processing, and database operations
+- Further improvements to responsive navigation and user experience
+- Extended observability and auditing capabilities
 
 ---
 
