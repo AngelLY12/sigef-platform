@@ -1,9 +1,9 @@
 @extends('emails.layouts.base')
 
-@section('title', 'Confirmación de pago')
+@section('title', 'Solicitud de pago registrada')
 
 @section('header_title')
-    Confirmación de pago
+    Solicitud de pago registrada
 @endsection
 
 @section('greeting')
@@ -11,7 +11,7 @@
 @endsection
 
 @section('message_intro')
-    Hemos recibido tu pago correctamente.
+    Hemos recibido correctamente tu solicitud de pago. El proceso de pago ha sido iniciado y se encuentra pendiente de validación.
 @endsection
 
 @section('message_details')
@@ -28,5 +28,5 @@
 @endsection
 
 @section('message_footer')
-    Gracias por tu puntualidad. Te avisaremos cuando haya sido validado tu pago.
+    Te notificaremos cuando el pago haya sido recibido y validado correctamente.
 @endsection
