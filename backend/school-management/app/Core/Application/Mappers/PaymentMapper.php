@@ -10,8 +10,6 @@ use App\Core\Application\DTO\Response\Payment\PaymentListItemResponse;
 use App\Core\Application\DTO\Response\Payment\PaymentsMadeByConceptName;
 use App\Core\Application\DTO\Response\Payment\PaymentsSummaryResponse;
 use App\Core\Application\DTO\Response\Payment\PaymentToDisplay;
-use App\Core\Application\DTO\Response\Payment\PaymentValidateResponse;
-use App\Core\Application\DTO\Response\User\UserDataResponse;
 use App\Core\Domain\Entities\PaymentConcept;
 use App\Core\Domain\Utils\Helpers\Money;
 use App\Models\Payment;
@@ -26,7 +24,7 @@ class PaymentMapper{
             concept_name: $concept->concept_name,
             amount: $concept->amount,
             status: EnumMapper::fromStripe($session->payment_status),
-            payment_method_details: [],
+            payment_method_details: null,
             id: null,
             user_id: $userId,
             payment_concept_id: $concept->id,
@@ -72,7 +70,7 @@ class PaymentMapper{
             created_at_human: $payment->created_at->diffForHumans(),
             has_pending_amount: $payment->amount_received < $payment->amount,
             balance: $balance ?? 'N/A',
-            payment_method_details: $payment->payment_method_details ? : null,
+            payment_method_details: $domainPayment->payment_method_details->toArray()  ?? [],
             amount_received: $payment->amount_received ?? null,
             reference: $payment->payment_intent_id ?? null,
             url: $payment->url ?? null,
@@ -90,31 +88,9 @@ class PaymentMapper{
 
     }
 
-     public static function toPaymentValidateResponse(UserDataResponse $student, PaymentDataResponse $payment, array $metadata): PaymentValidateResponse
-    {
-        return new PaymentValidateResponse(
-            student: new UserDataResponse(
-                id: $student->id ?? null,
-                fullName: $student->fullName ?? null,
-                email: $student->email ?? null,
-                curp: $student->curp ?? null,
-                n_control: $student->n_control ?? null
-            ),
-            payment: new PaymentDataResponse(
-                id: $payment->id ?? null,
-                amount: $payment->amount ?? null,
-                amount_received: $payment->amount_received ?? null,
-                status: $payment->status ?? null,
-                payment_intent_id: $payment->payment_intent_id ?? null,
-            ),
-            updatedAt: now()->format('Y-m-d H:i:s'),
-            metadata: $metadata
-        );
-    }
-
     public static function toListItemResponse(Payment $payment): PaymentListItemResponse
     {
-        $type = $payment->payment_method_details['type'] ?? 'desconocido';
+        $type = $payment->payment_method_details?->type() ?? 'desconocido';
         return new PaymentListItemResponse(
             id: $payment->id,
             date:$payment->created_at ? $payment->created_at->format('Y-m-d H:i:s'): null,
