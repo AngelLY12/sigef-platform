@@ -1,0 +1,12 @@
+<app-metadata-card title="Intento de pago cancelado">
+  <div metadata-body>
+    @if (metadata.conceptName) {
+      <app-metadata-row label="Concepto" [value]="metadata.conceptName" />
+    }
+    <app-metadata-row
+      label="Razón de cancelación"
+      [value]="metadata.cancellationReason"
+    />
+
+  </div>
+</app-metadata-card>

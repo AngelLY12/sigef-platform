@@ -1,0 +1,51 @@
+<div class="timeline">
+  @for (item of items; track $index; let last = $last) {
+    <div
+      class="timeline-item"
+      [class.timeline-error]="item.status === 'error'"
+      [class.timeline-pending]="item.status === 'pending'"
+    >
+      <div class="timeline-indicator">
+        <span
+          class="timeline-dot"
+          [class.success]="item.status === 'success'"
+          [class.error]="item.status === 'error'"
+          [class.pending]="item.status === 'pending'"
+        ></span>
+
+        @if (!last) {
+          <span class="timeline-line"></span>
+        }
+      </div>
+
+      <div class="timeline-content">
+        <div class="timeline-title">
+          <strong>{{ item.label }}</strong>
+
+          @if (item.badge) {
+            <app-metadata-badge
+              [type]="item.badge.type"
+              [text]="item.badge.text"
+            />
+          }
+        </div>
+
+        @if (item.date) {
+          <span class="timeline-date">
+            {{ item.date | date: "medium" }}
+          </span>
+        } @else if (item.description) {
+          <span class="timeline-date">
+            {{ item.description }}
+          </span>
+        }
+
+        @if (item.description && item.date) {
+          <p class="timeline-description">
+            {{ item.description }}
+          </p>
+        }
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,12 @@
+<div class="detail-item" [class.detail-item-divider]="divider">
+  <span class="detail-label">{{ label }}</span>
+  <span
+    class="detail-value"
+    [class.detail-mono]="variant === 'mono'"
+    [class.detail-amount]="variant === 'amount'"
+    [class.detail-highlight]="variant === 'highlight'"
+    [class.detail-muted]="variant === 'muted'"
+  >
+    {{ value }}
+  </span>
+</div>

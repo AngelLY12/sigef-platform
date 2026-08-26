@@ -1,0 +1,22 @@
+<app-metadata-card title="Monto critico de concepto">
+  <div metadata-header>
+    <app-metadata-badge
+      type="warning"
+      [text]="'Excedente: ' + (metadata.exceededBy | currencyMXN)"
+    />
+  </div>
+  <div metadata-body>
+    <app-metadata-row label="Usuario notificado" [value]="metadata.fullName" />
+    <app-metadata-row label="Concepto" [value]="metadata.conceptName" />
+    <app-metadata-row label="Monto" [value]="metadata.amount | currencyMXN" />
+    <app-metadata-row
+      label="Límite establecido"
+      [value]="metadata.threshold | currencyMXN"
+    />
+
+    <app-metadata-row
+      label="Acción efectuada"
+      [value]="'Se ' + metadata.action + ' el concepto'"
+    />
+  </div>
+</app-metadata-card>

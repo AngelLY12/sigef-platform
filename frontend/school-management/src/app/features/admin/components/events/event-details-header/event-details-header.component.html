@@ -1,0 +1,53 @@
+<section class="event-summary">
+  <div class="event-summary-main">
+
+    <div class="event-icon">
+      <span class="material-icons">
+        {{ event.icon }}
+      </span>
+    </div>
+
+    <div class="event-identity">
+
+      <div class="event-title-row">
+        <h2>Evento #{{ event.id }}</h2>
+
+        @if (event.statusLabel) {
+          <app-metadata-badge
+            [type]="event.statusType"
+            [text]="event.statusLabel"
+          />
+        }
+      </div>
+
+      @if (event.recipient) {
+        <p class="event-recipient">
+          {{ event.recipient }}
+        </p>
+      }
+
+      @if (event.context.length) {
+        <div class="event-context">
+          @for (item of event.context; track item; let last = $last) {
+            <span>{{ item }}</span>
+
+            @if (!last) {
+              <span class="separator">·</span>
+            }
+          }
+        </div>
+      }
+
+    </div>
+
+  </div>
+  <app-button
+    variant="ghost"
+    size="sm"
+    iconLeft="refresh"
+    [iconOnly]="true"
+    [loading]="refreshing"
+    [disabled]="refreshing"
+    (click)="refresh.emit()"
+  />
+</section>

@@ -1,0 +1,16 @@
+<app-metadata-card title="Acciones requeridas del pago">
+  @if (metadata.actionType) {
+    <div metadata-header>
+      <app-metadata-badge type="info" [text]="metadata.actionType" />
+    </div>
+  }
+
+  <div metadata-body>
+    <app-metadata-row
+      label="Usuario notificado"
+      [value]="metadata.recipientName"
+    />
+    <app-metadata-row label="Concepto" [value]="metadata.conceptName" />
+    <app-metadata-row label="Monto" [value]="metadata.amount | currencyMXN" />
+  </div>
+</app-metadata-card>

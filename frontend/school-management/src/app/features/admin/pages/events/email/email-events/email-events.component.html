@@ -1,0 +1,111 @@
+<app-page-layout
+  title="Eventos de correo"
+  welcomeMessage="Aquí puedes visualizar los eventos de correo procesados en el sistema."
+  loadingMessage="Cargando eventos de correo..."
+  icon="request_quote "
+  [state]="eventsState"
+  [refreshable]="true"
+  [refreshing]="eventsState === 'loading'"
+  (refresh)="onRefreshData()"
+  (retry)="loadEvents()"
+>
+  @if (eventsState === "success" && paginatedEmails) {
+    <app-folder-tabs
+      [tabs]="emailTabs"
+      [activeTab]="activeEmailTab"
+      (activeTabChange)="onStatusTabChange($event)"
+      [actionsTemplate]="eventTemplate"
+    >
+      <app-table
+        [data]="paginatedEmails.data.items"
+        [columns]="emailColumns"
+        [actionsTemplate]="tableActions"
+      />
+      <app-paginator
+        [paginator]="paginatedEmails"
+        (pageChange)="onPageChange($event)"
+        (perPageChange)="onPageSizeChange($event)"
+      />
+    </app-folder-tabs>
+  }
+</app-page-layout>
+
+<ng-template #eventTemplate>
+  <app-filter-bar variant="embedded" (reset)="onResetFilters()">
+    <app-select
+      label="Tipo de evento"
+      [options]="eventTypeOptions"
+      [ngModel]="emailFilters.eventType"
+      (ngModelChange)="onEventTypeChange($event)"
+      ()
+    />
+    <app-select
+      label="Fuente del evento"
+      [options]="eventSourceTypeOptions"
+      [ngModel]="emailFilters.sourceType"
+      (ngModelChange)="onEventSourceChange($event)"
+    />
+    <app-input
+      label="Desde"
+      type="date"
+      [ngModel]="emailFilters.from"
+      (ngModelChange)="onFromChange($event)"
+    />
+
+    <app-input
+      label="Hasta"
+      type="date"
+      [ngModel]="emailFilters.to"
+      (ngModelChange)="onToChange($event)"
+    />
+    <app-input
+      label="Correo del destinatario"
+      placeholder="correo@ejemplo.com"
+      type="email"
+      iconRight="search"
+      (iconRightClick)="onSearchByRecipient()"
+      (keyup.enter)="onSearchByRecipient()"
+      [(ngModel)]="pendingRecipientEmail"
+    />
+
+    <app-input
+      label="ID del destinatario"
+      placeholder="1"
+      type="number"
+      iconRight="search"
+      (iconRightClick)="onSearchByUserId()"
+      (keyup.enter)="onSearchByUserId()"
+      [(ngModel)]="userId"
+    />
+
+    <app-input
+      label="ID de fuente"
+      placeholder="evt_..."
+      type="text"
+      iconRight="search"
+      (iconRightClick)="onSearchById()"
+      (keyup.enter)="onSearchById()"
+      [(ngModel)]="pendingSourceId"
+    />
+  </app-filter-bar>
+</ng-template>
+
+<ng-template #tableActions let-item>
+  <app-button
+    [iconOnly]="true"
+    iconLeft="history"
+    variant="ghost"
+    size="sm"
+    tooltip="Ver historial del usuario"
+    (click)="onNavigateToHistory(item.userId)"
+  />
+
+  <app-button
+    [iconOnly]="true"
+    iconLeft="visibility"
+    variant="ghost"
+    size="sm"
+    tooltip="Ver evento"
+    (click)="onNavigateToDetails(item.id)"
+  />
+</ng-template>

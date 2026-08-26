@@ -1,0 +1,6 @@
+@if (component && emailEvent.metadata) {
+  <ng-container
+    *ngComponentOutlet="component; inputs: { metadata: emailEvent.metadata }"
+  >
+  </ng-container>
+}

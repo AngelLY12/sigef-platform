@@ -1,0 +1,28 @@
+<app-metadata-card title="Validación de pago">
+  <div metadata-header>
+    <app-metadata-badge type="info" [text]="metadata.status" />
+  </div>
+  <div metadata-body>
+    <app-metadata-row
+      label="Usuario notificado"
+      [value]="metadata.recipientName"
+    />
+    <app-metadata-row label="Concepto" [value]="metadata.conceptName" />
+    <app-metadata-row label="Monto" [value]="metadata.amount | currencyMXN" />
+    <app-metadata-row
+      label="Monto recibido"
+      [value]="metadata.amountReceived | currencyMXN"
+    />
+
+    @if (metadata.paymentMethodType) {
+      <app-metadata-row
+        label="Método de pago"
+        [value]="metadata.paymentMethodType"
+      />
+    }
+
+    @if (metadata.url) {
+      <app-metadata-link label="URL" text="Abrir enlace" [link]="metadata.url" />
+    }
+  </div>
+</app-metadata-card>

@@ -1,0 +1,6 @@
+@if (component && paymentEvent.metadata) {
+  <ng-container
+    *ngComponentOutlet="component; inputs: { metadata: paymentEvent.metadata }"
+  >
+  </ng-container>
+}

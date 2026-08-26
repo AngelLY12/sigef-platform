@@ -1,0 +1,15 @@
+<app-metadata-card title="Pago fallido">
+  <div metadata-body>
+    <app-metadata-row
+      label="Usuario notificado"
+      [value]="metadata.recipientName"
+    />
+    <app-metadata-row label="Concepto" [value]="metadata.conceptName" />
+    <app-metadata-row label="Monto" [value]="metadata.amount | currencyMXN" />
+    <app-metadata-row
+      label="Monto a recibir"
+      [value]="metadata.amountReceived | currencyMXN"
+    />
+    <app-metadata-row label="Error" [value]="metadata.error" />
+  </div>
+</app-metadata-card>

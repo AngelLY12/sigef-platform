@@ -1,0 +1,73 @@
+<app-page-layout
+  title="Historial de eventos de correo"
+  welcomeMessage="Visualiza el historial de eventos de correo procesados en el sistema de un usuario en especifico."
+  loadingMessage="Cargando eventos de correo..."
+  icon="request_quote "
+  [state]="historyState"
+  [refreshable]="true"
+  [refreshing]="historyState === 'loading'"
+  (refresh)="onRefreshData()"
+  (retry)="loadUserEmailHistory(userId!)"
+>
+@if (historyState === "success" && paginatedEmails) {
+    <app-folder-tabs
+      [tabs]="emailTabs"
+      [activeTab]="activeEmailTab"
+      (activeTabChange)="onStatusTabChange($event)"
+      [actionsTemplate]="eventTemplate"
+    >
+      <app-table
+        [data]="paginatedEmails.data.items"
+        [columns]="emailColumns"
+        [actionsTemplate]="tableActions"
+      />
+      <app-paginator
+        [paginator]="paginatedEmails"
+        (pageChange)="onPageChange($event)"
+        (perPageChange)="onPageSizeChange($event)"
+      />
+    </app-folder-tabs>
+  }
+</app-page-layout>
+
+<ng-template #eventTemplate>
+  <app-filter-bar variant="embedded" (reset)="onResetFilters()">
+    <app-select
+      label="Tipo de evento"
+      [options]="eventTypeOptions"
+      [ngModel]="emailFilters.eventType"
+      (ngModelChange)="onEventTypeChange($event)"
+      ()
+    />
+    <app-select
+      label="Fuente del evento"
+      [options]="eventSourceTypeOptions"
+      [ngModel]="emailFilters.sourceType"
+      (ngModelChange)="onEventSourceChange($event)"
+    />
+    <app-input
+      label="Desde"
+      type="date"
+      [ngModel]="emailFilters.from"
+      (ngModelChange)="onFromChange($event)"
+    />
+
+    <app-input
+      label="Hasta"
+      type="date"
+      [ngModel]="emailFilters.to"
+      (ngModelChange)="onToChange($event)"
+    />
+  </app-filter-bar>
+</ng-template>
+
+<ng-template #tableActions let-item>
+  <app-button
+    [iconOnly]="true"
+    iconLeft="visibility"
+    variant="ghost"
+    size="sm"
+    tooltip="Ver evento"
+    (click)="onNavigateToDetails(item.id)"
+  />
+</ng-template>

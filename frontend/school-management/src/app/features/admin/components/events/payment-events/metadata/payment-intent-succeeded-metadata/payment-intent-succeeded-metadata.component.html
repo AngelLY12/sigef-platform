@@ -1,0 +1,16 @@
+<app-metadata-card title="Intento de pago éxitoso">
+  <div metadata-header>
+    <app-metadata-badge
+      type="info"
+      [text]="metadata.intentStatus"
+    ></app-metadata-badge>
+  </div>
+
+  <div metadata-body>
+    <app-metadata-row label="Concepto" [value]="metadata.conceptName" />
+    <app-metadata-row
+      label="Último cargo asociado"
+      [value]="metadata.latestCharge"
+    />
+  </div>
+</app-metadata-card>

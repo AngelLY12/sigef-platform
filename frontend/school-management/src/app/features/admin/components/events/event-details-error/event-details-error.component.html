@@ -1,0 +1,25 @@
+@if (message) {
+  <section class="error-section">
+
+    <div class="error-header">
+
+      <span class="material-icons">
+        error_outline
+      </span>
+
+      <div>
+        <h2>{{ title }}</h2>
+
+        @if (description) {
+          <p>{{ description }}</p>
+        }
+      </div>
+
+    </div>
+
+    <div class="error-message">
+      {{ message }}
+    </div>
+
+  </section>
+}

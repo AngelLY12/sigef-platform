@@ -1,0 +1,96 @@
+<app-page-layout
+  title="Eventos de reconciliación"
+  welcomeMessage="Aquí puedes visualizar los eventos de pago procesados en el sistema."
+  loadingMessage="Cargando eventos de pago..."
+  icon="request_quote "
+  [state]="eventsState"
+  [refreshable]="true"
+  [refreshing]="eventsState === 'loading'"
+  (refresh)="onRefreshData()"
+  (retry)="loadEvents()"
+>
+  @if (eventsState === "success" && paginatedEvents) {
+    <app-folder-tabs
+      [tabs]="reconciliationTabs"
+      [activeTab]="activePaymentTab"
+      (activeTabChange)="onPaymentTabChange($event)"
+      [actionsTemplate]="eventTemplate"
+    >
+      <app-table
+        [data]="paginatedEvents.data.items"
+        [columns]="reconcileColumns"
+        [actionsTemplate]="tableActions"
+      />
+      <app-paginator
+        [paginator]="paginatedEvents"
+        (pageChange)="onPageChange($event)"
+        (perPageChange)="onPageSizeChange($event)"
+      />
+    </app-folder-tabs>
+  }
+</app-page-layout>
+
+<ng-template #eventTemplate>
+  <app-filter-bar variant="embedded" (reset)="onResetFilters()">
+    <app-select
+      label="Tipo de fuente"
+      [options]="sourceTypeOptions"
+      [ngModel]="paymentFilters.sourceType"
+      (ngModelChange)="onSourceTypeChange($event)"
+      ()
+    />
+
+    <app-input
+      label="Desde"
+      type="date"
+      [ngModel]="paymentFilters.from"
+      (ngModelChange)="onFromChange($event)"
+    />
+
+    <app-input
+      label="Hasta"
+      type="date"
+      [ngModel]="paymentFilters.to"
+      (ngModelChange)="onToChange($event)"
+    />
+
+    <app-input
+      label="ID de fuente"
+      placeholder="evt_..."
+      type="text"
+      iconRight="search"
+      (iconRightClick)="onSearchBySourceId()"
+      (keyup.enter)="onSearchBySourceId()"
+      [(ngModel)]="sourceId"
+    />
+    <app-input
+      label="ID del pago"
+      placeholder="1"
+      type="number"
+      iconRight="search"
+      (iconRightClick)="onSearchByPaymentId()"
+      (keyup.enter)="onSearchByPaymentId()"
+      [(ngModel)]="paymentId"
+    />
+  </app-filter-bar>
+</ng-template>
+
+<ng-template #tableActions let-item>
+  <app-button
+    [iconOnly]="true"
+    iconLeft="history"
+    variant="ghost"
+    size="sm"
+    tooltip="Ver historial del pago"
+    (click)="onNavigateToHistory(item.paymentId)"
+  />
+
+  <app-button
+    [iconOnly]="true"
+    iconLeft="visibility"
+    variant="ghost"
+    size="sm"
+    tooltip="Ver evento"
+    (click)="onNavigateToDetails(item.id)"
+  />
+</ng-template>

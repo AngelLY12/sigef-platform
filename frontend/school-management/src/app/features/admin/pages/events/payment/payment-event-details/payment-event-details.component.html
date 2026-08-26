@@ -1,0 +1,131 @@
+<app-page-layout [headerContent]="header" [state]="detailsState">
+  @if (paymentEvent) {
+    <div class="payment-event-details">
+
+      <!-- Información general -->
+      <app-event-details-section title="Información del evento">
+        <app-event-details-grid>
+
+          <app-event-details-item
+            label="ID"
+            [value]="paymentEvent.id"
+          />
+
+          <app-event-details-item
+            label="Tipo de evento"
+            [value]="paymentEvent.eventTypeLabel"
+            [divider]="true"
+          />
+
+          <app-event-details-item
+            label="Estado"
+            [value]="paymentEvent.statusLabel ?? '—'"
+            variant="highlight"
+          />
+
+          <app-event-details-item
+            label="Procesado"
+            [value]="paymentEvent.processed ? 'Sí' : 'No'"
+            [divider]="true"
+          />
+
+          <app-event-details-item
+            label="Monto recibido"
+            [value]="paymentEvent.amountReceived | currencyMXN"
+            variant="amount"
+          />
+
+          <app-event-details-item
+            label="Intentos"
+            [value]="paymentEvent.retryCount"
+            [divider]="true"
+          />
+
+          <app-event-details-item
+            label="Creado"
+            [value]="paymentEvent.createdAt | date:'medium'"
+          />
+
+          <app-event-details-item
+            label="Procesado en"
+            [value]="paymentEvent.processedAt | date:'medium'"
+            [divider]="true"
+          />
+
+        </app-event-details-grid>
+      </app-event-details-section>
+
+
+      <!-- Identificadores de Stripe -->
+      <app-event-details-section title="Identificadores de Stripe">
+        <app-event-details-grid>
+
+          <app-event-details-item
+            label="Stripe Event ID"
+            [value]="paymentEvent.stripeEventId ?? '—'"
+            variant="mono"
+          />
+
+          <app-event-details-item
+            label="Payment Intent ID"
+            [value]="paymentEvent.stripePaymentIntentId ?? '—'"
+            variant="mono"
+            [divider]="true"
+          />
+
+          <app-event-details-item
+            label="Session ID"
+            [value]="paymentEvent.stripeSessionId ?? '—'"
+            variant="mono"
+          />
+
+          <app-event-details-item
+            label="Payment ID"
+            [value]="paymentEvent.paymentId"
+            [divider]="true"
+          />
+
+        </app-event-details-grid>
+      </app-event-details-section>
+
+
+      <!-- Procesamiento -->
+      <app-event-details-section title="Procesamiento">
+        <app-event-details-timeline [items]="timeline" />
+      </app-event-details-section>
+
+
+      <!-- Metadata -->
+      @if (paymentEvent.metadata) {
+        <app-event-details-section
+          title="Metadata"
+          description="Información técnica adicional asociada al evento"
+        >
+          <app-payment-event-metadata
+            [paymentEvent]="paymentEvent"
+          />
+        </app-event-details-section>
+      }
+
+
+      <!-- Error -->
+      @if (paymentEvent.errorMessage) {
+        <app-event-details-error
+          [message]="paymentEvent.errorMessage"
+        />
+      }
+
+    </div>
+  }
+</app-page-layout>
+
+
+<ng-template #header>
+  @if (paymentEvent) {
+    <app-event-details-header
+      [event]="eventHeader"
+      [refreshing]="detailsState === 'loading'"
+      (refresh)="onRefreshData()"
+    />
+  }
+</ng-template>

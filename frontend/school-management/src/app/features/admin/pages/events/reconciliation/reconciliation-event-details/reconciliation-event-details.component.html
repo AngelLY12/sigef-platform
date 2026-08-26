@@ -1,0 +1,128 @@
+<app-page-layout [headerContent]="header" [state]="detailsState">
+  @if (paymentEvent) {
+    <div class="reconciliation-event-details">
+      <!-- Información de la reconciliación -->
+      <app-event-details-section title="Información de la reconciliación">
+        <app-event-details-grid>
+
+          <app-event-details-item
+            label="ID"
+            [value]="paymentEvent.id ?? '—'"
+          />
+
+          <app-event-details-item
+            label="Estado"
+            [value]="paymentEvent.statusLabel"
+            variant="highlight"
+            [divider]="true"
+          />
+
+          <app-event-details-item
+            label="Resultado"
+            [value]="paymentEvent.outcomeLabel ?? '—'"
+          />
+
+        </app-event-details-grid>
+      </app-event-details-section>
+
+
+      <!-- Origen -->
+      <app-event-details-section title="Origen">
+        <app-event-details-grid>
+
+          <app-event-details-item
+            label="Payment ID"
+            [value]="paymentEvent.paymentId ?? '—'"
+          />
+
+          <app-event-details-item
+            label="ID de origen"
+            [value]="paymentEvent.sourceId"
+            variant="mono"
+            [divider]="true"
+          />
+
+          <app-event-details-item
+            label="Tipo de fuente"
+            [value]="paymentEvent.sourceTypeLabel"
+          />
+
+        </app-event-details-grid>
+      </app-event-details-section>
+
+
+      <!-- Fechas -->
+      <app-event-details-section title="Fechas">
+        <app-event-details-grid>
+
+          <app-event-details-item
+            label="Creado"
+            [value]="paymentEvent.createdAt | date:'medium'"
+          />
+
+          <app-event-details-item
+            label="Procesamiento iniciado"
+            [value]="paymentEvent.startedAt | date:'medium'"
+            [divider]="true"
+          />
+
+          <app-event-details-item
+            label="Completado"
+            [value]="paymentEvent.completedAt | date:'medium'"
+          />
+
+          <app-event-details-item
+            label="Fallido"
+            [value]="paymentEvent.failedAt | date:'medium'"
+            [divider]="true"
+          />
+
+          <app-event-details-item
+            label="Última actualización"
+            [value]="paymentEvent.updatedAt | date:'medium'"
+          />
+
+        </app-event-details-grid>
+      </app-event-details-section>
+
+
+      <!-- Procesamiento -->
+      <app-event-details-section title="Procesamiento">
+        <app-event-details-timeline [items]="timeline" />
+      </app-event-details-section>
+
+
+      <!-- Metadata -->
+      @if (paymentEvent.metadata) {
+        <app-event-details-section
+          title="Metadata"
+          description="Información técnica adicional asociada al evento"
+        >
+          <app-reconciliation-event-metadata
+            [reconcileEvent]="paymentEvent"
+          />
+        </app-event-details-section>
+      }
+
+
+      <!-- Error -->
+      @if (paymentEvent.errorMessage) {
+        <app-event-details-error
+          [message]="paymentEvent.errorMessage"
+        />
+      }
+
+    </div>
+  }
+</app-page-layout>
+
+
+<ng-template #header>
+  @if (paymentEvent) {
+    <app-event-details-header
+      [event]="eventHeader"
+      [refreshing]="detailsState === 'loading'"
+      (refresh)="onRefreshData()"
+    />
+  }
+</ng-template>

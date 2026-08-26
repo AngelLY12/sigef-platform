@@ -1,0 +1,6 @@
+@if (component && reconcileEvent.metadata) {
+  <ng-container
+    *ngComponentOutlet="component; inputs: { metadata: reconcileEvent.metadata }"
+  >
+  </ng-container>
+}

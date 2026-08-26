@@ -1,0 +1,26 @@
+<app-metadata-card title="Intento de pago cancelado">
+  @if (metadata.errorType) {
+    <div metadata-header>
+      <app-metadata-badge
+        type="error"
+        [text]="metadata.errorType"
+      ></app-metadata-badge>
+    </div>
+  }
+
+  <div metadata-body>
+    <app-metadata-row label="Concepto" [value]="metadata.conceptName" />
+    <app-metadata-row
+      label="Mensaje de error"
+      [value]="metadata.errorMessage"
+    />
+    <app-metadata-row label="Código de error" [value]="metadata.errorCode" />
+    <app-metadata-row
+      label="Código de rechazo"
+      [value]="metadata.declineCode"
+    /><app-metadata-row
+      label="Último cargo asociado"
+      [value]="metadata.latestCharge"
+    />
+  </div>
+</app-metadata-card>

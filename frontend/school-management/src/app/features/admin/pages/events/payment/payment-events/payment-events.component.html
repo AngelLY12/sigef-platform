@@ -1,0 +1,113 @@
+<app-page-layout
+  title="Eventos de pago"
+  welcomeMessage="Aquí puedes visualizar los eventos de pago procesados en el sistema."
+  loadingMessage="Cargando eventos de pago..."
+  icon="request_quote "
+  [state]="eventsState"
+  [refreshable]="true"
+  [refreshing]="eventsState === 'loading'"
+  (refresh)="onRefreshData()"
+  (retry)="loadEvents()"
+>
+  @if (eventsState === "success" && paginatedEvents) {
+    <app-folder-tabs
+      [tabs]="paymentTabs"
+      [activeTab]="activePaymentTab"
+      (activeTabChange)="onPaymentTabChange($event)"
+      [actionsTemplate]="eventTemplate"
+    >
+      <app-table
+        [data]="paginatedEvents.data.items"
+        [columns]="paymentColumns"
+        [actionsTemplate]="tableActions"
+      />
+      <app-paginator
+        [paginator]="paginatedEvents"
+        (pageChange)="onPageChange($event)"
+        (perPageChange)="onPageSizeChange($event)"
+      />
+    </app-folder-tabs>
+  }
+</app-page-layout>
+
+<ng-template #eventTemplate>
+  <app-filter-bar variant="embedded" (reset)="onResetFilters()">
+    <app-select
+      label="Tipo de evento"
+      [options]="availableEventTypes"
+      [ngModel]="paymentFilters.eventType"
+      (ngModelChange)="onEventTypeChange($event)"
+      ()
+    />
+
+    <app-select
+      label="Procesado"
+      [options]="processedOptions"
+      [ngModel]="processed"
+      (ngModelChange)="onChangeProcessed($event)"
+      ()
+    />
+
+    <app-input
+      label="Desde"
+      type="date"
+      [ngModel]="paymentFilters.from"
+      (ngModelChange)="onFromChange($event)"
+    />
+
+    <app-input
+      label="Hasta"
+      type="date"
+      [ngModel]="paymentFilters.to"
+      (ngModelChange)="onToChange($event)"
+    />
+    <app-input
+      label="ID del intento de pago"
+      placeholder="pi_..."
+      type="text"
+      iconRight="search"
+      (iconRightClick)="onSearchByPaymentIntentId()"
+      (keyup.enter)="onSearchByPaymentIntentId()"
+      [(ngModel)]="stripePaymentIntentId"
+    />
+
+    <app-input
+      label="ID de sesión"
+      placeholder="evt_..."
+      type="text"
+      iconRight="search"
+      (iconRightClick)="onSearchBySessionId()"
+      (keyup.enter)="onSearchBySessionId()"
+      [(ngModel)]="stripeSessionId"
+    />
+    <app-input
+      label="ID del pago"
+      placeholder="1"
+      type="number"
+      iconRight="search"
+      (iconRightClick)="onSearchByPaymentId()"
+      (keyup.enter)="onSearchByPaymentId()"
+      [(ngModel)]="paymentId"
+    />
+  </app-filter-bar>
+</ng-template>
+
+<ng-template #tableActions let-item>
+  <app-button
+    [iconOnly]="true"
+    iconLeft="history"
+    variant="ghost"
+    size="sm"
+    tooltip="Ver historial del pago"
+    (click)="onNavigateToHistory(item.paymentId)"
+  />
+
+  <app-button
+    [iconOnly]="true"
+    iconLeft="visibility"
+    variant="ghost"
+    size="sm"
+    tooltip="Ver evento"
+    (click)="onNavigateToDetails(item.id)"
+  />
+</ng-template>

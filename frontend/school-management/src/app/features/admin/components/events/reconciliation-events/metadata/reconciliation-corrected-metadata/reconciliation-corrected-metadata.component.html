@@ -1,0 +1,20 @@
+<app-metadata-card title="Pago corregido">
+  <div metadata-body>
+    <app-metadata-row
+      label="Fuente"
+      [value]="metadata.dataSource"
+    ></app-metadata-row>
+    <app-metadata-row
+      label="ID del intento de pago"
+      [value]="metadata.paymentIntentId"
+    ></app-metadata-row>
+    <app-metadata-row
+      label="ID del cargo"
+      [value]="metadata.chargeId"
+    ></app-metadata-row>
+    <app-metadata-row
+      label="Monto recibido"
+      [value]="metadata.amountReceived | currencyMXN"
+    ></app-metadata-row>
+  </div>
+</app-metadata-card>

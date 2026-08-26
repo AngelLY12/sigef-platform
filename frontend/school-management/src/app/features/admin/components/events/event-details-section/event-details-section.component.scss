@@ -1,0 +1,46 @@
+
+.details-section {
+  padding: 1.25rem 1.5rem;
+  background: var(--card-bg-primary);
+  border: 1px solid var(--card-border-light);
+  border-radius: 0.85rem;
+}
+
+.section-header {
+  margin-bottom: 1.25rem;
+
+  h2 {
+    margin: 0;
+
+    font-size: 1rem;
+    font-weight: 600;
+
+    color: var(--card-text-primary);
+  }
+
+  p {
+    margin: 0.3rem 0 0;
+
+    font-size: 0.8rem;
+    color: var(--card-text-tertiary);
+  }
+}
+
+@media (max-width: 768px) {
+
+  .details-section {
+    padding: 1.15rem;
+  }
+}
+
+
+@media (max-width: 480px) {
+
+  .details-section {
+    padding: 1rem;
+  }
+
+  .section-header {
+    margin-bottom: 1rem;
+  }
+}

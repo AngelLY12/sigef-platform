@@ -1,0 +1,63 @@
+<app-page-layout
+  [headerContent]="header"
+  [state]="detailsState"
+>
+  @if (emailEvent) {
+    <div class="email-event-details">
+      <app-event-details-section title="Información del evento">
+        <app-event-details-grid>
+          <app-event-details-item label="ID" [value]="emailEvent.id" />
+          <app-event-details-item
+            label="Tipo de evento"
+            [value]="emailEvent.eventTypeLabel"
+            [divider]="true"
+          />
+          <app-event-details-item
+            label="Destinatario"
+            [value]="emailEvent.recipientEmail"
+          />
+          <app-event-details-item
+            label="Origen"
+            [value]="emailEvent.sourceTypeLabel"
+            [divider]="true"
+          />
+          <app-event-details-item
+            label="ID de origen"
+            [value]="emailEvent.sourceId"
+          />
+          <app-event-details-item
+            label="Intentos"
+            [value]="emailEvent.attemptCount"
+            [divider]="true"
+          />
+        </app-event-details-grid>
+      </app-event-details-section>
+
+      <app-event-details-section title="Procesamiento">
+        <app-event-details-timeline [items]="timeline" />
+      </app-event-details-section>
+
+      @if (emailEvent.metadata) {
+        <app-event-details-section
+          title="Metadata"
+          description="Información técnica adicional asociada al evento"
+        >
+          <app-email-event-metadata
+            [emailEvent]="emailEvent"
+          ></app-email-event-metadata>
+        </app-event-details-section>
+      }
+
+      @if (emailEvent.errorMessage) {
+        <app-event-details-error [message]="emailEvent.errorMessage" />
+      }
+    </div>
+  }
+</app-page-layout>
+
+<ng-template #header>
+  @if (emailEvent) {
+    <app-event-details-header [event]="eventHeader" [refreshing]="detailsState === 'loading'"
+  (refresh)="onRefreshData()"/>
+  }
+</ng-template>
