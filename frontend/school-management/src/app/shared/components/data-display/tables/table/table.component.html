@@ -35,17 +35,17 @@
                   }
                 }
               </td>
-              @if (actionsTemplate) {
-                <td>
-                  <ng-container
-                    *ngTemplateOutlet="
-                      actionsTemplate;
-                      context: { $implicit: row }
-                    "
-                  >
-                  </ng-container>
-                </td>
-              }
+            }
+            @if (actionsTemplate) {
+              <td class="actions">
+                <ng-container
+                  *ngTemplateOutlet="
+                    actionsTemplate;
+                    context: { $implicit: row }
+                  "
+                >
+                </ng-container>
+              </td>
             }
           </tr>
         }
