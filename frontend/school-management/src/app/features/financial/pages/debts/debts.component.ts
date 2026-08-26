@@ -23,6 +23,7 @@ import { FolderTabsComponent } from '../../../../shared/components/navigation/fo
 import { FolderTab } from '../../../../shared/components/navigation/folder-tabs/folder-tabs-config.model';
 import { DEBTS_LIST_TABS } from '../../config/financial.config';
 import { FilterBarComponent } from '../../../../shared/components/data-controls/filter-bar/filter-bar.component';
+import { EMPTY } from 'rxjs';
 
 @Component({
   selector: 'app-debts',
@@ -37,7 +38,7 @@ import { FilterBarComponent } from '../../../../shared/components/data-controls/
     ReactiveFormsModule,
     EmptyStateComponent,
     FolderTabsComponent,
-    FilterBarComponent
+    FilterBarComponent,
   ],
   templateUrl: './debts.component.html',
   styleUrl: './debts.component.scss',
@@ -127,9 +128,47 @@ export class DebtsComponent implements OnInit {
     this.listController.update(updatedParams);
   }
 
+  openStripeSearchModal() {
+    this.modalService.openActions({
+      title: 'Busca los pagos de un usuario',
+      description:
+  'Consulta los pagos registrados en la pasarela de pago indicando el número de control y el año.',
+        entityName: 'usuario',
+      fields: [
+        {
+          name: 'n_control',
+          type: 'input',
+          placeHolder: 'Ejemplo: 26000000',
+          label: 'Número de control',
+          inputType: 'search',
+        },
+        {
+          name: 'year',
+          type: 'input',
+          label: 'Año',
+          inputType: 'number',
+          placeHolder: '2024'
+        },
+      ],
+      onSubmit: (data: any) => {
+        this.modalService.openCustom({
+          title: `Pagos en la pasarela de pago`,
+          component: StripePaymentsComponent,
+          data: {
+            nControl: data.n_control,
+            year: Number(data.year),
+          },
+        });
+
+        return EMPTY;
+      },
+    }, []);
+  }
+
+
   openStripeModal(item: DebtsList) {
     this.modalService.openCustom({
-      title: `Pagos Stripe - ${item.user_name}`,
+      title: `Pagos en la pasarela de pago - ${item.user_name}`,
       component: StripePaymentsComponent,
       data: {
         nControl: item.n_control,

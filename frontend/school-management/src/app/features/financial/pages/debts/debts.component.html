@@ -26,6 +26,14 @@
             [fullWidth]="true"
           />
         </span>
+        <app-button
+          variant="ghost"
+          size="sm"
+          iconLeft="payments"
+          (click)="openStripeSearchModal()"
+        >
+          Consultar pagos en la pasarela
+        </app-button>
       </app-filter-bar>
     }
   </ng-template>
@@ -55,6 +63,14 @@
     </app-folder-tabs>
   } @else {
     <app-empty-state icon="receipt_long" message="No se encontraron adeudos" />
+    <app-button
+      variant="ghost"
+      size="sm"
+      iconLeft="payments"
+      (click)="openStripeSearchModal()"
+    >
+      Consultar pagos en la pasarela
+    </app-button>
   }
 
   <ng-template #actionsTemplate let-item>
@@ -65,7 +81,7 @@
         iconLeft="payments"
         (click)="openStripeModal(item)"
       >
-        Stripe
+        Pasarela
       </app-button>
     </div>
   </ng-template>
