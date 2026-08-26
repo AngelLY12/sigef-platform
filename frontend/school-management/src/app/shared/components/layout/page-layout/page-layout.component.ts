@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { LoadingState } from '../../../../core/models/types/loading-state.type';
 import { ButtonComponent } from '../../ui/button/button.component';
 import { ErrorStateComponent } from '../../feedback/error-state/error-state.component';
+import { BreadcrumbComponent } from '../breadcrumb/breadcrumb.component';
 
 @Component({
   selector: 'app-page-layout',
@@ -21,6 +22,7 @@ import { ErrorStateComponent } from '../../feedback/error-state/error-state.comp
     CommonModule,
     ErrorStateComponent,
     ButtonComponent,
+    BreadcrumbComponent
   ],
   templateUrl: './page-layout.component.html',
   styleUrl: './page-layout.component.scss',
