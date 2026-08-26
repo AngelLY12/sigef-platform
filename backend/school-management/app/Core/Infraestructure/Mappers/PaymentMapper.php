@@ -14,7 +14,7 @@ class PaymentMapper{
             concept_name: $payment->concept_name ?? null,
             amount: $payment->amount ?? null,
             status: $payment->status,
-            payment_method_details: $payment->payment_method_details ?? [],
+            payment_method_details: $payment->payment_method_details ?? null,
             id: $payment->id ?? null,
             user_id: $payment->user_id,
             payment_concept_id: $payment->payment_concept_id ?? null,

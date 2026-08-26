@@ -15,7 +15,7 @@ class PaymentEventMapper
             stripePaymentIntentId: $model->stripe_payment_intent_id,
             stripeSessionId: $model->stripe_session_id,
             eventType: $model->event_type,
-            metadata: $model->metadata,
+            metadata: $model->metadata ?? null,
             amountReceived: $model->amount_received,
             status: $model->status,
             processed: $model->processed,
