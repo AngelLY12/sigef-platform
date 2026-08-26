@@ -25,6 +25,13 @@ class EloquentPaymentQueryRepository implements PaymentQueryRepInterface
         return optional(EloquentPayment::find($id), fn($pc) => PaymentMapper::toDomain($pc));
     }
 
+    public function existsById(int $id): bool
+    {
+        return EloquentPayment::query()
+            ->whereKey($id)
+            ->exists();
+    }
+
     public function findByIds(array $ids): Collection
     {
         if(empty($ids)) return collect();
@@ -51,6 +58,14 @@ class EloquentPaymentQueryRepository implements PaymentQueryRepInterface
     public function findByIntentId(string $intentId): ?Payment
     {
         $payment=EloquentPayment::where('payment_intent_id', $intentId)->first();
+        return $payment ? PaymentMapper::toDomain($payment) : null;
+    }
+    public function findByIdAndUserId(int $paymentId, int $userId): ?Payment
+    {
+        $payment = EloquentPayment::query()
+            ->whereKey($paymentId)
+            ->where('user_id',$userId)
+            ->first();
         return $payment ? PaymentMapper::toDomain($payment) : null;
     }
 

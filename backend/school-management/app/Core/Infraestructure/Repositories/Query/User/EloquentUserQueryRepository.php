@@ -36,6 +36,13 @@ class EloquentUserQueryRepository implements UserQueryRepInterface
         return optional(EloquentUser::with('roles')->find($userId),fn($eloquent)=>UserMapper::toDomain($eloquent));
     }
 
+    public function existsById(int $userId): bool
+    {
+        return EloquentUser::query()
+            ->whereKey($userId)
+            ->exists();
+    }
+
     public function findUserRoles(int $userId): array
     {
         $user = EloquentUser::findOrFail($userId);
