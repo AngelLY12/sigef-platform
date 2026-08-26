@@ -1,0 +1,35 @@
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  margin-bottom: 0.75rem;
+
+  font-size: 0.8rem;
+  line-height: 1.25;
+
+  color: var(--card-text-tertiary);
+
+  .separator {
+    color: var(--card-text-tertiary);
+    opacity: 0.6;
+    user-select: none;
+  }
+
+  .current {
+    color: var(--card-text-secondary);
+    font-weight: 500;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+@media (max-width: 768px) {
+  .breadcrumb {
+    margin-bottom: 0.5rem;
+    font-size: 0.75rem;
+    gap: 0.4rem;
+  }
+}

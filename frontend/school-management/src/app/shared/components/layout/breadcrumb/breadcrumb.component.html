@@ -1,0 +1,25 @@
+@if (breadcrumbs.length > 1) {
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    @for (breadcrumb of breadcrumbs; track breadcrumb.label; let last = $last) {
+      @if (!last) {
+        @if (breadcrumb.url) {
+          <app-anchor
+            [link]="breadcrumb.url"
+            [anchorMessage]="breadcrumb.label"
+            [external]="false"
+          />
+        }@else {
+          <span class="current">
+            {{ breadcrumb.label }}
+          </span>
+        }
+
+        <span class="separator">/</span>
+      } @else {
+        <span class="current">
+          {{ breadcrumb.label }}
+        </span>
+      }
+    }
+  </nav>
+}
