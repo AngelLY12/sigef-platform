@@ -3,8 +3,14 @@
 namespace App\Core\Application\UseCases\Admin\UserManagement;
 
 use App\Core\Application\DTO\Response\General\ImportResponse;
+use App\Core\Application\Factories\Emails\Events\EmailEventFactory;
 use App\Core\Application\Mappers\EnumMapper;
 use App\Core\Application\Mappers\MailMapper;
+use App\Core\Application\Services\Events\Contracts\EmailEventManagerInterface;
+use App\Core\Domain\Entities\User;
+use App\Core\Domain\Enum\Events\Sources\EmailEventSourceType;
+use App\Core\Domain\Enum\Events\Types\EmailEventType;
+use App\Core\Domain\Enum\User\UserActorType;
 use App\Core\Domain\Enum\User\UserRoles;
 use App\Core\Domain\Enum\User\UserStatus;
 use App\Core\Domain\Repositories\Command\Auth\RolesAndPermissionsRepInterface;
@@ -12,16 +18,15 @@ use App\Core\Domain\Repositories\Command\User\StudentDetailReInterface;
 use App\Core\Domain\Repositories\Command\User\UserRepInterface;
 use App\Core\Domain\Repositories\Query\Auth\RolesAndPermissosQueryRepInterface;
 use App\Core\Domain\Repositories\Query\Misc\CareerQueryRepInterface;
+use App\Core\Domain\Utils\Helpers\EventSourceId;
 use App\Core\Infraestructure\Mappers\UserMapper;
 use App\Jobs\ClearStaffCacheJob;
 use App\Jobs\SendBulkMailJob;
 use App\Mail\CreatedUserMail;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class BulkImportUsersUseCase
@@ -56,6 +61,7 @@ class BulkImportUsersUseCase
         private StudentDetailReInterface $sdRepo,
         private RolesAndPermissosQueryRepInterface $rpqRepo,
         private CareerQueryRepInterface $cqRepo,
+        private EmailEventManagerInterface $emailEventManager,
     ) {
     }
     public function execute(array $rows): ImportResponse
@@ -63,6 +69,7 @@ class BulkImportUsersUseCase
         $this->importResponse = new ImportResponse();
         $this->importResponse->setTotalRows(count($rows));
         $allUsersToNotify = [];
+        $operationId = EventSourceId::generateOperationId();
         $this->loadCareerIds();
         foreach (array_chunk($rows, self::CHUNK_SIZE) as $chunkIndex => $chunk) {
             try {
@@ -83,8 +90,7 @@ class BulkImportUsersUseCase
             }
         }
 
-        $this->processNotifications($allUsersToNotify);
-
+        $this->processNotifications($allUsersToNotify, $operationId);
         $this->dispatchCacheClear();
 
         return $this->importResponse;
@@ -431,7 +437,7 @@ class BulkImportUsersUseCase
             'last_name' => $trimmedRow[self::COL_LAST_NAME],
             'email' => $trimmedRow[self::COL_EMAIL],
             'password' => Hash::make($tempPassword),
-            'phone_number' => $normalizedPhone, // ← Normalizado
+            'phone_number' => $normalizedPhone,
             'birthdate' => !empty($trimmedRow[self::COL_BIRTHDATE]) ? Carbon::parse($trimmedRow[self::COL_BIRTHDATE]) : null,
             'gender' => !empty($trimmedRow[self::COL_GENDER]) ? EnumMapper::toUserGender($trimmedRow[self::COL_GENDER])->value : null,
             'curp' => $trimmedRow[self::COL_CURP],
@@ -482,7 +488,7 @@ class BulkImportUsersUseCase
         ];
     }
 
-    private function processNotifications(array $usersToNotify): void
+    private function processNotifications(array $usersToNotify, string $operationId): void
     {
         if (empty($usersToNotify)) {
             return;
@@ -492,30 +498,39 @@ class BulkImportUsersUseCase
         foreach ($chunks as $chunkIndex => $chunk) {
             $mailables = [];
             $recipientEmails = [];
-
+            $eventIds = [];
             foreach ($chunk as $data) {
+                /** @var User $user */
                 $user = $data['user'];
                 $password = $data['password'];
-
-                $dtoData = [
-                    'recipientName'  => $user->name . ' ' . $user->last_name,
-                    'recipientEmail' => $user->email,
-                    'password'       => $password
-                ];
-
+                $event = $this->emailEventManager->findOrCreate(
+                    eventType: EmailEventType::USER_CREATED,
+                    sourceType: EmailEventSourceType::USER,
+                    sourceId: EventSourceId::email(
+                        sourceType: EmailEventSourceType::USER,
+                        eventType: EmailEventType::USER_CREATED,
+                        operationId: $operationId,
+                        recipientId: $user->id,
+                    ),
+                    factory: fn () => EmailEventFactory::userCreated(user: $user,actorType: UserActorType::ADMIN,operationId: $operationId),
+                );
+                $eventIds[] = $event->id;
                 $mailables[] = new CreatedUserMail(
-                    MailMapper::toNewUserCreatedEmailDTO($dtoData)
+                    MailMapper::toNewUserCreatedEmailDTO(
+                        fullName: $user->fullName(),
+                        email: $user->email,
+                        password: $password
+                    )
                 );
                 $recipientEmails[] = $user->email;
             }
 
-            SendBulkMailJob::forRecipients(
-                $mailables,
-                $recipientEmails,
-                'bulk_import_user_registration'
-            )
-                ->onQueue('emails')
-                ->delay(now()->addSeconds(5));
+            $this->emailEventManager->dispatchBulk(
+                eventIds: $eventIds,
+                mailables: $mailables,
+                recipientEmails: $recipientEmails,
+                jobType: 'bulk_import_user_registration'
+            );
         }
     }
 
