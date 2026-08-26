@@ -86,7 +86,7 @@ public function stripe(){}
 
 /**
  * @OA\Post(
- *     path="/api/v1/debts/validate",
+ *     path="/api/v1/debts/reconcile",
  *     summary="Validar un pago de Stripe",
  *     description="Valida un pago realizado en Stripe mediante el `payment_intent_id` y la búsqueda del estudiante.",
  *     tags={"Debts"},
@@ -114,12 +114,12 @@ public function stripe(){}
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(
- *            ref="#/components/schemas/ValidatePaymentRequest"
+ *            ref="#/components/schemas/ReconcilePaymentRequest"
  *         )
  *     ),
  *     @OA\Response(
  *          response=200,
- *          description="Pago validado correctamente",
+ *          description="Pago reconciliado correctamente",
  *          @OA\JsonContent(
  *              allOf={
  *                  @OA\Schema(ref="#/components/schemas/SuccessResponse"),
@@ -128,8 +128,8 @@ public function stripe(){}
  *                          property="data",
  *                          type="object",
  *                          @OA\Property(
- *                              property="validated_payment",
- *                              ref="#/components/schemas/PaymentValidateResponse"
+ *                              property="reconciled_payment",
+ *                              ref="#/components/schemas/PaymentReconciliationResponse"
  *                          )
  *                      )
  *                  )
@@ -146,7 +146,7 @@ public function stripe(){}
  *     )
  * )
  */
-public function validate(){}
+public function reconcile(){}
 
 
 /**
