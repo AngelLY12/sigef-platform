@@ -2,8 +2,7 @@
 
 namespace App\Core\Application\UseCases\Payments\Student\PendingPayment;
 
-use App\Core\Application\Mappers\EnumMapper;
-use App\Core\Application\Mappers\PaymentMapper;
+use App\Core\Domain\Entities\Payment;
 use App\Core\Domain\Entities\User;
 use App\Core\Domain\Enum\Payment\PaymentStatus;
 use App\Core\Domain\Repositories\Command\Payments\PaymentRepInterface;
@@ -15,7 +14,6 @@ use App\Core\Domain\Utils\Validators\PaymentConceptValidator;
 use App\Core\Domain\Utils\Validators\PaymentValidator;
 use App\Exceptions\NotAllowed\PaymentRetryNotAllowedException;
 use App\Exceptions\NotFound\ConceptNotFoundException;
-use App\Exceptions\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
 
 class PayConceptUseCase
@@ -53,19 +51,27 @@ class PayConceptUseCase
             }
         }
 
-        $session = $this->stripe->createCheckoutSession($customerId, $concept, $amountToPay, $user->id);
-        return DB::transaction(function() use ($lastPayment, $session, $concept, $user) {
-            if ($lastPayment) {
-                $this->paymentRepo->update($lastPayment->id, [
-                    'stripe_session_id' => $session->id,
-                ]);
-            } else {
-                $payment = PaymentMapper::toDomain(concept: $concept, userId: $user->id, session: $session);
-                $this->paymentRepo->create($payment);
+        $payment = DB::transaction(function () use ($lastPayment, $concept, $user, $amountToPay){
+            if($lastPayment){
+                return $lastPayment;
             }
-
-            return $session->url;
+            return $this->paymentRepo->create(
+                new Payment(
+                    concept_name: $concept->concept_name,
+                    amount: $amountToPay,
+                    status: PaymentStatus::DEFAULT,
+                    user_id: $user->id,
+                    payment_concept_id: $concept->id,
+                )
+            );
         });
+
+        $session = $this->stripe->createCheckoutSession($customerId, $concept, $amountToPay, $user->id, $payment->id);
+        $this->paymentRepo->update($payment->id, [
+            'stripe_session_id' => $session->id,
+            'url' => $session->url,
+        ]);
+        return $session->url;
     }
 
     private function verifyStripeCustomer(User $user): string
