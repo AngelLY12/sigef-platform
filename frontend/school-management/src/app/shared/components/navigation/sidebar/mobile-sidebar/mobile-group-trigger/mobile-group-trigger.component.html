@@ -1,0 +1,83 @@
+<!-- Bottom navigation -->
+<button
+  *ngIf="variant === 'bottom'"
+  type="button"
+  class="mobile-nav-item mobile-group-trigger"
+  [class.has-active-child]="isAnyChildActive()"
+  [class.expanded]="expanded"
+  (click)="toggle()"
+>
+  <span class="material-icons">
+    {{ item.icon }}
+  </span>
+
+  <span
+    *ngIf="item.badge"
+    class="badge"
+    [ngClass]="item.badgeColor || 'primary'"
+  >
+    {{ item.badge === true ? "" : item.badge }}
+  </span>
+</button>
+
+<!-- Bottom submenu -->
+<div
+  *ngIf="variant === 'bottom' && expanded"
+  class="mobile-submenu mobile-bottom-submenu"
+>
+  <ng-container *ngFor="let child of item.children">
+    <app-mobile-bottom-item
+      *ngIf="child.type === 'item'"
+      [item]="child"
+      variant="menu"
+      (itemClick)="onChildClick()"
+    />
+
+    <app-mobile-group-trigger
+      *ngIf="child.type === 'group'"
+      [item]="child"
+      variant="menu"
+      (itemClick)="onChildClick()"
+    />
+  </ng-container>
+</div>
+
+<!-- More menu -->
+<div *ngIf="variant === 'menu'" class="mobile-menu-group">
+  <button
+    type="button"
+    class="mobile-more-item mobile-menu-parent"
+    [class.active]="isAnyChildActive()"
+    (click)="toggle()"
+  >
+    <span class="material-icons">
+      {{ item.icon }}
+    </span>
+
+    <span>
+      {{ item.label }}
+    </span>
+
+    <span class="material-icons mobile-expand-icon">
+      {{ expanded ? "expand_less" : "expand_more" }}
+    </span>
+  </button>
+
+  <div *ngIf="expanded" class="mobile-submenu">
+    <ng-container *ngFor="let child of item.children">
+      <app-mobile-bottom-item
+        *ngIf="child.type === 'item'"
+        [item]="child"
+        variant="menu"
+        (itemClick)="onChildClick()"
+      />
+
+      <app-mobile-group-trigger
+        *ngIf="child.type === 'group'"
+        [item]="child"
+        variant="menu"
+        (itemClick)="onChildClick()"
+      />
+    </ng-container>
+  </div>
+</div>

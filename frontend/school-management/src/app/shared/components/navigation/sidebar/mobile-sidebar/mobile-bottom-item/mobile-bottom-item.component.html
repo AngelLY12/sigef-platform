@@ -1,0 +1,46 @@
+<!-- Bottom navigation -->
+<a
+  *ngIf="variant === 'bottom'"
+  class="mobile-nav-item"
+  [routerLink]="item.route"
+  [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
+  routerLinkActive="active"
+>
+  <span class="material-icons">
+    {{ item.icon }}
+  </span>
+
+  <span
+    *ngIf="item.badge"
+    class="badge"
+    [ngClass]="item.badgeColor || 'primary'"
+  >
+    {{ item.badge === true ? '' : item.badge }}
+  </span>
+</a>
+
+
+<!-- More menu -->
+<button
+  *ngIf="variant === 'menu'"
+  type="button"
+  class="mobile-more-item"
+  [class.active]="isActive()"
+  (click)="onClick()"
+>
+  <span class="material-icons">
+    {{ item.icon }}
+  </span>
+
+  <span>
+    {{ item.label }}
+  </span>
+
+  <span
+    *ngIf="item.badge"
+    class="badge"
+    [ngClass]="item.badgeColor || 'primary'"
+  >
+    {{ item.badge === true ? '' : item.badge }}
+  </span>
+</button>

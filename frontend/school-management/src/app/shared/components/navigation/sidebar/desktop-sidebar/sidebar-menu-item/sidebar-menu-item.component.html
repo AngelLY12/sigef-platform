@@ -1,0 +1,25 @@
+<a
+  class="menu-item"
+  [class.collapsed]="collapsed"
+  [routerLink]="item.route"
+  [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
+  routerLinkActive="active"
+>
+  <span class="material-icons icon">
+    {{ item.icon }}
+  </span>
+
+  <span *ngIf="!collapsed" class="label">
+    {{ item.label }}
+  </span>
+
+  <span
+    *ngIf="item.badge"
+    class="badge"
+    [ngClass]="item.badgeColor || 'primary'"
+  >
+    <ng-container *ngIf="!collapsed">
+      {{ item.badge === true ? "" : item.badge }}
+    </ng-container>
+  </span>
+</a>

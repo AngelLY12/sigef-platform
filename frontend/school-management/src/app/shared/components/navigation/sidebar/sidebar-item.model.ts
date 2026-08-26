@@ -1,10 +1,20 @@
-export interface SideBarItem {
+interface SideBarItemBase {
   icon: string;
   label: string;
-  route: string;
   key: string;
-  exact?: boolean;
-  badge?: number|boolean;
+  badge?: number | boolean;
   badgeColor?: 'primary' | 'success' | 'warning' | 'error';
-  children?: SideBarItem[];
 }
+
+export interface SideBarMenuItem extends SideBarItemBase {
+  type:'item';
+  route: string;
+  exact?: boolean;
+}
+
+export interface SideBarMenuGroup extends SideBarItemBase {
+  type:'group';
+  children: SideBarItem[];
+}
+export type SideBarItemType = 'item' | 'group';
+export type SideBarItem = SideBarMenuItem | SideBarMenuGroup;

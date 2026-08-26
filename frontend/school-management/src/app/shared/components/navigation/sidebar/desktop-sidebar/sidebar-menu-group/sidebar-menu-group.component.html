@@ -1,0 +1,30 @@
+<div class="menu-group">
+  <button
+    type="button"
+    class="menu-item menu-group-trigger"
+    [class.active]="isAnyChildActive()"
+    [class.collapsed]="collapsed"
+    [class.expanded]="expanded"
+    (click)="toggle()"
+  >
+    <span class="material-icons icon">
+      {{ item.icon }}
+    </span>
+
+    <span *ngIf="!collapsed" class="label">
+      {{ item.label }}
+    </span>
+
+    <span *ngIf="!collapsed" class="material-icons expand-icon">
+      {{ expanded ? "expand_less" : "expand_more" }}
+    </span>
+  </button>
+
+  <div class="submenu" [class.expanded]="expanded && !collapsed">
+    <ng-container *ngFor="let child of item.children">
+      <app-sidebar-menu-item *ngIf="child.type === 'item'" [item]="child" />
+
+      <app-sidebar-menu-group *ngIf="child.type === 'group'" [item]="child" />
+    </ng-container>
+  </div>
+</div>

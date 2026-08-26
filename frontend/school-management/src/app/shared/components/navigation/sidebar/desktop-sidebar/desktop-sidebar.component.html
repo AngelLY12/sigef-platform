@@ -1,0 +1,69 @@
+<aside class="sidebar" [class.collapsed]="collapsed">
+
+  <div class="sidebar-header">
+    <div class="logo" routerLink="/">
+      <span class="material-icons">
+        {{ logoIcon }}
+      </span>
+
+      <span *ngIf="!collapsed" class="logo-text">
+        {{ logoText }}
+      </span>
+    </div>
+
+    <app-button
+      variant="ghost"
+      size="sm"
+      [iconOnly]="true"
+      [iconLeft]="collapsed ? 'chevron_right' : 'chevron_left'"
+      (click)="toggleSidebar()"
+    >
+    </app-button>
+  </div>
+
+
+  <nav class="menu">
+
+    <ng-container *ngFor="let item of sideBarItems">
+
+      <app-sidebar-menu-item
+        *ngIf="item.type === 'item'"
+        [item]="item"
+        [collapsed]="collapsed"
+
+      >
+      </app-sidebar-menu-item>
+
+
+      <app-sidebar-menu-group
+        *ngIf="item.type === 'group'"
+        [item]="item"
+        [collapsed]="collapsed"
+        (expandSidebar)="toggleSidebar()"
+      >
+      </app-sidebar-menu-group>
+
+    </ng-container>
+
+  </nav>
+
+
+  <div class="sidebar-footer">
+
+    <app-avatar
+      [collapsed]="collapsed"
+      [showUserInfo]="showUserInfo"
+      [role]="role"
+      [userAvatar]="userAvatar"
+      [userName]="userName"
+      [showRoleSelector]="showRoleSelector"
+      [showChildrenSelector]="showChildrenSelector"
+      (profileClick)="onProfileClick()"
+      (changeRole)="onChangeRole()"
+      (selectChild)="onSelectChild()"
+    >
+    </app-avatar>
+
+  </div>
+
+</aside>

@@ -1,0 +1,55 @@
+<nav class="mobile-top-bar">
+
+  <div class="mobile-logo" routerLink="/">
+    <span class="material-icons">
+      {{ logoIcon }}
+    </span>
+
+    <span>
+      {{ logoText }}
+    </span>
+  </div>
+
+  <app-avatar
+    [collapsed]="true"
+    [showUserInfo]="false"
+    [role]="role"
+    [userAvatar]="userAvatar"
+    [userName]="userName"
+    (profileClick)="onProfileClick()"
+    [showRoleSelector]="showRoleSelector"
+    [showChildrenSelector]="showChildrenSelector"
+    (changeRole)="onChangeRole()"
+    (selectChild)="onSelectChild()"
+  />
+</nav>
+
+
+<nav class="mobile-bottom-bar">
+
+  <ng-container
+    *ngFor="let item of sideBarItems | slice: 0 : mobileVisibleItems"
+  >
+
+    <app-mobile-bottom-item
+      *ngIf="item.type === 'item'"
+      [item]="item"
+      variant="bottom"
+    />
+
+    <app-mobile-group-trigger
+      *ngIf="item.type === 'group'"
+      [item]="item"
+      variant="bottom"
+    />
+
+  </ng-container>
+
+
+  <app-mobile-group-trigger
+    *ngIf="sideBarItems.length > mobileVisibleItems"
+    [item]="moreMenu"
+    variant="bottom"
+  />
+
+</nav>
