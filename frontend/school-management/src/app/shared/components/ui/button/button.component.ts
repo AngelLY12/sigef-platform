@@ -27,6 +27,7 @@ export class ButtonComponent {
   @Input() iconRight?: string;
 
   @Input() routerLink?: string;
+  @Input() tooltip = '';
 
   get isDisabled(): boolean {
     return this.disabled || this.loading;

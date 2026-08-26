@@ -15,6 +15,7 @@
 
   <button
     [attr.type]="type"
+    [attr.title]="tooltip || null"
     class="btn"
     [disabled]="isDisabled"
     [ngClass]="[variant, size, fullWidth ? 'full' : '', iconOnly ? 'icon-only': '' ,isDisabled ? 'disabled' : '']">
